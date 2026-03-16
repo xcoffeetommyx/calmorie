@@ -13,10 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./calmorie
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,7 +34,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./calmorie/out
+          path: ./out
 
   deploy:
     needs: build
