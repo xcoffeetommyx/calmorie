@@ -1,0 +1,259 @@
+/**
+ * Calmorie Design Tokens
+ * ─────────────────────────────────────────────────────────────
+ * All design decisions live here as CSS custom properties.
+ * Tailwind is configured to reference these variables so
+ * classes like bg-primary, text-ink-secondary, shadow-card,
+ * etc. all resolve back to these tokens.
+ *
+ * Token categories:
+ *  1. Raw palette (brand, accent, stone, status)
+ *  2. Semantic color aliases
+ *  3. Typography
+ *  4. Spacing & layout
+ *  5. Border radius
+ *  6. Shadows
+ *  7. Motion
+ *  8. Z-index
+ *  9. Safe area insets (PWA / notch)
+ * 10. Dark mode overrides
+ */
+
+:root {
+  /* ══════════════════════════════════════════════════════════
+     1. RAW PALETTE
+  ══════════════════════════════════════════════════════════ */
+
+  /* Brand — Warm Sage Green */
+  --brand-50:  #f0f6f2;
+  --brand-100: #d6eadb;
+  --brand-200: #aed4b9;
+  --brand-300: #7db594;
+  --brand-400: #52906e;
+  --brand-500: #3d7558;   /* ← primary */
+  --brand-600: #2e5d44;
+  --brand-700: #224732;
+  --brand-800: #163021;
+  --brand-900: #0d1e14;
+
+  /* Accent — Warm Terracotta */
+  --accent-50:  #fdf3ee;
+  --accent-100: #f9dece;
+  --accent-200: #f1b99a;
+  --accent-500: #c06b3a;   /* ← accent */
+  --accent-600: #a0572e;
+  --accent-700: #7d4122;
+
+  /* Warm Stone (neutral base) */
+  --stone-50:  #faf9f7;   /* ← page background */
+  --stone-100: #f4f2ef;
+  --stone-200: #ebe8e2;
+  --stone-300: #d5d0c8;
+  --stone-400: #aea79d;
+  --stone-500: #7c746b;
+  --stone-600: #57524c;
+  --stone-700: #3c3732;
+  --stone-800: #27231f;
+  --stone-900: #17130f;
+
+  /* Status */
+  --status-success-50:  #ecf7ed;
+  --status-success-500: #3d7a45;
+  --status-success-700: #2a5631;
+  --status-warning-50:  #fef8ec;
+  --status-warning-500: #c08c1a;
+  --status-warning-700: #8a6212;
+  --status-error-50:    #fdf0f0;
+  --status-error-500:   #c0392b;
+  --status-error-700:   #8b2820;
+
+  /* ══════════════════════════════════════════════════════════
+     2. SEMANTIC COLOR ALIASES
+  ══════════════════════════════════════════════════════════ */
+
+  /* Surfaces */
+  --color-bg:              var(--stone-50);
+  --color-bg-alt:          var(--stone-100);
+  --color-surface:         #ffffff;
+  --color-surface-raised:  var(--stone-100);
+  --color-surface-overlay: rgba(255, 255, 255, 0.92);
+
+  /* Brand */
+  --color-primary:      var(--brand-500);
+  --color-primary-light: var(--brand-50);
+  --color-primary-mid:  var(--brand-100);
+  --color-primary-dark: var(--brand-600);
+  --color-primary-text: var(--brand-700);
+
+  /* Accent */
+  --color-accent:       var(--accent-500);
+  --color-accent-light: var(--accent-50);
+
+  /* Text */
+  --color-text:          var(--stone-900);
+  --color-text-secondary: var(--stone-600);
+  --color-text-muted:    var(--stone-400);
+  --color-text-on-primary: #ffffff;
+
+  /* Borders */
+  --color-border:        var(--stone-200);
+  --color-border-strong: var(--stone-300);
+  --color-border-focus:  var(--brand-400);
+
+  /* Status */
+  --color-success:    var(--status-success-500);
+  --color-success-bg: var(--status-success-50);
+  --color-warning:    var(--status-warning-500);
+  --color-warning-bg: var(--status-warning-50);
+  --color-error:      var(--status-error-500);
+  --color-error-bg:   var(--status-error-50);
+
+  /* ══════════════════════════════════════════════════════════
+     3. TYPOGRAPHY
+     Font families are set by next/font via CSS variables.
+     Fallbacks below are used if next/font hasn't loaded.
+  ══════════════════════════════════════════════════════════ */
+
+  /* next/font injects --font-display and --font-body onto <html> */
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body:    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Type scale */
+  --text-xs:   0.75rem;    /*  12px */
+  --text-sm:   0.875rem;   /*  14px */
+  --text-base: 1rem;       /*  16px */
+  --text-lg:   1.125rem;   /*  18px */
+  --text-xl:   1.25rem;    /*  20px */
+  --text-2xl:  1.5rem;     /*  24px */
+  --text-3xl:  1.875rem;   /*  30px */
+  --text-4xl:  2.25rem;    /*  36px */
+
+  /* Line heights */
+  --leading-tight:   1.2;
+  --leading-snug:    1.35;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.65;
+
+  /* ══════════════════════════════════════════════════════════
+     4. SPACING & LAYOUT
+  ══════════════════════════════════════════════════════════ */
+
+  --page-padding:         1rem;       /* 16px — mobile gutter */
+  --page-padding-lg:      1.5rem;     /* 24px — desktop gutter */
+  --content-max-width:    640px;      /* single-column content cap */
+  --desktop-sidebar-width: 256px;     /* left nav on desktop */
+  --bottom-nav-height:    64px;       /* mobile tab bar */
+  --top-bar-height:       56px;       /* page header */
+
+  /* ══════════════════════════════════════════════════════════
+     5. BORDER RADIUS
+  ══════════════════════════════════════════════════════════ */
+
+  --radius-xs:   8px;
+  --radius-sm:   12px;
+  --radius-md:   16px;
+  --radius-lg:   20px;
+  --radius-xl:   24px;
+  --radius-2xl:  32px;
+  --radius-full: 9999px;
+
+  /* ══════════════════════════════════════════════════════════
+     6. SHADOWS
+     Warm-tinted shadows that feel organic, not harsh
+  ══════════════════════════════════════════════════════════ */
+
+  --shadow-xs:
+    0 1px 2px 0 rgba(23, 19, 15, 0.04);
+
+  --shadow-sm:
+    0 1px 3px 0 rgba(23, 19, 15, 0.06),
+    0 1px 2px -1px rgba(23, 19, 15, 0.04);
+
+  --shadow-card:
+    0 2px 8px 0 rgba(23, 19, 15, 0.06),
+    0 0 0 1px rgba(23, 19, 15, 0.04);
+
+  --shadow-card-hover:
+    0 8px 24px 0 rgba(23, 19, 15, 0.10),
+    0 0 0 1px rgba(23, 19, 15, 0.04);
+
+  --shadow-md:
+    0 4px 16px 0 rgba(23, 19, 15, 0.08),
+    0 2px 4px -2px rgba(23, 19, 15, 0.04);
+
+  --shadow-lg:
+    0 12px 32px 0 rgba(23, 19, 15, 0.12),
+    0 4px 8px -4px rgba(23, 19, 15, 0.06);
+
+  --shadow-xl:
+    0 24px 48px 0 rgba(23, 19, 15, 0.14),
+    0 8px 16px -8px rgba(23, 19, 15, 0.08);
+
+  --shadow-bottom-nav:
+    0 -1px 0 rgba(23, 19, 15, 0.06),
+    0 -4px 16px rgba(23, 19, 15, 0.04);
+
+  /* ══════════════════════════════════════════════════════════
+     7. MOTION
+  ══════════════════════════════════════════════════════════ */
+
+  --duration-fast:   150ms;
+  --duration-normal: 300ms;
+  --duration-slow:   500ms;
+  --duration-slower: 700ms;
+
+  /* Custom easing curves */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);       /* natural deceleration */
+  --ease-snappy: cubic-bezier(0.34, 1.56, 0.64, 1);    /* slight spring overshoot */
+  --ease-gentle: cubic-bezier(0.4, 0, 0.2, 1);         /* material-like */
+
+  /* ══════════════════════════════════════════════════════════
+     8. Z-INDEX SCALE
+  ══════════════════════════════════════════════════════════ */
+
+  --z-base:     0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+  --z-top:      999;
+
+  /* ══════════════════════════════════════════════════════════
+     9. SAFE AREA INSETS  (notch / home indicator support)
+  ══════════════════════════════════════════════════════════ */
+
+  --safe-top:    env(safe-area-inset-top,    0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left,   0px);
+  --safe-right:  env(safe-area-inset-right,  0px);
+}
+
+/* ══════════════════════════════════════════════════════════
+   10. DARK MODE  (future-ready — tokens only)
+═══════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg:              var(--stone-900);
+    --color-bg-alt:          var(--stone-800);
+    --color-surface:         var(--stone-800);
+    --color-surface-raised:  var(--stone-700);
+    --color-surface-overlay: rgba(23, 19, 15, 0.92);
+
+    --color-text:            var(--stone-50);
+    --color-text-secondary:  var(--stone-300);
+    --color-text-muted:      var(--stone-500);
+
+    --color-border:          var(--stone-700);
+    --color-border-strong:   var(--stone-600);
+
+    --shadow-card:
+      0 2px 8px 0 rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
+
+    --shadow-card-hover:
+      0 8px 24px 0 rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+}

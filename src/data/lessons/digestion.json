@@ -1,0 +1,64 @@
+{
+  "slug": "digestion",
+  "title": "Digestion & Gut Health",
+  "category": "digestion",
+  "summary": "Digestion is more than just breaking down food — it shapes how full you feel, how your body absorbs nutrients, and how your gut communicates with your brain. Understanding the basics helps explain why food quality matters beyond calorie content.",
+  "readTimeMinutes": 4,
+  "steps": [
+    {
+      "heading": "How digestion works",
+      "body": "Digestion begins in the mouth, where chewing breaks food into smaller pieces and saliva starts breaking down starches. Food then travels to the stomach, where acid and enzymes continue the process, before moving into the small intestine — where most nutrients are absorbed into the bloodstream. What remains passes into the large intestine, where water is reabsorbed and gut bacteria process leftover fibre before waste is eliminated."
+    },
+    {
+      "heading": "The gut-brain connection",
+      "body": "Your gut and brain communicate continuously through the vagus nerve and a network of hormones and signalling molecules. Research has found that the gut plays a role in producing and responding to compounds involved in mood and wellbeing, though exactly how gut health and mental health influence each other is still an active area of study. What is established is that stress and emotional states affect digestion — it is one reason that digestive symptoms often worsen during anxious or difficult periods."
+    },
+    {
+      "heading": "Why fibre matters",
+      "body": "Dietary fibre is not absorbed by the body — it travels to the large intestine where gut bacteria break it down, supporting the gut lining and contributing to a healthy digestive environment. Fibre also slows the digestion of carbohydrates, helping to moderate blood sugar levels after meals, and adds bulk to digestion, which supports feelings of fullness and regular bowel movements. Most adults in Western countries consume roughly half the recommended daily amount of fibre."
+    },
+    {
+      "heading": "Fibre, satiety, and food choices",
+      "body": "High-fibre foods — vegetables, fruits, legumes, wholegrains — tend to be more filling per calorie than low-fibre processed foods. This is partly because fibre slows gastric emptying (how quickly the stomach empties) and partly because it triggers the release of satiety hormones. Eating more fibre-rich foods is one of the most consistently supported dietary strategies for managing appetite without strict calorie counting."
+    },
+    {
+      "heading": "What supports a healthy digestive system",
+      "body": "A varied diet rich in plant foods — vegetables, fruits, legumes, wholegrains, nuts, and seeds — is the most consistently supported approach to digestive health. These foods provide the fibre, vitamins, and minerals that the digestive system needs to function well. Ultra-processed foods, which are low in fibre and high in additives, are associated with poorer digestive and overall health outcomes in population studies."
+    },
+    {
+      "heading": "Digestion speed and appetite",
+      "body": "How quickly food moves through your digestive system affects how long you feel full. Protein and fat slow gastric emptying — meaning food stays in the stomach longer, extending the feeling of fullness. Liquid calories tend to move through faster, which is partly why drinks (including juice and smoothies) are generally less filling than solid food with similar calorie content. Eating slowly also gives fullness signals time to reach the brain before you have eaten more than you needed."
+    }
+  ],
+  "takeaway": "Digestion shapes how much you absorb, how full you feel, and how your gut communicates with the rest of your body. Eating more fibre-rich, minimally processed foods is one of the most reliable ways to support digestive health and appetite regulation.",
+  "sources": [
+    {
+      "title": "Healthy diet — Fact sheet",
+      "organization": "World Health Organization",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet",
+      "year": 2020,
+      "note": "WHO guidance on dietary fibre, vegetables, fruits, and wholegrains as part of a healthy diet."
+    },
+    {
+      "title": "Health benefits of dietary fibre",
+      "organization": "Nutrition Reviews",
+      "url": "https://academic.oup.com/nutritionreviews/article/67/4/188/1851624",
+      "year": 2009,
+      "note": "Well-cited review of the mechanisms and health effects of dietary fibre, including satiety and digestive health."
+    },
+    {
+      "title": "Gut feelings: the emerging biology of gut–brain communication",
+      "organization": "Nature Reviews Neuroscience",
+      "url": "https://www.nature.com/articles/nrn3071",
+      "year": 2012,
+      "note": "Accessible review of how the gut and brain communicate, including the vagus nerve and gut hormones."
+    },
+    {
+      "title": "Dietary fibre and satiety",
+      "organization": "Nutrition Bulletin — British Nutrition Foundation",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1467-3010.2007.00603.x",
+      "year": 2007,
+      "note": "Review of evidence linking dietary fibre intake to feelings of fullness and appetite regulation."
+    }
+  ]
+}

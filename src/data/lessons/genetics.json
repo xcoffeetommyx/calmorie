@@ -1,0 +1,64 @@
+{
+  "slug": "genetics",
+  "title": "The Genetics Factor",
+  "category": "genetics",
+  "summary": "Genes do influence body weight — but they are not destiny. Understanding what is inherited and what is within your control changes how you approach your health.",
+  "readTimeMinutes": 4,
+  "steps": [
+    {
+      "heading": "Yes, genes influence body weight",
+      "body": "Large twin and family studies consistently show that genetic factors account for roughly 40–70% of the variation in BMI between people. This means that two people eating similar diets and living similar lives can have meaningfully different body weights partly because of biology they were born with. This is not an excuse to do nothing — it is useful context for why some people find weight management harder than others."
+    },
+    {
+      "heading": "What genes actually influence",
+      "body": "Genes affect appetite regulation, how full you feel after eating, how quickly you feel hungry again, where your body stores fat, your resting metabolic rate, and even food preferences. Over 900 genetic variants have been linked to BMI in large population studies, though each individual variant has a very small effect. It is the combination of many variants — plus environment — that shapes the picture."
+    },
+    {
+      "heading": "Set point theory",
+      "body": "The idea of a body weight \"set point\" suggests your body has a preferred weight range it actively defends through appetite and metabolic changes. When you lose weight, hunger hormones increase and metabolism slows to push you back toward this range. When you gain weight, the opposite can occur. This range is not fixed permanently — it can shift over time with sustained changes in habits, and it varies widely between individuals."
+    },
+    {
+      "heading": "The environment amplifies or suppresses genetic risk",
+      "body": "Genetic predispositions toward weight gain existed long before the obesity epidemic — but the epidemic is recent. This tells us that environment powerfully amplifies genetic risk. The same genetic variants that cause problems in a food environment full of cheap, hyperpalatable, calorie-dense food may have little effect when food is less processed and portions are smaller. Genes set a tendency; environment and habits shape the outcome."
+    },
+    {
+      "heading": "What you can genuinely control",
+      "body": "You may not be able to change your genes, but environment, habits, and choices still account for a substantial part of the equation. Regular physical activity, consistent sleep, lower consumption of ultra-processed foods, and stress management all demonstrably affect weight and metabolic health regardless of genetic background. People with high genetic risk for obesity still benefit from these habits — they just may need to be more consistent about them."
+    },
+    {
+      "heading": "A kinder way to think about weight",
+      "body": "Understanding that weight is influenced by biology helps move the conversation away from blame. Weight is not purely a matter of willpower, and struggling to maintain a particular weight does not mean someone lacks discipline. It means they are working against some biological headwinds — and being aware of those headwinds makes it easier to work with them rather than against them."
+    }
+  ],
+  "takeaway": "Genes meaningfully influence body weight through appetite, metabolism, and fat storage — but environment and habits still matter. Genetic predisposition is not the same as genetic destiny.",
+  "sources": [
+    {
+      "title": "Genetic influences on human energy expenditure and body mass index",
+      "organization": "New England Journal of Medicine — Bouchard et al.",
+      "url": "https://www.nejm.org/doi/10.1056/NEJM199005243222101",
+      "year": 1990,
+      "note": "Classic overfeeding twin study demonstrating strong genetic influence on fat storage."
+    },
+    {
+      "title": "Genome-wide association studies of obesity and related traits",
+      "organization": "Nature Reviews Genetics",
+      "url": "https://www.nature.com/articles/s41576-021-00416-z",
+      "year": 2022,
+      "note": "Review of genetic variants associated with BMI and obesity risk."
+    },
+    {
+      "title": "Obesity and the environment: where do we go from here?",
+      "organization": "Science",
+      "url": "https://www.science.org/doi/10.1126/science.1259074",
+      "year": 2014,
+      "note": "Examines gene–environment interactions and the obesogenic food environment."
+    },
+    {
+      "title": "Body weight set points: determination and adjustment",
+      "organization": "Journal of Nutrition",
+      "url": "https://academic.oup.com/jn/article/136/1/97S/4664048",
+      "year": 2006,
+      "note": "Overview of the biological mechanisms behind weight set points and how they shift."
+    }
+  ]
+}

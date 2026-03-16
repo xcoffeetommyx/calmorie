@@ -1,0 +1,234 @@
+/* tokens.css must be imported before Tailwind directives */
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ══════════════════════════════════════════════════════════
+   BASE LAYER — resets and global element defaults
+═══════════════════════════════════════════════════════════ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    min-height: 100dvh;
+    overscroll-behavior: none;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+  }
+
+  h4, h5, h6 {
+    font-family: var(--font-body);
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  input, textarea, select, button {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='number'],
+  input[type='search'],
+  textarea {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  ul[role='list'],
+  ol[role='list'] {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  img, video, canvas, svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-mid);
+    color: var(--color-primary-text);
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-strong);
+    border-radius: var(--radius-full);
+  }
+  ::-webkit-scrollbar-thumb:hover { background-color: var(--color-text-muted); }
+
+  a { color: inherit; text-decoration: none; }
+
+  .prose p + p { margin-top: 1em; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   REDUCED MOTION
+   Respect the user's system preference.
+   CSS transitions are instant; Framer Motion is handled via
+   <MotionConfig reducedMotion="user"> in AppProviders.
+═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Keep loading skeletons breathing, just slower */
+  .animate-pulse-soft {
+    animation-duration: 4s !important;
+    animation-iteration-count: infinite !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   COMPONENT LAYER
+═══════════════════════════════════════════════════════════ */
+@layer components {
+  .page-container {
+    width: 100%;
+    max-width: var(--content-max-width);
+    margin-inline: auto;
+    padding-inline: var(--page-padding);
+  }
+
+  .pb-safe-nav {
+    padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 1.5rem);
+  }
+
+  .pt-safe-bar {
+    padding-top: calc(var(--top-bar-height) + var(--safe-top));
+  }
+
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-raised) 25%,
+      var(--color-border) 50%,
+      var(--color-surface-raised) 75%
+    );
+    background-size: 200% 100%;
+  }
+
+  .scroll-strip {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-inline: var(--page-padding);
+    margin-inline: calc(-1 * var(--page-padding));
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .scroll-strip::-webkit-scrollbar { display: none; }
+  .scroll-strip > * { flex-shrink: 0; }
+
+  .divider {
+    height: 1px;
+    background-color: var(--color-border);
+    border: none;
+    margin: 0;
+  }
+
+  .card-base {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   UTILITY LAYER
+═══════════════════════════════════════════════════════════ */
+@layer utilities {
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  .h-screen-dynamic { height: 100dvh; }
+  .min-h-screen-dynamic { min-height: 100dvh; }
+
+  .text-balance { text-wrap: balance; }
+
+  .select-none { user-select: none; -webkit-user-select: none; }
+
+  .scroll-touch { -webkit-overflow-scrolling: touch; }
+
+  .pt-safe { padding-top: var(--safe-top); }
+  .pb-safe { padding-bottom: var(--safe-bottom); }
+  .pl-safe { padding-left: var(--safe-left); }
+  .pr-safe { padding-right: var(--safe-right); }
+
+  .text-gradient-brand {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .backdrop-blur-ios {
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .press-scale {
+    transition: transform var(--duration-fast) var(--ease-smooth);
+  }
+  .press-scale:active { transform: scale(0.97); }
+}

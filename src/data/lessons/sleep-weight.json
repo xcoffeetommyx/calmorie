@@ -1,0 +1,64 @@
+{
+  "slug": "sleep-weight",
+  "title": "Sleep & Your Weight",
+  "category": "sleep",
+  "summary": "Poor sleep disrupts the hormones that control hunger and fullness — making it harder to eat well even when you intend to. The connection between sleep and weight is better established than most people realise.",
+  "readTimeMinutes": 4,
+  "steps": [
+    {
+      "heading": "The sleep–weight connection",
+      "body": "Multiple large studies have found that people who consistently sleep fewer than 7 hours per night have higher rates of obesity and weight gain over time. This is not just about having more waking hours to eat — the mechanisms go deeper. Sleep deprivation directly changes the hormones that govern how hungry you feel and how quickly you feel full."
+    },
+    {
+      "heading": "Ghrelin: the hunger hormone",
+      "body": "Ghrelin is a hormone produced mainly in the stomach that signals hunger to your brain. When you are sleep-deprived, ghrelin levels rise — meaning your body sends stronger hunger signals than it would after a full night's sleep. Studies have found that a single night of insufficient sleep can increase ghrelin and reported hunger levels the following day, particularly cravings for calorie-dense foods."
+    },
+    {
+      "heading": "Leptin: the fullness hormone",
+      "body": "Leptin is produced by fat cells and signals to the brain that you have had enough to eat. Poor sleep suppresses leptin levels, meaning your brain receives a weaker \"I'm full\" signal even after eating. The combination of elevated ghrelin and reduced leptin after sleep deprivation creates a hormonal environment that makes overeating significantly easier and more likely."
+    },
+    {
+      "heading": "What you tend to crave when tired",
+      "body": "Sleep deprivation does not just increase overall appetite — it specifically increases cravings for high-calorie, sweet, and salty foods. Research suggests this happens partly because the reward and decision-making regions of the brain are more reactive to food cues when you are tired, and the prefrontal cortex — responsible for impulse control — is less able to override those impulses. Willpower is genuinely harder to access on poor sleep."
+    },
+    {
+      "heading": "Sleep and physical activity",
+      "body": "Fatigue from poor sleep reduces motivation to exercise and decreases physical performance when you do. Over time, a pattern of poor sleep can reduce both the amount and intensity of physical activity, contributing further to a calorie surplus. Recovery from exercise also requires adequate sleep — muscles repair and adapt during deep sleep stages, so poor sleep can reduce the benefits of workouts."
+    },
+    {
+      "heading": "How much sleep is enough?",
+      "body": "Most adults function best with 7–9 hours of sleep per night, according to major sleep health organisations. The quality of sleep matters alongside quantity — fragmented sleep can leave you tired even after 8 hours in bed. Consistent sleep and wake times, a cool and dark room, and avoiding bright screens in the hour before bed are among the most evidence-supported ways to improve sleep quality."
+    }
+  ],
+  "takeaway": "Sleep is an underappreciated factor in weight management. Too little sleep raises hunger hormones, suppresses fullness signals, increases cravings for calorie-dense food, and undermines willpower — all at the same time.",
+  "sources": [
+    {
+      "title": "Short sleep duration and weight gain: a systematic review",
+      "organization": "Obesity — Cappuccio et al.",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1038/oby.2007.118",
+      "year": 2008,
+      "note": "Systematic review of 30 studies linking short sleep to higher obesity risk in adults and children."
+    },
+    {
+      "title": "Brief communication: Sleep curtailment in healthy young men is associated with decreased leptin levels, elevated ghrelin levels, and increased hunger and appetite",
+      "organization": "Annals of Internal Medicine",
+      "url": "https://www.acpjournals.org/doi/10.7326/0003-4819-141-11-200412070-00008",
+      "year": 2004,
+      "note": "Landmark study directly demonstrating how sleep restriction raises ghrelin and lowers leptin, increasing hunger."
+    },
+    {
+      "title": "Sleep curtailment is accompanied by increased intake of calories from snacks",
+      "organization": "American Journal of Clinical Nutrition",
+      "url": "https://academic.oup.com/ajcn/article/89/1/126/4598237",
+      "year": 2009,
+      "note": "Controlled study showing sleep-deprived participants consumed more calories, particularly from snacks."
+    },
+    {
+      "title": "Sleep and obesity: a critical review",
+      "organization": "Current Opinion in Clinical Nutrition & Metabolic Care",
+      "url": "https://journals.lww.com/co-clinicalnutrition/Abstract/2010/07000/Sleep_and_obesity.17.aspx",
+      "year": 2010,
+      "note": "Review of hormonal mechanisms connecting sleep deprivation to weight gain."
+    }
+  ]
+}

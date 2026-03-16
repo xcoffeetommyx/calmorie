@@ -1,0 +1,71 @@
+{
+  "slug": "ultra-processed",
+  "title": "Ultra-Processed Foods",
+  "category": "ultra-processed",
+  "summary": "Ultra-processed foods are engineered to override natural fullness signals and encourage eating beyond genuine hunger. Understanding how this works makes it easier to notice in your own habits.",
+  "readTimeMinutes": 5,
+  "steps": [
+    {
+      "heading": "What makes a food 'ultra-processed'?",
+      "body": "The NOVA classification, developed by researchers at the University of São Paulo, divides foods into four groups based on the extent of industrial processing. Ultra-processed foods (Group 4) contain ingredients rarely used in home cooking — emulsifiers, artificial flavours, colour additives, sweeteners, modified starches — and are typically made from refined substances rather than whole foods. Examples include packaged biscuits, flavoured crisps, instant noodles, fizzy drinks, and many breakfast cereals."
+    },
+    {
+      "heading": "How much of what we eat is ultra-processed?",
+      "body": "In the United Kingdom, ultra-processed foods account for approximately 57% of total caloric intake in adults. In the United States, the figure is around 60%. These products are cheap, shelf-stable, heavily marketed, and designed to be convenient — which has made them the dominant food type in many countries' food supplies over the past 40 years, coinciding with the rise in obesity rates."
+    },
+    {
+      "heading": "Hyperpalatability: engineered to overeat",
+      "body": "Food manufacturers have long used combinations of salt, sugar, and fat at specific ratios to maximise a product's appeal. When these three are combined in ways that rarely occur naturally, they can trigger stronger dopamine responses in the brain's reward system — making the food feel compulsive to eat. This engineering is sometimes called hyperpalatability. The effect is not a character flaw in the person eating; it is a deliberate design outcome."
+    },
+    {
+      "heading": "Ultra-processed foods and satiety",
+      "body": "A well-controlled study by Kevin Hall and colleagues at the NIH found that participants randomly assigned to eat an ultra-processed diet consumed on average 508 more calories per day than when eating an unprocessed diet — even though both diets were matched for total offered calories and participants ate until they felt full. Ultra-processed foods appear to undermine satiety signals, possibly because they are eaten faster, are lower in fibre and protein, and are less filling per calorie."
+    },
+    {
+      "heading": "The role of fibre and protein",
+      "body": "Whole and minimally processed foods tend to be higher in fibre and protein — two nutrients that strongly influence how full you feel. Fibre slows digestion and feeds gut bacteria that produce hormones involved in satiety. Protein triggers the strongest satiety hormone response of any macronutrient. Ultra-processed foods are frequently low in both, which is part of why they are easy to keep eating even after consuming a significant number of calories."
+    },
+    {
+      "heading": "This is not about 'clean eating'",
+      "body": "The evidence on ultra-processed foods does not mean all processed food is harmful, or that you must eat only whole foods. Minimally processed foods like tinned tomatoes, frozen vegetables, oats, and plain yogurt are genuinely convenient and nutritious. The concern is specifically with foods in the ultra-processed category — those that have been fundamentally reformulated and are associated in large population studies with higher rates of obesity, cardiovascular disease, type 2 diabetes, and cancer."
+    }
+  ],
+  "takeaway": "Ultra-processed foods are designed to be easy to overeat. They are low in fibre and protein, engineered for palatability, and appear to undermine the body's natural fullness signals. Eating more whole and minimally processed foods consistently outperforms any specific diet for long-term health.",
+  "sources": [
+    {
+      "title": "Ultra-processed food intake and risk of cardiovascular disease — NOVA classification",
+      "organization": "British Medical Journal",
+      "url": "https://www.bmj.com/content/365/bmj.l1451",
+      "year": 2019,
+      "note": "Large cohort study linking ultra-processed food consumption to cardiovascular risk."
+    },
+    {
+      "title": "Ultra-processed diets cause excess calorie intake and weight gain: an inpatient randomized controlled trial",
+      "organization": "Cell Metabolism — Hall et al.",
+      "url": "https://www.cell.com/cell-metabolism/fulltext/S1550-4131(19)30248-7",
+      "year": 2019,
+      "note": "Landmark controlled trial showing 508 kcal/day overconsumption on ultra-processed diet."
+    },
+    {
+      "title": "Consumption of ultra-processed foods and obesity in Brazilian adolescents and adults",
+      "organization": "Preventive Medicine — Louzada et al.",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0091743515001742",
+      "year": 2015,
+      "note": "Population study using the NOVA framework; foundational to the research area."
+    },
+    {
+      "title": "Ultra-processed food and chronic disease: a narrative review",
+      "organization": "Nutrients",
+      "url": "https://www.mdpi.com/2072-6643/14/1/8",
+      "year": 2022,
+      "note": "Overview of associations between ultra-processed food and multiple health outcomes."
+    },
+    {
+      "title": "Ultra-processed food consumption and excess weight among US adults",
+      "organization": "British Journal of Nutrition",
+      "url": "https://www.cambridge.org/core/journals/british-journal-of-nutrition/article/ultraprocessed-food-consumption-and-excess-weight-among-us-adults/5B4D4AEE0968EA68E4E1D28E1D2C6B95",
+      "year": 2019,
+      "note": "US adult population data on ultra-processed food proportion and obesity association."
+    }
+  ]
+}

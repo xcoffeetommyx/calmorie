@@ -1,0 +1,75 @@
+{
+  "slug": "metabolism",
+  "title": "Your Metabolism",
+  "category": "metabolism",
+  "summary": "How your body converts food into energy, what BMR and TDEE mean in practice, and why metabolism is not fixed — it adapts to what you do and eat.",
+  "readTimeMinutes": 5,
+  "steps": [
+    {
+      "heading": "What metabolism actually means",
+      "body": "Metabolism refers to all the chemical processes your body runs to keep you alive — converting food into energy, building and repairing tissue, regulating temperature, and moving nutrients around. When people say someone has a \"fast\" or \"slow\" metabolism, they usually mean how many calories that person burns at rest, which varies considerably between individuals."
+    },
+    {
+      "heading": "Basal Metabolic Rate (BMR)",
+      "body": "Your Basal Metabolic Rate is the number of calories your body needs just to stay alive while completely at rest — maintaining organ function, breathing, circulation, and body temperature. BMR accounts for roughly 60–70% of the total calories most people burn each day. It is primarily determined by your body size, muscle mass, age, and biological sex."
+    },
+    {
+      "heading": "Total Daily Energy Expenditure (TDEE)",
+      "body": "TDEE is your BMR plus all the energy you use for physical activity, digestion, and non-exercise movement like fidgeting and walking around. A sedentary office worker and an active construction worker with identical body sizes can have a TDEE difference of 500–1,000 calories per day. Activity is the largest lever you can pull to increase how many calories you burn."
+    },
+    {
+      "heading": "Muscle mass changes your resting burn",
+      "body": "Muscle tissue is metabolically more active than fat tissue — it uses more energy at rest to maintain itself. Research suggests the difference is real but modest; most estimates place it at a few calories per pound of muscle per day. While the exact number varies and the overall effect can be overstated, building or preserving muscle through resistance exercise does contribute to a higher resting metabolic rate over time."
+    },
+    {
+      "heading": "Adaptive thermogenesis: why metabolism is not static",
+      "body": "When you reduce calorie intake significantly, your body responds by lowering its metabolic rate — a process called adaptive thermogenesis. This is a survival mechanism, not a character flaw. It partly explains why weight loss often slows after the first few weeks of a diet. This adaptation also reverses gradually when calorie intake returns to normal, which is part of why very restrictive diets are difficult to sustain long-term."
+    },
+    {
+      "heading": "Age and metabolism",
+      "body": "Metabolic rate does decline with age, but the effect is more modest than is commonly believed. Research suggests resting metabolism stays relatively stable between ages 20 and 60, then declines more noticeably in later decades. Much of the metabolism change associated with ageing is actually due to gradual loss of muscle mass — which is partly preventable with regular activity."
+    },
+    {
+      "heading": "What you can actually influence",
+      "body": "You cannot dramatically speed up your metabolism through special foods or supplements — the evidence for these claims is generally weak. What genuinely helps: maintaining or building muscle mass, staying physically active throughout the day (not just formal exercise), eating enough protein, and getting adequate sleep. Consistency in these habits matters far more than short-term changes."
+    }
+  ],
+  "takeaway": "Metabolism is the sum of all energy your body uses. Your BMR is largely set by body size and muscle mass, but activity, sleep, and how you eat all shift the total — and the body adapts dynamically to changes in both directions.",
+  "sources": [
+    {
+      "title": "Temporal changes in the human metabolic rate",
+      "organization": "Science — Pontzer et al.",
+      "url": "https://www.science.org/doi/10.1126/science.abe5017",
+      "year": 2021,
+      "note": "Large-scale study tracking metabolic rate across the lifespan; found stability from age 20–60."
+    },
+    {
+      "title": "Adaptive thermogenesis in humans",
+      "organization": "International Journal of Obesity",
+      "url": "https://www.nature.com/articles/ijo2010184",
+      "year": 2010,
+      "note": "Review of how caloric restriction triggers metabolic adaptation."
+    },
+    {
+      "title": "Energy expenditure components and evaluation methods",
+      "organization": "Nutrition in Clinical Practice",
+      "url": "https://aspenjournals.onlinelibrary.wiley.com/doi/10.1177/0115426512467880",
+      "year": 2012,
+      "note": "Breakdown of BMR, thermic effect of food, and activity components of TDEE."
+    },
+    {
+      "title": "Resistance training and resting metabolic rate: a systematic review",
+      "organization": "Obesity Reviews",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1467-789X.2011.00878.x",
+      "year": 2011,
+      "note": "Review examining how muscle-building exercise affects resting calorie burn."
+    },
+    {
+      "title": "A comparison of predictive equations for resting metabolic rate in healthy nonobese and obese adults",
+      "organization": "Journal of the American Dietetic Association",
+      "url": "https://www.sciencedirect.com/science/article/pii/S000282230500532X",
+      "year": 2005,
+      "note": "Validates the Mifflin-St Jeor equation as the most accurate for estimating BMR."
+    }
+  ]
+}
