@@ -1,15 +1,9 @@
-const isGitHubPages = process.env.GITHUB_PAGES === 'true'
-const repo = 'calmorie'
+const isProd = process.env.GITHUB_PAGES === "true";
 
-/** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: isGitHubPages ? 'export' : undefined,
-  trailingSlash: isGitHubPages,
-  basePath: isGitHubPages ? `/${repo}` : '',
-  assetPrefix: isGitHubPages ? `/${repo}/` : '',
-  images: {
-    unoptimized: true,
-  },
-}
+  output: "export",
+  basePath: isProd ? "/calmorie" : "",
+  assetPrefix: isProd ? "/calmorie/" : "",
+};
 
-export default nextConfig
+export default nextConfig;
