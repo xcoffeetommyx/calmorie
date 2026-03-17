@@ -5,34 +5,16 @@
  *
  * Full-page lesson layout rendered at /learn/[slug].
  *
- * Structure:
- *   ┌─────────────────────────────┐
- *   │  TopBar (back, title)       │  ← sticky, h = var(--top-bar-height) = 56px
- *   ├─────────────────────────────┤
- *   │  Lesson intro screen        │  ← shown before reading starts
- *   │  (or LessonSwiper)          │
- *   └─────────────────────────────┘
+ * Swiper height — v4 fix:
+ *   Height is now calc(100dvh - top-bar-height - bottom-nav-height).
+ *   On Galaxy S20 (800px): 800 - 56 - 64 = 680px.
+ *   The swiper bottom aligns exactly with the BottomNav top — no overlap,
+ *   no compensating padding needed inside LessonSwiper. The nav-buttons bar
+ *   can use normal py-3 padding with no extra bottom clearance.
  *
- * Swiper height — v3 fix:
- *   The previous design used flex-1 on the swiper motion.div and relied on
- *   min-h-screen-dynamic (min-height: 100dvh) propagating a definite flex
- *   container height down the chain. This is fragile: while Chrome 84+ does
- *   treat min-height as definite for flex in most cases, the behaviour can
- *   break when intermediate elements (AnimatePresence, Next.js page wrappers)
- *   are not flex children in the expected way.
- *
- *   Fix: give the swiper motion.div an EXPLICIT height using CSS calc(),
- *   bypassing the flex chain entirely:
- *     height: calc(100dvh - var(--top-bar-height))
- *   This gives the swiper exactly the viewport below the TopBar regardless
- *   of what any ancestor does.
- *
- *   The BottomNav (64px, position: fixed) sits on top of the viewport bottom.
- *   LessonSwiper's nav-buttons bar compensates with extra bottom padding on
- *   mobile (see LessonSwiper.tsx).
- *
- * Intro screen:
- *   Uses min-h-screen-dynamic and normal block scroll — unchanged from v2.
+ *   Previous: calc(100dvh - top-bar) = 744px left the swiper 64px behind the
+ *   fixed BottomNav. LessonSwiper compensated with pb-[calc(0.75rem+64px)]=76px
+ *   on the nav bar, making it 133px tall — consuming 64px of space for nothing.
  */
 
 import { useState } from 'react'
@@ -79,7 +61,6 @@ export function LessonReader({ lesson }: LessonReaderProps) {
 
       <AnimatePresence mode="wait" initial={false}>
         {!started ? (
-          /* ── Lesson intro / overview ─────────────────────────── */
           <motion.div
             key="intro"
             initial={{ opacity: 0, y: 8 }}
@@ -88,7 +69,6 @@ export function LessonReader({ lesson }: LessonReaderProps) {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="page-container py-6 flex flex-col gap-6"
           >
-            {/* Category badge */}
             <span
               className={cn(
                 'self-start inline-flex items-center gap-1.5',
@@ -101,7 +81,6 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               {categoryLabel}
             </span>
 
-            {/* Title */}
             <h1
               className={cn(
                 'font-display font-semibold text-ink',
@@ -112,12 +91,10 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               {lesson.title}
             </h1>
 
-            {/* Summary */}
             <p className="font-body text-[1.0625rem] text-ink leading-[1.8]">
               {lesson.summary}
             </p>
 
-            {/* Meta row */}
             <div className="flex items-center gap-5">
               <span className="flex items-center gap-2 font-body text-sm text-ink-muted">
                 <Clock className="w-4 h-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -129,7 +106,6 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               </span>
             </div>
 
-            {/* In-progress resume indicator */}
             {isInProgress && (
               <div
                 className={cn(
@@ -152,7 +128,6 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               </div>
             )}
 
-            {/* Completed indicator */}
             {isCompleted && (
               <div
                 className={cn(
@@ -173,7 +148,6 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               </div>
             )}
 
-            {/* Sections preview card */}
             <div className="bg-surface rounded-2xl shadow-card overflow-hidden border border-border/50">
               <div className="px-5 py-3 border-b border-border bg-background/50">
                 <p className="font-body text-[11px] font-semibold text-ink-muted uppercase tracking-wider">
@@ -202,7 +176,6 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               </ul>
             </div>
 
-            {/* CTA */}
             <button
               type="button"
               onClick={() => setStarted(true)}
@@ -242,10 +215,10 @@ export function LessonReader({ lesson }: LessonReaderProps) {
           </motion.div>
 
         ) : (
-          /* Swiper: explicit calc() height bypasses the flex chain so the
-             content area is always the viewport minus the TopBar, regardless
-             of how intermediate wrappers (AnimatePresence, Next.js) handle
-             min-height propagation on Android Chrome. */
+          /* Swiper height = viewport minus TopBar minus BottomNav.
+             Galaxy S20: 800 - 56 - 64 = 680px. Swiper bottom aligns exactly
+             with BottomNav top. No overlap, so LessonSwiper needs no extra
+             bottom padding to clear the BottomNav. */
           <motion.div
             key="swiper"
             initial={{ opacity: 0, x: '20%' }}
@@ -253,7 +226,9 @@ export function LessonReader({ lesson }: LessonReaderProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col overflow-hidden"
-            style={{ height: 'calc(100dvh - var(--top-bar-height))' }}
+            style={{
+              height: 'calc(100dvh - var(--top-bar-height) - var(--bottom-nav-height))',
+            }}
           >
             <LessonSwiper key={lesson.slug} lesson={lesson} onClose={handleDone} />
           </motion.div>
