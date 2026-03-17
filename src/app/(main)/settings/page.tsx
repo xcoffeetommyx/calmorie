@@ -1,29 +1,9 @@
 'use client'
 
-/**
- * Settings page — /settings
- *
- * Four sections:
- *   1. Profile — shows real name and calorie target from userStore
- *   2. About   — version, mission statement
- *   3. Support — PayPal donation link
- *   4. Disclaimer — always visible medical disclaimer
- *
- * The profile section displays live data when the user has completed
- * onboarding; shows a prompt to set up if they haven't.
- */
-
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
-  User,
-  Target,
-  Heart,
-  Info,
-  Shield,
-  ExternalLink,
-  ChevronRight,
-  Leaf,
+  User, Target, Heart, Info, Shield, ExternalLink, ChevronRight, Leaf,
 } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { TopBar } from '@/components/layout/TopBar'
@@ -32,7 +12,7 @@ import { useUserStore, selectIsOnboarded, selectDisplayName } from '@/stores/use
 import { formatCalories } from '@/lib/utils/format'
 
 export default function SettingsPage() {
-  const profile    = useUserStore((s) => s.profile)
+  const profile     = useUserStore((s) => s.profile)
   const isOnboarded = useUserStore(selectIsOnboarded)
   const displayName = useUserStore(selectDisplayName)
 
@@ -46,19 +26,14 @@ export default function SettingsPage() {
         initial="initial"
         animate="enter"
       >
-
-        {/* ══ Section 1: Profile ════════════════════════════════ */}
+        {/* ══ Profile ══════════════════════════════════════════ */}
         <motion.div variants={staggerItem} className="space-y-2">
           <SectionLabel>Profile</SectionLabel>
 
           <div className="bg-surface rounded-xl shadow-card divide-y divide-border overflow-hidden">
-            {/* Avatar + name row */}
             <div className="flex items-center gap-4 px-4 py-4">
               <div
-                className={cn(
-                  'w-12 h-12 rounded-full shrink-0',
-                  'bg-primary-light flex items-center justify-center',
-                )}
+                className="w-12 h-12 rounded-full bg-primary-light flex items-center justify-center shrink-0"
                 aria-hidden="true"
               >
                 <User className="w-5 h-5 text-primary" strokeWidth={1.75} />
@@ -77,9 +52,7 @@ export default function SettingsPage() {
                   </>
                 ) : (
                   <>
-                    <p className="font-body text-sm font-semibold text-ink">
-                      Your profile
-                    </p>
+                    <p className="font-body text-sm font-semibold text-ink">Your profile</p>
                     <p className="font-body text-xs text-ink-muted mt-0.5">
                       Complete onboarding to personalise your experience
                     </p>
@@ -103,7 +76,6 @@ export default function SettingsPage() {
               )}
             </div>
 
-            {/* Calorie target row */}
             <SettingsRow
               icon={<Target size={16} strokeWidth={1.75} className="text-ink-muted" />}
               label="Daily calorie target"
@@ -122,11 +94,11 @@ export default function SettingsPage() {
           </div>
         </motion.div>
 
-        {/* ══ Section 2: About ══════════════════════════════════ */}
+        {/* ══ About ════════════════════════════════════════════ */}
         <motion.div variants={staggerItem} className="space-y-2">
           <SectionLabel>About Calmorie</SectionLabel>
 
-          <div className="bg-surface rounded-xl shadow-card p-4 space-y-3">
+          <div className="bg-surface rounded-xl shadow-card p-4 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shrink-0" aria-hidden="true">
                 <Leaf className="w-5 h-5 text-white" strokeWidth={2.25} />
@@ -137,96 +109,96 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <hr className="border-border" />
-
             <p className="font-body text-sm text-ink-secondary leading-relaxed">
-              Calmorie is a free, science-informed app that helps you understand
-              calories, metabolism, sleep, and the habits that quietly shape
-              your weight — without rigid diets, guilt, or pressure.
+              Calmorie is a free educational app that helps you understand how calories,
+              metabolism, sleep, and daily habits connect to your weight — using
+              science-backed explanations rather than rules or restriction.
             </p>
 
-            <div className="flex flex-col gap-1.5 pt-0.5">
-              <InfoRow icon={<Info size={14} />} label="No ads, no subscriptions, no data selling" />
-              <InfoRow icon={<Shield size={14} />} label="All your data stays on your device" />
+            <div className="flex flex-col gap-2 pt-0.5 border-t border-border">
+              <InfoRow icon={<Info size={14} />}   label="No ads, no subscriptions, no data selling" />
+              <InfoRow icon={<Shield size={14} />} label="Everything you log stays on this device — nothing is sent to a server" />
             </div>
           </div>
         </motion.div>
 
-        {/* ══ Section 3: Support ════════════════════════════════ */}
+        {/* ══ Support ══════════════════════════════════════════ */}
         <motion.div variants={staggerItem} className="space-y-2" id="support">
           <SectionLabel>Support the project</SectionLabel>
 
-          <div className={cn('bg-surface rounded-xl shadow-card p-4 space-y-3', 'border border-border')}>
-            <div className="flex items-start gap-3">
-              <div className="w-9 h-9 rounded-full bg-rose-50 flex items-center justify-center shrink-0 mt-0.5" aria-hidden="true">
+          <div className="bg-surface rounded-xl shadow-card overflow-hidden">
+            {/* Warm header band */}
+            <div className="bg-rose-50 border-b border-rose-100 px-4 py-4 flex items-start gap-3">
+              <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm" aria-hidden="true">
                 <Heart className="w-4 h-4 text-rose-500" strokeWidth={2} />
               </div>
               <div className="min-w-0">
-                <p className="font-body text-sm font-semibold text-ink leading-snug">
+                <p className="font-body text-sm font-semibold text-rose-900 leading-snug">
                   Calmorie is free
                 </p>
-                <p className="font-body text-xs text-ink-secondary leading-relaxed mt-1">
+                <p className="font-body text-xs text-rose-700/80 leading-relaxed mt-1">
                   If it&rsquo;s helped you build better habits, a small contribution
                   keeps development going and the app ad-free.
                 </p>
               </div>
             </div>
 
-            <a
-              href="https://www.paypal.com/donate/?hosted_button_id=5M7R79QNBEJE2"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                'w-full flex items-center justify-center gap-2',
-                'h-10 rounded-full',
-                'bg-primary text-ink-on-primary',
-                'font-body text-sm font-semibold',
-                'hover:bg-primary-dark active:scale-[0.97]',
-                'transition-all duration-fast ease-smooth',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
-              )}
-              aria-label="Support Calmorie via PayPal (opens in new tab)"
-            >
-              <Heart size={15} strokeWidth={2} aria-hidden="true" />
-              Support Calmorie
-              <ExternalLink size={13} strokeWidth={2} className="opacity-70" aria-hidden="true" />
-            </a>
+            {/* Donate button */}
+            <div className="px-4 py-4">
+              <a
+                href="https://www.paypal.com/donate/?hosted_button_id=5M7R79QNBEJE2"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  'w-full flex items-center justify-center gap-2',
+                  'h-11 rounded-full',
+                  'bg-primary text-ink-on-primary',
+                  'font-body text-sm font-semibold',
+                  'shadow-sm hover:bg-primary-dark hover:shadow-md',
+                  'active:scale-[0.97]',
+                  'transition-all duration-fast ease-smooth',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
+                )}
+                aria-label="Support Calmorie via PayPal (opens in new tab)"
+              >
+                <Heart size={15} strokeWidth={2} aria-hidden="true" />
+                Support Calmorie
+                <ExternalLink size={13} strokeWidth={2} className="opacity-70" aria-hidden="true" />
+              </a>
+            </div>
           </div>
         </motion.div>
 
-        {/* ══ Section 4: Disclaimer ═════════════════════════════ */}
+        {/* ══ Disclaimer ═══════════════════════════════════════ */}
         <motion.div variants={staggerItem} className="space-y-2">
-          <SectionLabel>Disclaimer</SectionLabel>
+          <SectionLabel>Health note</SectionLabel>
 
           <div
-            className={cn('bg-surface-raised rounded-xl p-4 space-y-2', 'border border-border')}
+            className="bg-surface-raised rounded-xl p-4 space-y-3 border border-border"
             role="note"
-            aria-label="Medical disclaimer"
+            aria-label="Health and science note"
           >
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-ink-muted shrink-0" strokeWidth={1.75} aria-hidden="true" />
               <p className="font-body text-xs font-semibold text-ink-muted uppercase tracking-wide">
-                Medical disclaimer
+                Health note
               </p>
             </div>
             <p className="font-body text-sm text-ink-secondary leading-relaxed">
-              This app provides educational information about nutrition and
-              health habits. It is not intended to replace professional medical
-              advice, diagnosis, or treatment.
+              Calmorie provides general information for educational purposes. It is not
+              medical advice, and nothing here should replace a conversation with your
+              doctor or a registered dietitian — especially if you have a health condition
+              that affects your nutrition or weight.
             </p>
-            <p className="font-body text-sm text-ink-secondary leading-relaxed">
-              Always seek the advice of a qualified healthcare provider with any
-              questions about a medical condition or before starting a new diet
-              or exercise programme.
-            </p>
-            <p className="font-body text-xs text-ink-muted leading-relaxed pt-1">
-              Calorie targets are estimates based on general population
-              formulas and should not be treated as clinical guidance.
+            <p className="font-body text-xs text-ink-muted leading-relaxed border-t border-border pt-2">
+              Calorie estimates use standard population formulas (Mifflin-St Jeor).
+              Individual needs vary, so treat your target as a starting point, not a
+              precise prescription.
             </p>
           </div>
         </motion.div>
 
-        {/* ── Footer ───────────────────────────────────────────── */}
+        {/* Footer */}
         <motion.p
           variants={staggerItem}
           className="font-body text-xs text-ink-muted text-center pb-2"
@@ -251,7 +223,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 function InfoRow({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-2 text-ink-muted">
+    <div className="flex items-center gap-2 text-ink-muted pt-2">
       <span className="shrink-0" aria-hidden="true">{icon}</span>
       <span className="font-body text-xs leading-snug">{label}</span>
     </div>
@@ -259,12 +231,12 @@ function InfoRow({ icon, label }: { icon: React.ReactNode; label: string }) {
 }
 
 interface SettingsRowProps {
-  icon: React.ReactNode
-  label: string
-  value?: string
-  hint?: string
+  icon:      React.ReactNode
+  label:     string
+  value?:    string
+  hint?:     string
   disabled?: boolean
-  onClick?: () => void
+  onClick?:  () => void
 }
 
 function SettingsRow({ icon, label, value, hint, disabled, onClick }: SettingsRowProps) {
@@ -273,13 +245,9 @@ function SettingsRow({ icon, label, value, hint, disabled, onClick }: SettingsRo
       <span className="shrink-0" aria-hidden="true">{icon}</span>
       <div className="flex-1 min-w-0">
         <p className="font-body text-sm text-ink">{label}</p>
-        {hint && (
-          <p className="font-body text-xs text-ink-muted mt-0.5">{hint}</p>
-        )}
+        {hint && <p className="font-body text-xs text-ink-muted mt-0.5">{hint}</p>}
       </div>
-      {value && (
-        <span className="font-body text-sm text-ink-muted shrink-0">{value}</span>
-      )}
+      {value && <span className="font-body text-sm text-ink-muted shrink-0">{value}</span>}
       {!disabled && (
         <ChevronRight className="w-4 h-4 text-ink-muted shrink-0" strokeWidth={2} aria-hidden="true" />
       )}
@@ -293,8 +261,7 @@ function SettingsRow({ icon, label, value, hint, disabled, onClick }: SettingsRo
       type="button"
       onClick={onClick}
       className={cn(
-        'w-full text-left',
-        'hover:bg-surface-raised transition-colors duration-fast',
+        'w-full text-left hover:bg-surface-raised transition-colors duration-fast',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-focus',
       )}
     >

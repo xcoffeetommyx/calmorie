@@ -59,10 +59,10 @@ export default function LearnPage() {
           {/* ── Page header ─────────────────────────────────── */}
           <motion.div variants={staggerItem} className="space-y-1">
             <h2 className="font-display text-xl font-semibold text-ink tracking-tight">
-              Science-backed lessons
+              Learn how your body works
             </h2>
             <p className="font-body text-sm text-ink-secondary leading-relaxed">
-              Short reads on how your body and habits actually work.
+              Short, evidence-based reads on calories, metabolism, sleep, and habits.
             </p>
           </motion.div>
 
@@ -82,8 +82,8 @@ export default function LearnPage() {
               aria-hidden="true"
             />
             <p className="font-body text-xs text-primary-text leading-relaxed">
-              Every lesson references published research. Tap{' '}
-              <strong>Sources</strong> while reading to see the references.
+              Each lesson is written from published research. Tap{' '}
+              <strong>Sources</strong> while reading to see exactly where the information comes from.
             </p>
           </motion.div>
 

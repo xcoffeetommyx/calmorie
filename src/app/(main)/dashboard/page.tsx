@@ -1,19 +1,10 @@
 'use client'
 
 /**
- * Dashboard page
+ * Dashboard page — first impression of the app.
  *
- * The home screen. All data is live from stores.
- *
- * Onboarding gate:
- *   If the user profile is not yet set up, render OnboardingFlow directly
- *   instead of the dashboard. No router.replace(), no useEffect — just
- *   conditional rendering based on hydrated store state.
- *
- * States:
- *   1. Store not yet hydrated → skeleton (same loading screen as before)
- *   2. Hydrated, not onboarded → OnboardingFlow renders in place
- *   3. Hydrated, onboarded → dashboard renders normally
+ * Onboarding gate: if profile is not set up, renders OnboardingFlow directly.
+ * Loading state: shows a skeleton until both stores have hydrated.
  */
 
 import { useRouter } from 'next/navigation'
@@ -24,18 +15,18 @@ import { cn } from '@/lib/utils/cn'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { getTimeGreeting, formatDateDisplay, todayISO } from '@/lib/utils/date'
 
-import { CalorieRing } from '@/components/dashboard/CalorieRing'
-import { DailyBurnCard, type BurnSuggestion } from '@/components/dashboard/DailyBurnCard'
-import { MealSummaryCard } from '@/components/dashboard/MealSummaryCard'
-import { LessonOfTheDay } from '@/components/dashboard/LessonOfTheDay'
-import { HabitAlertBanner } from '@/components/dashboard/HabitAlertBanner'
-import { CheckInCTA } from '@/components/dashboard/CheckInCTA'
-import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow'
+import { CalorieRing }                          from '@/components/dashboard/CalorieRing'
+import { DailyBurnCard, type BurnSuggestion }   from '@/components/dashboard/DailyBurnCard'
+import { MealSummaryCard }                      from '@/components/dashboard/MealSummaryCard'
+import { LessonOfTheDay }                       from '@/components/dashboard/LessonOfTheDay'
+import { HabitAlertBanner }                     from '@/components/dashboard/HabitAlertBanner'
+import { CheckInCTA }                           from '@/components/dashboard/CheckInCTA'
+import { OnboardingFlow }                       from '@/components/onboarding/OnboardingFlow'
 
-import { useCalorieTarget } from '@/hooks/useCalorieTarget'
-import { useLessons } from '@/hooks/useLessons'
-import { useTodayLog } from '@/hooks/useTodayLog'
-import { useHabitAlerts } from '@/hooks/useHabitAlerts'
+import { useCalorieTarget }                     from '@/hooks/useCalorieTarget'
+import { useLessons }                           from '@/hooks/useLessons'
+import { useTodayLog }                          from '@/hooks/useTodayLog'
+import { useHabitAlerts }                       from '@/hooks/useHabitAlerts'
 import { useCheckinStore, selectIsCompletedToday } from '@/stores/checkinStore'
 
 const FALLBACK_TARGET = 2000
@@ -47,23 +38,29 @@ const BURN_SUGGESTION: BurnSuggestion = {
   tip:           'A short walk after meals can be an easy way to add daily movement and support your energy levels.',
 }
 
+// ── Skeleton ──────────────────────────────────────────────────────────────
+
 function DashboardSkeleton() {
   return (
-    <div className="page-container py-5 space-y-4">
-      <div className="space-y-1.5">
-        <div className="h-3.5 w-24 bg-surface-raised rounded-full animate-pulse-soft" />
-        <div className="h-7 w-48 bg-surface-raised rounded-full animate-pulse-soft" />
+    <div className="page-container py-6 space-y-4">
+      {/* Greeting */}
+      <div className="space-y-2">
+        <div className="h-3 w-20 bg-surface-raised rounded-full animate-pulse-soft" />
+        <div className="h-7 w-52 bg-surface-raised rounded-full animate-pulse-soft" />
       </div>
-      {[1, 2, 3, 4].map((i) => (
-        <div
-          key={i}
-          className="h-24 bg-surface-raised rounded-2xl animate-pulse-soft"
-          style={{ animationDelay: `${i * 80}ms` }}
-        />
-      ))}
+      {/* Cards */}
+      <div className="h-56 bg-surface-raised rounded-2xl animate-pulse-soft" style={{ animationDelay: '80ms' }} />
+      <div className="h-16 bg-surface-raised rounded-2xl animate-pulse-soft" style={{ animationDelay: '140ms' }} />
+      <div className="h-16 bg-surface-raised rounded-2xl animate-pulse-soft" style={{ animationDelay: '200ms' }} />
+      <div className="grid grid-cols-2 gap-3">
+        <div className="h-40 bg-surface-raised rounded-xl animate-pulse-soft" style={{ animationDelay: '260ms' }} />
+        <div className="h-40 bg-surface-raised rounded-xl animate-pulse-soft" style={{ animationDelay: '320ms' }} />
+      </div>
     </div>
   )
 }
+
+// ── Page ──────────────────────────────────────────────────────────────────
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -75,15 +72,10 @@ export default function DashboardPage() {
   const isCheckedIn    = useCheckinStore(selectIsCompletedToday)
   const { topWarning } = useHabitAlerts()
   const { lessonOfTheDay } = useLessons()
+
   const greeting  = getTimeGreeting()
   const dateLabel = formatDateDisplay(todayISO())
-
-  const isReady = profileHydrated && logHydrated
-
-  // ── Onboarding gate ───────────────────────────────────────────────────────
-  // While hydrating, show skeleton (we don't know onboarding state yet).
-  // Once hydrated: if profile is missing, render onboarding in place.
-  // No router calls — pure conditional render, no loop risk.
+  const isReady   = profileHydrated && logHydrated
 
   if (!isReady) {
     return (
@@ -95,77 +87,69 @@ export default function DashboardPage() {
   }
 
   if (!isOnboarded) {
-    return (
-      <OnboardingFlow
-        onComplete={() => router.replace('/dashboard')}
-      />
-    )
+    return <OnboardingFlow onComplete={() => router.replace('/dashboard')} />
   }
-
-  // ── Dashboard ─────────────────────────────────────────────────────────────
 
   return (
     <div className="flex flex-col min-h-full bg-background">
       <DashboardHeader />
 
       <motion.div
-        className="page-container py-5 space-y-4"
+        className="page-container py-6 space-y-4 pb-safe-nav"
         variants={staggerContainer}
         initial="initial"
         animate="enter"
       >
-        <motion.div variants={staggerItem} className="space-y-0.5">
-          <p className="font-body text-sm text-ink-muted">{dateLabel}</p>
+        {/* ── Greeting ─────────────────────────────────────── */}
+        <motion.div variants={staggerItem} className="space-y-0.5 pb-1">
+          <p className="font-body text-xs text-ink-muted tracking-wide">{dateLabel}</p>
           <h1 className="font-display text-2xl font-semibold text-ink tracking-tight">
             {greeting}, {displayName} 👋
           </h1>
         </motion.div>
 
+        {/* ── Calorie ring — hero ───────────────────────────── */}
         <motion.div variants={staggerItem}>
-          <CalorieRing
-            caloriesEaten={caloriesEaten}
-            calorieTarget={calorieTarget}
-          />
+          <CalorieRing caloriesEaten={caloriesEaten} calorieTarget={calorieTarget} />
         </motion.div>
 
+        {/* ── Habit alert — only when present ──────────────── */}
         {topWarning && (
           <motion.div variants={staggerItem}>
             <HabitAlertBanner alert={topWarning} />
           </motion.div>
         )}
 
+        {/* ── Check-in CTA ──────────────────────────────────── */}
         <motion.div variants={staggerItem}>
           <CheckInCTA isCompleted={isCheckedIn} />
         </motion.div>
 
+        {/* ── Two-card row: lesson + burn ───────────────────── */}
         <motion.div variants={staggerItem} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <LessonOfTheDay lesson={lessonOfTheDay} />
           <DailyBurnCard suggestion={BURN_SUGGESTION} />
         </motion.div>
 
+        {/* ── Meal summary ──────────────────────────────────── */}
         <motion.div variants={staggerItem}>
-          <MealSummaryCard
-            entries={todayEntries}
-            calorieTarget={calorieTarget}
-          />
+          <MealSummaryCard entries={todayEntries} calorieTarget={calorieTarget} />
         </motion.div>
 
-        <div className="h-2" aria-hidden="true" />
+        <div className="h-1" aria-hidden="true" />
       </motion.div>
     </div>
   )
 }
 
-// ── Shared header sub-component ───────────────────────────────────────────
-// Extracted so it can be shown during the skeleton state too.
+// ── Header (shown during skeleton too) ────────────────────────────────────
 
 function DashboardHeader() {
   return (
     <header
       className={cn(
         'sticky top-0 z-[200]',
-        'h-[var(--top-bar-height)]',
-        'pt-[env(safe-area-inset-top,0px)]',
+        'h-[var(--top-bar-height)] pt-[env(safe-area-inset-top,0px)]',
         'bg-background/90 backdrop-blur-ios border-b border-border',
         'flex items-center justify-between px-5',
       )}

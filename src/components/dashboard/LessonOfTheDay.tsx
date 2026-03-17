@@ -1,26 +1,8 @@
 'use client'
 
-/**
- * LessonOfTheDay
- *
- * Displays the lesson of the day using real data from the content loader.
- * Shows category badge, title, summary, read-time, and a source-backed
- * trust cue ("X cited sources") before linking to the lesson reader.
- *
- * The lesson is chosen by getLessonOfTheDay() in lib/content/lessons.ts:
- *   1. First incomplete lesson (once lessonStore exists — Phase 6)
- *   2. Day-based rotation as fallback
- *
- * Phase 6: pass real progressMap from lessonStore so the function returns
- * the first genuinely unread lesson rather than always using rotation.
- *
- * Props:
- *   lesson — a Lesson object from the content loader
- */
-
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Clock, BookMarked, ChevronRight } from 'lucide-react'
+import { Clock, BookMarked, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { slideUp } from '@/lib/animations/variants'
 import { type Lesson, LESSON_CATEGORY_LABELS, LESSON_CATEGORY_COLORS } from '@/types/lesson'
@@ -39,33 +21,23 @@ export function LessonOfTheDay({ lesson, className }: LessonOfTheDayProps) {
       <Link
         href={`/learn/${lesson.slug}`}
         className={cn(
-          'block bg-surface rounded-xl shadow-card',
-          'px-4 py-4 space-y-3',
+          'flex flex-col gap-3',
+          'bg-surface rounded-xl shadow-card px-4 py-4',
           'transition-all duration-normal ease-smooth',
           'hover:shadow-card-hover hover:-translate-y-px active:scale-[0.99]',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
         )}
         aria-label={`Today's lesson: ${lesson.title}`}
       >
-        {/* ── Top row: category badge + chevron ──────────────── */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            {/* Eyebrow label */}
-            <span className="font-body text-[10px] font-semibold text-ink-muted uppercase tracking-wider">
-              Lesson of the day
-            </span>
-          </div>
-          <ChevronRight
-            className="w-4 h-4 text-ink-muted opacity-0 group-hover:opacity-100 transition-opacity duration-fast shrink-0"
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-        </div>
+        {/* Eyebrow */}
+        <p className="font-body text-[11px] font-semibold text-ink-muted uppercase tracking-wider">
+          Lesson of the day
+        </p>
 
-        {/* ── Category badge ───────────────────────────────────── */}
+        {/* Category badge */}
         <span
           className={cn(
-            'inline-flex items-center',
+            'self-start inline-flex items-center',
             'px-2.5 py-1 rounded-full',
             'font-body text-[11px] font-semibold',
             categoryColors.bg,
@@ -75,28 +47,33 @@ export function LessonOfTheDay({ lesson, className }: LessonOfTheDayProps) {
           {categoryLabel}
         </span>
 
-        {/* ── Title + summary ──────────────────────────────────── */}
-        <div className="space-y-1.5">
-          <h3 className="font-display text-base font-semibold text-ink leading-snug tracking-tight">
-            {lesson.title}
-          </h3>
-          <p className="font-body text-sm text-ink-secondary leading-relaxed line-clamp-2">
-            {lesson.summary}
-          </p>
-        </div>
+        {/* Title */}
+        <h3 className="font-display text-base font-semibold text-ink leading-snug tracking-tight">
+          {lesson.title}
+        </h3>
 
-        {/* ── Footer meta ──────────────────────────────────────── */}
-        <div className="flex items-center gap-4 pt-0.5">
-          <span className="flex items-center gap-1.5 font-body text-xs text-ink-muted">
-            <Clock className="w-3.5 h-3.5 shrink-0" strokeWidth={2} aria-hidden="true" />
-            {lesson.readTimeMinutes} min read
-          </span>
+        {/* Summary */}
+        <p className="font-body text-xs text-ink-secondary leading-relaxed line-clamp-2">
+          {lesson.summary}
+        </p>
 
-          {/* Trust cue — source count */}
-          <span className="flex items-center gap-1.5 font-body text-xs text-ink-muted">
-            <BookMarked className="w-3.5 h-3.5 shrink-0" strokeWidth={2} aria-hidden="true" />
-            {lesson.sources.length} {lesson.sources.length === 1 ? 'source' : 'sources'}
-          </span>
+        {/* Footer: meta + arrow */}
+        <div className="flex items-center justify-between gap-2 pt-0.5">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1 font-body text-xs text-ink-muted">
+              <Clock className="w-3 h-3 shrink-0" strokeWidth={2} aria-hidden="true" />
+              {lesson.readTimeMinutes} min
+            </span>
+            <span className="flex items-center gap-1 font-body text-xs text-ink-muted">
+              <BookMarked className="w-3 h-3 shrink-0" strokeWidth={2} aria-hidden="true" />
+              {lesson.sources.length} {lesson.sources.length === 1 ? 'source' : 'sources'}
+            </span>
+          </div>
+          <ArrowRight
+            className="w-3.5 h-3.5 text-primary shrink-0 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-fast"
+            strokeWidth={2}
+            aria-hidden="true"
+          />
         </div>
       </Link>
     </motion.div>

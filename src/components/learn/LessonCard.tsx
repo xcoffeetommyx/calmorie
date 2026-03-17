@@ -1,26 +1,8 @@
 'use client'
 
-/**
- * LessonCard
- *
- * Library card linking to a lesson reader page.
- * Shows category badge, title, summary, read-time, and a source-count
- * trust cue ("X cited sources").
- *
- * The card is fully interactive — the whole surface links to the lesson.
- *
- * Phase 7: add progress state (completed checkmark, "continue" label)
- * once lessonStore is wired.
- *
- * Props:
- *   lesson    — the full Lesson object from getAllLessons()
- *   progress  — optional LessonProgress (null until store is wired)
- *   className
- */
-
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Clock, BookMarked, ChevronRight, CheckCircle2 } from 'lucide-react'
+import { Clock, BookMarked, CheckCircle2, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { slideUp } from '@/lib/animations/variants'
 import {
@@ -31,7 +13,7 @@ import {
 } from '@/types/lesson'
 
 interface LessonCardProps {
-  lesson: Lesson
+  lesson:    Lesson
   progress?: LessonProgress | null
   className?: string
 }
@@ -39,7 +21,10 @@ interface LessonCardProps {
 export function LessonCard({ lesson, progress, className }: LessonCardProps) {
   const categoryLabel  = LESSON_CATEGORY_LABELS[lesson.category]
   const categoryColors = LESSON_CATEGORY_COLORS[lesson.category]
-  const isCompleted    = progress?.completed === true
+
+  const isCompleted  = progress?.completed === true
+  // In-progress: has a progress record, not yet completed, beyond step 0
+  const isInProgress = !!progress && !progress.completed && progress.lastStepIndex > 0
 
   return (
     <motion.div variants={slideUp} className={cn('group', className)}>
@@ -49,37 +34,35 @@ export function LessonCard({ lesson, progress, className }: LessonCardProps) {
           'flex flex-col gap-3',
           'bg-surface rounded-xl shadow-card p-4',
           'transition-all duration-normal ease-smooth',
-          'hover:shadow-card-hover hover:-translate-y-px',
-          'active:scale-[0.99]',
+          'hover:shadow-card-hover hover:-translate-y-px active:scale-[0.99]',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
           'relative overflow-hidden',
-          className,
+          // Faint completed overlay
+          isCompleted && 'opacity-80',
         )}
-        aria-label={`Read lesson: ${lesson.title}`}
+        aria-label={
+          isCompleted
+            ? `${lesson.title} — completed`
+            : isInProgress
+              ? `${lesson.title} — continue reading`
+              : `Read lesson: ${lesson.title}`
+        }
       >
-        {/* ── Top row: badge + status + chevron ────────────── */}
+        {/* Top row: category badge + status */}
         <div className="flex items-center justify-between gap-2">
           <span
             className={cn(
-              'inline-flex items-center gap-1.5',
+              'inline-flex items-center',
               'px-2.5 py-1 rounded-full',
               'font-body text-[11px] font-semibold',
               categoryColors.bg,
               categoryColors.text,
             )}
           >
-            <span
-              className={cn(
-                'w-1.5 h-1.5 rounded-full shrink-0',
-                categoryColors.text.replace('text-', 'bg-'),
-              )}
-              aria-hidden="true"
-            />
             {categoryLabel}
           </span>
 
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Completion indicator — shown when progress store is wired */}
+          <div className="flex items-center gap-1.5 shrink-0">
             {isCompleted && (
               <CheckCircle2
                 className="w-4 h-4 text-success"
@@ -88,14 +71,14 @@ export function LessonCard({ lesson, progress, className }: LessonCardProps) {
               />
             )}
             <ChevronRight
-              className="w-4 h-4 text-ink-muted opacity-0 group-hover:opacity-100 transition-opacity duration-fast"
+              className="w-4 h-4 text-ink-muted opacity-0 group-hover:opacity-60 transition-opacity duration-fast"
               strokeWidth={2}
               aria-hidden="true"
             />
           </div>
         </div>
 
-        {/* ── Content ───────────────────────────────────────── */}
+        {/* Title + summary */}
         <div className="space-y-1.5">
           <h3 className="font-display text-base font-semibold text-ink leading-snug tracking-tight">
             {lesson.title}
@@ -105,21 +88,27 @@ export function LessonCard({ lesson, progress, className }: LessonCardProps) {
           </p>
         </div>
 
-        {/* ── Footer meta ───────────────────────────────────── */}
-        <div className="flex items-center gap-4 pt-0.5">
-          <span className="flex items-center gap-1.5 font-body text-xs text-ink-muted">
+        {/* Footer meta */}
+        <div className="flex items-center gap-3 pt-0.5">
+          <span className="flex items-center gap-1 font-body text-xs text-ink-muted">
             <Clock className="w-3 h-3 shrink-0" strokeWidth={2} aria-hidden="true" />
             {lesson.readTimeMinutes} min
           </span>
-          <span className="flex items-center gap-1.5 font-body text-xs text-ink-muted">
+          <span className="flex items-center gap-1 font-body text-xs text-ink-muted">
             <BookMarked className="w-3 h-3 shrink-0" strokeWidth={2} aria-hidden="true" />
             {lesson.sources.length} {lesson.sources.length === 1 ? 'source' : 'sources'}
           </span>
-          {isCompleted && (
+
+          {/* Progress / completion label */}
+          {isCompleted ? (
             <span className="font-body text-xs text-success font-medium ml-auto">
               Completed
             </span>
-          )}
+          ) : isInProgress ? (
+            <span className="font-body text-xs text-primary font-medium ml-auto">
+              Continue
+            </span>
+          ) : null}
         </div>
       </Link>
     </motion.div>

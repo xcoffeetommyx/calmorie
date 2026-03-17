@@ -80,7 +80,7 @@ export function SourcesDrawer({ isOpen, sources, onClose }: SourcesDrawerProps) 
                   Sources
                 </h2>
                 <p className="font-body text-xs text-ink-muted mt-0.5">
-                  {sources.length} {sources.length === 1 ? 'reference' : 'references'} cited in this lesson
+                  {sources.length} {sources.length === 1 ? 'source' : 'sources'} this lesson draws from
                 </p>
               </div>
               <button
@@ -159,7 +159,7 @@ export function SourcesDrawer({ isOpen, sources, onClose }: SourcesDrawerProps) 
               {/* Footer note */}
               <div className="px-5 pb-5 pt-1">
                 <p className="font-body text-[11px] text-ink-muted text-center leading-relaxed">
-                  Links open external sites. Calmorie is not affiliated with any of these sources.
+                  These are the original research sources this lesson is based on. Calmorie is an independent app and is not affiliated with any of these organisations.
                 </p>
               </div>
             </div>

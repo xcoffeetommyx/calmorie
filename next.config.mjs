@@ -1,12 +1,42 @@
+import withPWAInit from '@ducanh2912/next-pwa'
+
 /** @type {import('next').NextConfig} */
 
-const repo = "calmorie"
+const repo = 'calmorie'
+
+// Service worker scope must match the GitHub Pages basePath so the SW
+// controls all pages under /calmorie/.
+const withPWA = withPWAInit({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  cacheOnFrontEndNav: true,
+  reloadOnOnline: true,
+  workboxOptions: {
+    disableDevLogs: true,
+    scope: `/${repo}/`,
+    runtimeCaching: [
+      {
+        urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'google-fonts',
+          expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+        },
+      },
+      {
+        urlPattern: /\.(?:json)$/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'static-data',
+          expiration: { maxEntries: 64, maxAgeSeconds: 60 * 60 * 24 * 7 },
+        },
+      },
+    ],
+  },
+})
 
 const nextConfig = {
-  output: "export",
-  // trailingSlash ensures GitHub Pages can serve sub-routes without a server.
-  // Without it, navigating directly to /calmorie/dashboard returns a 404
-  // because GitHub Pages looks for dashboard.html, not dashboard/index.html.
+  output: 'export',
   trailingSlash: true,
   basePath: `/${repo}`,
   assetPrefix: `/${repo}/`,
@@ -15,4 +45,4 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+export default withPWA(nextConfig)

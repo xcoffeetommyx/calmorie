@@ -34,6 +34,7 @@
 import { type ReactNode } from 'react'
 import { cn } from '@/lib/utils/cn'
 import { BottomNav } from './BottomNav'
+import { InstallPrompt } from '@/components/pwa/InstallPrompt'
 import { SideNav } from './SideNav'
 
 interface AppShellProps {
@@ -65,6 +66,9 @@ export function AppShell({ children, className }: AppShellProps) {
 
       {/* Mobile bottom nav — renders itself as fixed; hidden on desktop */}
       <BottomNav />
+
+      {/* PWA install prompt — non-intrusive, shown once per device */}
+      <InstallPrompt />
     </div>
   )
 }

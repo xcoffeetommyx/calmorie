@@ -1,19 +1,8 @@
 'use client'
 
-/**
- * MealSummaryCard
- *
- * Shows a compact summary of today's logged meals, grouped by meal type.
- * Each section shows item count, total kcal, and a micro progress bar
- * proportional to that meal's contribution to the daily total.
- *
- * Phase 4: replace `entries` prop with live data from useTodayLog().
- * The component itself stays the same — only the data source changes.
- */
-
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Plus } from 'lucide-react'
+import { Plus, UtensilsCrossed } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { formatCalories } from '@/lib/utils/format'
@@ -31,12 +20,7 @@ interface MealSummaryCardProps {
   className?: string
 }
 
-export function MealSummaryCard({
-  entries,
-  calorieTarget,
-  className,
-}: MealSummaryCardProps) {
-  // Group entries by meal type
+export function MealSummaryCard({ entries, calorieTarget, className }: MealSummaryCardProps) {
   const byMeal = MEAL_TYPE_ORDER.reduce<Record<MealType, FoodEntry[]>>(
     (acc, meal) => {
       acc[meal] = entries.filter((e) => e.meal === meal)
@@ -50,7 +34,7 @@ export function MealSummaryCard({
 
   return (
     <div className={cn('bg-surface rounded-xl shadow-card overflow-hidden', className)}>
-      {/* ── Card header ──────────────────────────────────────── */}
+      {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <div>
           <p className="font-body text-sm font-semibold text-ink">Today&rsquo;s meals</p>
@@ -63,8 +47,9 @@ export function MealSummaryCard({
         <Link
           href="/log"
           className={cn(
-            'flex items-center gap-1 font-body text-xs font-semibold',
-            'text-primary hover:text-primary-dark transition-colors duration-fast',
+            'flex items-center gap-1',
+            'font-body text-xs font-semibold text-primary',
+            'hover:text-primary-dark transition-colors duration-fast',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus rounded-sm',
           )}
           aria-label="Open food log"
@@ -74,7 +59,6 @@ export function MealSummaryCard({
         </Link>
       </div>
 
-      {/* ── Meal rows ─────────────────────────────────────────── */}
       {hasEntries ? (
         <motion.div
           variants={staggerContainer}
@@ -89,12 +73,7 @@ export function MealSummaryCard({
             const proportion = totalEaten > 0 ? mealTotal / totalEaten : 0
 
             return (
-              <motion.div
-                key={mealType}
-                variants={staggerItem}
-                className="px-4 py-3 space-y-2"
-              >
-                {/* Row header */}
+              <motion.div key={mealType} variants={staggerItem} className="px-4 py-3 space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-base select-none shrink-0" aria-hidden="true">
@@ -104,27 +83,27 @@ export function MealSummaryCard({
                       {MEAL_TYPE_LABELS[mealType]}
                     </span>
                   </div>
-                  <span className="font-body text-xs font-semibold text-ink shrink-0">
+                  <span className="font-body text-xs font-semibold text-ink shrink-0 tabular-nums">
                     {formatCalories(mealTotal)}
                   </span>
                 </div>
 
                 {/* Micro progress bar */}
                 <div
-                  className="h-1 bg-border rounded-full overflow-hidden"
+                  className="h-1.5 bg-border rounded-full overflow-hidden"
                   role="presentation"
                   aria-hidden="true"
                 >
                   <motion.div
-                    className="h-full bg-primary rounded-full"
+                    className="h-full bg-primary/70 rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${proportion * 100}%` }}
-                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+                    transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
                   />
                 </div>
 
                 {/* Item names */}
-                <p className="font-body text-[11px] text-ink-muted leading-relaxed">
+                <p className="font-body text-[11px] text-ink-muted leading-relaxed truncate">
                   {mealEntries.map((e) => e.name).join(' · ')}
                 </p>
               </motion.div>
@@ -132,20 +111,37 @@ export function MealSummaryCard({
           })}
         </motion.div>
       ) : (
-        /* Empty state */
-        <div className="px-4 py-5 flex flex-col items-center gap-2 text-center">
-          <span className="text-2xl select-none" aria-hidden="true">🍽️</span>
-          <p className="font-body text-sm text-ink-muted leading-relaxed">
-            No meals logged yet today.
-          </p>
+        /* Polished empty state */
+        <div className="px-4 py-7 flex flex-col items-center gap-3 text-center">
+          <div className="w-11 h-11 rounded-full bg-surface-raised flex items-center justify-center">
+            <UtensilsCrossed
+              className="w-5 h-5 text-ink-muted"
+              strokeWidth={1.75}
+              aria-hidden="true"
+            />
+          </div>
+          <div className="space-y-1">
+            <p className="font-body text-sm font-medium text-ink-secondary">
+              Nothing logged yet
+            </p>
+            <p className="font-body text-xs text-ink-muted leading-relaxed">
+              Tap below to start tracking your meals today.
+            </p>
+          </div>
           <Link
             href="/log"
             className={cn(
-              'font-body text-xs font-semibold text-primary',
-              'hover:underline underline-offset-2',
+              'inline-flex items-center gap-1.5',
+              'h-8 px-4 rounded-full',
+              'bg-primary-light text-primary',
+              'font-body text-xs font-semibold',
+              'hover:bg-primary-mid transition-colors duration-fast',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
             )}
+            aria-label="Go to food log"
           >
-            Log your first meal
+            <Plus size={13} strokeWidth={2.5} aria-hidden="true" />
+            Log first meal
           </Link>
         </div>
       )}
