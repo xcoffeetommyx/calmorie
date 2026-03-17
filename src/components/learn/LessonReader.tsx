@@ -242,7 +242,7 @@ export function LessonReader({ lesson }: LessonReaderProps) {
           </motion.div>
 
         ) : (
-          /* ── Lesson swiper ───────────────────────────────────────
+          {/* ── Lesson swiper ───────────────────────────────────────
            *
            * Explicit calc() height bypasses the flex chain.
            *
