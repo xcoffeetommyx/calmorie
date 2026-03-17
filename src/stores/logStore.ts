@@ -4,11 +4,17 @@
  * Zustand store for food log entries.
  *
  * Persistence: IndexedDB via db.foodEntries (Dexie).
- * The localStorage persist middleware has been replaced with explicit
- * IndexedDB write-through. IndexedDB can store far more data than
- * localStorage, so the 14-day pruning cap has been increased to 90 days.
  *
- * The public API (hooks, selectors) is unchanged.
+ * SELECTOR SAFETY NOTE:
+ * selectTodayEntries and selectRecentFoodNames previously returned newly
+ * allocated arrays on every call. Zustand re-renders the subscribing
+ * component whenever the selector return value changes — and since array
+ * equality in JS is by reference, a new [] !== [] on every render.
+ * This caused an infinite render loop (React production error #185).
+ *
+ * Fix: export ONLY primitive/stable selectors from this file.
+ * All derived array/object computations (filtering, grouping, deduplication)
+ * are done with useMemo inside the hooks/components that consume raw entries.
  */
 
 import { create } from 'zustand'
@@ -16,11 +22,6 @@ import { db, isDBOpen } from '@/lib/db'
 import { generateId, nowISO, todayISO, daysAgo } from '@/lib/utils/date'
 import type { FoodEntry, FoodEntryInput } from '@/types/food'
 
-// ── Constants ──────────────────────────────────────────────────────────────
-
-/** Days of history to keep in the in-memory Zustand state.
- *  IndexedDB retains all entries; this cap only affects what's loaded
- *  into memory on hydration. Older entries remain queryable from Dexie. */
 const MEMORY_HISTORY_DAYS = 90
 
 // ── Store shape ────────────────────────────────────────────────────────────
@@ -43,7 +44,6 @@ export const useLogStore = create<LogState>()((set, get) => ({
   isHydrated: false,
 
   hydrate: (entries) => {
-    // On hydration, only load entries within the memory window
     const recent = entries.filter((e) => daysAgo(e.date) <= MEMORY_HISTORY_DAYS)
     set({ entries: recent, isHydrated: true })
   },
@@ -58,15 +58,12 @@ export const useLogStore = create<LogState>()((set, get) => ({
       notes:    input.notes?.trim() || undefined,
       loggedAt: nowISO(),
     }
-
     set((state) => ({ entries: [...state.entries, newEntry] }))
-
     if (isDBOpen()) {
       db.foodEntries.put(newEntry).catch((err) =>
         console.warn('[logStore] addEntry write failed:', err)
       )
     }
-
     return newEntry
   },
 
@@ -93,28 +90,17 @@ export const useLogStore = create<LogState>()((set, get) => ({
   setHydrated: () => set({ isHydrated: true }),
 }))
 
-// ── Selectors ──────────────────────────────────────────────────────────────
+// ── Stable selectors (primitives / reference only) ────────────────────────
+// These selectors return stable scalar values or the direct state reference,
+// NOT newly-allocated arrays/objects. Safe to pass to useStore(selector).
 
-export const selectTodayEntries = (state: LogState): FoodEntry[] => {
-  const today = todayISO()
-  return state.entries.filter((e) => e.date === today)
-}
+/** Returns the raw entries array reference from the store */
+export const selectEntries = (state: LogState): FoodEntry[] => state.entries
 
-export const selectTodayTotal = (state: LogState): number =>
-  selectTodayEntries(state).reduce((sum, e) => sum + e.calories, 0)
+/** Returns whether the store has hydrated */
+export const selectLogHydrated = (state: LogState): boolean => state.isHydrated
 
-export const selectRecentFoodNames = (
-  state: LogState,
-  limit = 10
-): string[] => {
-  const seen   = new Set<string>()
-  const result: string[] = []
-  for (let i = state.entries.length - 1; i >= 0 && result.length < limit; i--) {
-    const name = state.entries[i].name
-    if (!seen.has(name)) {
-      seen.add(name)
-      result.push(name)
-    }
-  }
-  return result
-}
+// NOTE: selectTodayEntries and selectRecentFoodNames have been REMOVED.
+// They returned a new array instance on every call, which Zustand treats
+// as "state changed" and triggers a re-render — causing an infinite loop.
+// Derived values are now computed with useMemo in useTodayLog().

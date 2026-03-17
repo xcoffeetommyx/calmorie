@@ -3,34 +3,30 @@
 /**
  * Log page — /log
  *
- * The food log screen. Now fully wired to real state via useTodayLog().
- * Replaces the previous placeholder with a fully functional logging UI.
+ * The food log screen, fully wired to real state via useTodayLog().
  *
- * Features:
- *   – Calorie progress bar (consumed / target / remaining)
- *   – Quick-add chips from recent + common foods
- *   – Four meal sections with add/remove
- *   – FoodEntryForm bottom sheet (shared across all add triggers)
- *
- * State management:
- *   – All food data from useTodayLog() (reads logStore + useCalorieTarget)
- *   – Form open state and pre-fill values are local to this page
+ * recentNames is computed with useMemo from the raw entries array rather
+ * than via a selectRecentFoodNames selector. The old selector created a
+ * new string[] on every call, which caused an infinite render loop
+ * (React production error #185).
  */
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { formatDateDisplay, todayISO } from '@/lib/utils/date'
 import { useTodayLog } from '@/hooks/useTodayLog'
-import { useLogStore, selectRecentFoodNames } from '@/stores/logStore'
+import { useLogStore, selectEntries } from '@/stores/logStore'
 import { TopBar } from '@/components/layout/TopBar'
 import { CalorieTargetBar } from '@/components/log/CalorieTargetBar'
 import { RecentFoodsQuick } from '@/components/log/RecentFoodsQuick'
 import { FoodLogList } from '@/components/log/FoodLogList'
 import { FoodEntryForm } from '@/components/log/FoodEntryForm'
 import type { MealType, FoodEntryInput } from '@/types/food'
+
+const RECENT_NAMES_LIMIT = 10
 
 // ── Skeleton ──────────────────────────────────────────────────────────────
 
@@ -60,14 +56,27 @@ export default function LogPage() {
     isHydrated,
   } = useTodayLog()
 
-  const recentNames = useLogStore(selectRecentFoodNames)
+  // Read the raw entries reference (stable selector — no new allocation).
+  // Derive recent names with useMemo so it only recomputes when entries change.
+  const allEntries = useLogStore(selectEntries)
+  const recentNames = useMemo(() => {
+    const seen   = new Set<string>()
+    const result: string[] = []
+    for (let i = allEntries.length - 1; i >= 0 && result.length < RECENT_NAMES_LIMIT; i--) {
+      const name = allEntries[i].name
+      if (!seen.has(name)) {
+        seen.add(name)
+        result.push(name)
+      }
+    }
+    return result
+  }, [allEntries])
 
   // ── Form state ─────────────────────────────────────────────────────────
-  const [isFormOpen,    setIsFormOpen]    = useState(false)
-  const [activeMeal,    setActiveMeal]    = useState<MealType>('snack')
-  // Pre-fill values from quick-add chip taps
-  const [prefillName,   setPrefillName]   = useState('')
-  const [prefillCals,   setPrefillCals]   = useState<number | undefined>(undefined)
+  const [isFormOpen,  setIsFormOpen]  = useState(false)
+  const [activeMeal,  setActiveMeal]  = useState<MealType>('snack')
+  const [prefillName, setPrefillName] = useState('')
+  const [prefillCals, setPrefillCals] = useState<number | undefined>(undefined)
 
   function openForm(meal: MealType = 'snack', name = '', calories?: number) {
     setActiveMeal(meal)
@@ -78,7 +87,6 @@ export default function LogPage() {
 
   function handleAdd(input: FoodEntryInput) {
     addEntry(input)
-    // Keep sheet open for rapid logging; user closes manually
   }
 
   function handleQuickAdd({ name, calories }: { name: string; calories?: number }) {
@@ -121,14 +129,12 @@ export default function LogPage() {
         initial="initial"
         animate="enter"
       >
-        {/* ── Date header ─────────────────────────────────── */}
         <motion.div variants={staggerItem}>
           <p className="font-body text-sm text-ink-muted">
             {formatDateDisplay(todayISO())}
           </p>
         </motion.div>
 
-        {/* ── Calorie progress bar ─────────────────────────── */}
         <motion.div variants={staggerItem}>
           <CalorieTargetBar
             totalCalories={totalCalories}
@@ -136,7 +142,6 @@ export default function LogPage() {
           />
         </motion.div>
 
-        {/* ── Quick-add chips ──────────────────────────────── */}
         <motion.div variants={staggerItem}>
           <RecentFoodsQuick
             recentNames={recentNames}
@@ -144,7 +149,6 @@ export default function LogPage() {
           />
         </motion.div>
 
-        {/* ── Meal sections ────────────────────────────────── */}
         <motion.div variants={staggerItem}>
           <p className="font-body text-[11px] font-semibold text-ink-muted uppercase tracking-wider mb-3 px-0.5">
             Today&rsquo;s meals
@@ -156,7 +160,6 @@ export default function LogPage() {
           />
         </motion.div>
 
-        {/* ── Main add CTA ─────────────────────────────────── */}
         <motion.div variants={staggerItem}>
           <button
             onClick={() => openForm()}
@@ -175,11 +178,9 @@ export default function LogPage() {
           </button>
         </motion.div>
 
-        {/* Bottom spacer for nav */}
         <div className="h-2" aria-hidden="true" />
       </motion.div>
 
-      {/* ── Food entry form (bottom sheet) ────────────────── */}
       <FoodEntryForm
         isOpen={isFormOpen}
         initialMeal={activeMeal}

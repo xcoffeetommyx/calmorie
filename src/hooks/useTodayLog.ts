@@ -1,76 +1,77 @@
 /**
  * src/hooks/useTodayLog.ts
  *
- * Hook for reading today's food log data.
+ * Hook for reading today's food log data with safe derived values.
  *
- * Combines logStore entries with the calorie target from useCalorieTarget()
- * to produce a complete daily summary ready for display.
- *
- * Returns:
- *   entries         — all FoodEntry[] for today
- *   byMeal          — entries grouped by MealType
- *   totalCalories   — sum of all entries today
- *   calorieTarget   — daily target (from profile or fallback)
- *   remaining       — calorieTarget - totalCalories (can be negative)
- *   progressRatio   — 0–1 clamp of totalCalories / calorieTarget
- *   isHydrated      — true once both stores have loaded from localStorage
- *   addEntry        — proxy to logStore.addEntry
- *   removeEntry     — proxy to logStore.removeEntry
+ * Key design: all derived arrays/objects are computed with useMemo so
+ * they only produce new references when their inputs actually change,
+ * not on every render. Previously the derived values were computed
+ * inline (no memo), which meant new array references on every render,
+ * which Zustand treated as "state changed", triggering another render,
+ * causing an infinite loop (React production error #185).
  */
 
-import { useLogStore, selectTodayEntries } from '@/stores/logStore'
+import { useMemo } from 'react'
+import { useLogStore, selectEntries, selectLogHydrated } from '@/stores/logStore'
 import { useCalorieTarget } from '@/hooks/useCalorieTarget'
 import { clamp } from '@/lib/utils/format'
+import { todayISO } from '@/lib/utils/date'
 import type { FoodEntry, FoodEntryInput, MealType } from '@/types/food'
 import { MEAL_TYPE_ORDER } from '@/types/food'
 
-// ── Default fallback target when no profile exists ─────────────────────────
 const FALLBACK_TARGET = 2000
 
 export interface TodayLogResult {
-  /** All food entries logged today */
-  entries: FoodEntry[]
-  /** Entries grouped by meal type */
-  byMeal: Record<MealType, FoodEntry[]>
-  /** Total kcal logged today */
+  entries:       FoodEntry[]
+  byMeal:        Record<MealType, FoodEntry[]>
   totalCalories: number
-  /** Daily calorie target (from profile or fallback) */
   calorieTarget: number
-  /** kcal remaining until target (can be negative if over) */
-  remaining: number
-  /** 0–1 clamped ratio of consumed / target */
+  remaining:     number
   progressRatio: number
-  /** True when both stores have rehydrated from localStorage */
-  isHydrated: boolean
-  /** Add a new food entry for today */
-  addEntry: (input: FoodEntryInput) => FoodEntry
-  /** Remove an entry by id */
-  removeEntry: (id: string) => void
+  isHydrated:    boolean
+  addEntry:      (input: FoodEntryInput) => FoodEntry
+  removeEntry:   (id: string) => void
 }
 
 export function useTodayLog(): TodayLogResult {
-  // Log store
-  const entries       = useLogStore(selectTodayEntries)
-  const logHydrated   = useLogStore((s) => s.isHydrated)
-  const addEntry      = useLogStore((s) => s.addEntry)
-  const removeEntry   = useLogStore((s) => s.removeEntry)
+  // Read raw stable state — these selectors return primitives or the
+  // direct state reference, never newly-allocated arrays.
+  const allEntries  = useLogStore(selectEntries)
+  const logHydrated = useLogStore(selectLogHydrated)
+  const addEntry    = useLogStore((s) => s.addEntry)
+  const removeEntry = useLogStore((s) => s.removeEntry)
 
-  // Calorie target from profile
   const { calorieTarget: profileTarget, isHydrated: profileHydrated } = useCalorieTarget()
   const calorieTarget = profileTarget ?? FALLBACK_TARGET
 
-  // Derived values
-  const totalCalories = entries.reduce((sum, e) => sum + e.calories, 0)
+  // Filter to today — memoized so the result array reference is stable
+  // between renders unless allEntries actually changes.
+  const today = todayISO()
+  const entries = useMemo(
+    () => allEntries.filter((e) => e.date === today),
+    [allEntries, today]
+  )
+
+  // Derived scalar — cheap, no allocation
+  const totalCalories = useMemo(
+    () => entries.reduce((sum, e) => sum + e.calories, 0),
+    [entries]
+  )
+
   const remaining     = calorieTarget - totalCalories
   const progressRatio = clamp(totalCalories / calorieTarget, 0, 1)
 
-  // Group by meal
-  const byMeal = MEAL_TYPE_ORDER.reduce<Record<MealType, FoodEntry[]>>(
-    (acc, meal) => {
-      acc[meal] = entries.filter((e) => e.meal === meal)
-      return acc
-    },
-    { breakfast: [], lunch: [], dinner: [], snack: [] },
+  // Group by meal — memoized to avoid new object literal on every render
+  const byMeal = useMemo(
+    () =>
+      MEAL_TYPE_ORDER.reduce<Record<MealType, FoodEntry[]>>(
+        (acc, meal) => {
+          acc[meal] = entries.filter((e) => e.meal === meal)
+          return acc
+        },
+        { breakfast: [], lunch: [], dinner: [], snack: [] }
+      ),
+    [entries]
   )
 
   return {

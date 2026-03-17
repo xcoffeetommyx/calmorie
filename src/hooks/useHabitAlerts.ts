@@ -1,23 +1,15 @@
 /**
  * src/hooks/useHabitAlerts.ts
  *
- * Returns today's habit warnings from the check-in store for display
- * on the dashboard.
+ * Returns today's habit warnings from the check-in store.
  *
- * Returns:
- *   topWarning     — the highest-priority warning (null if no check-in today)
- *   allWarnings    — full sorted list of today's warnings
- *   hasWarnings    — true if at least one warning was generated
- *   isCheckedIn    — whether today's check-in has been completed
- *
- * The dashboard uses `topWarning` to show a single alert banner.
- * The check-in result screen shows `allWarnings` in full.
- *
- * This hook is read-only — it never calls the habit engine directly.
- * The engine runs inside useCheckIn.submit() and the results are
- * stored in checkinStore. This hook simply reads them out.
+ * allWarnings is wrapped in useMemo to prevent a new [] being created
+ * on every render when todayRecord is null (no check-in today).
+ * Previously `todayRecord?.habitWarnings ?? []` created a new empty
+ * array on every call, making the reference unstable.
  */
 
+import { useMemo } from 'react'
 import {
   useCheckinStore,
   selectTodayRecord,
@@ -27,22 +19,27 @@ import {
 import type { HabitWarning } from '@/types/habit'
 
 export interface UseHabitAlertsReturn {
-  /** Highest-priority warning from today's check-in, or null */
-  topWarning: HabitWarning | null
-  /** All warnings from today's check-in, sorted by severity */
+  topWarning:  HabitWarning | null
   allWarnings: HabitWarning[]
-  /** True if any warnings were generated today */
   hasWarnings: boolean
-  /** True if today's check-in has been completed */
   isCheckedIn: boolean
 }
 
-export function useHabitAlerts(): UseHabitAlertsReturn {
-  const todayRecord  = useCheckinStore(selectTodayRecord)
-  const isCheckedIn  = useCheckinStore(selectIsCompletedToday)
-  const topWarning   = useCheckinStore(selectTopWarning)
+// Stable empty array — reused when there are no warnings.
+// Avoids creating a new [] on every render when no check-in exists.
+const EMPTY_WARNINGS: HabitWarning[] = []
 
-  const allWarnings  = todayRecord?.habitWarnings ?? []
+export function useHabitAlerts(): UseHabitAlertsReturn {
+  const todayRecord = useCheckinStore(selectTodayRecord)
+  const isCheckedIn = useCheckinStore(selectIsCompletedToday)
+  const topWarning  = useCheckinStore(selectTopWarning)
+
+  // When todayRecord is null, return the stable EMPTY_WARNINGS constant.
+  // When todayRecord exists, return the same array reference from the record.
+  const allWarnings = useMemo(
+    () => todayRecord?.habitWarnings ?? EMPTY_WARNINGS,
+    [todayRecord]
+  )
 
   return {
     topWarning,

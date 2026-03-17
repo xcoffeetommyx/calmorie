@@ -1,22 +1,16 @@
 /**
  * src/hooks/useLessons.ts
  *
- * Hook that combines static lesson content (from lib/content/lessons.ts)
- * with dynamic reading progress (from lessonStore).
+ * Hook combining static lesson content with dynamic reading progress.
  *
- * Returns:
- *   lessons         — all LessonWithProgress[], merged with real progress
- *   progressMap     — raw Record<slug, LessonProgress> from lessonStore
- *   lessonOfTheDay  — first unread lesson, or day-rotation fallback
- *   isHydrated      — true once lessonStore has loaded from IndexedDB
- *   getProgress     — helper to get progress for a single slug
- *
- * Components that previously used `getAllLessons()` directly should switch
- * to this hook to get real completion state.
- *
- * The learn page and dashboard LessonOfTheDay both use this hook.
+ * All derived arrays and objects are wrapped in useMemo so their
+ * references are stable between renders when progressMap hasn't changed.
+ * Previously these were computed inline (no memo), producing new
+ * allocations on every render — causing unnecessary child re-renders
+ * and potential render cascades.
  */
 
+import { useMemo, useCallback } from 'react'
 import { useLessonStore } from '@/stores/lessonStore'
 import {
   getAllLessonsWithProgress,
@@ -25,34 +19,38 @@ import {
 import type { LessonWithProgress, LessonProgress } from '@/types/lesson'
 
 export interface UseLessonsReturn {
-  /** All lessons merged with reading progress */
-  lessons: LessonWithProgress[]
-  /** Raw progress map — Record<slug, LessonProgress> */
-  progressMap: Record<string, LessonProgress>
-  /** Best lesson to feature on the dashboard today */
+  lessons:        LessonWithProgress[]
+  progressMap:    Record<string, LessonProgress>
   lessonOfTheDay: LessonWithProgress
-  /** True once the store has hydrated from IndexedDB */
-  isHydrated: boolean
-  /** Get progress for a single lesson slug */
-  getProgress: (slug: string) => LessonProgress | null
+  isHydrated:     boolean
+  getProgress:    (slug: string) => LessonProgress | null
 }
 
 export function useLessons(): UseLessonsReturn {
   const progressMap = useLessonStore((s) => s.progressMap)
   const isHydrated  = useLessonStore((s) => s.isHydrated)
 
-  const lessons        = getAllLessonsWithProgress(progressMap)
-  const rawLoTD        = getLessonOfTheDay(progressMap)
+  // Memoized — only recomputes when progressMap reference changes
+  // (i.e. when a lesson is started, progressed, or completed)
+  const lessons = useMemo(
+    () => getAllLessonsWithProgress(progressMap),
+    [progressMap]
+  )
 
-  // Enrich the lesson-of-the-day with its progress
-  const lessonOfTheDay: LessonWithProgress = {
-    ...rawLoTD,
-    progress: progressMap[rawLoTD.slug] ?? null,
-  }
+  // Memoized — stable object reference between renders
+  const lessonOfTheDay = useMemo(() => {
+    const raw = getLessonOfTheDay(progressMap)
+    return {
+      ...raw,
+      progress: progressMap[raw.slug] ?? null,
+    } as LessonWithProgress
+  }, [progressMap])
 
-  function getProgress(slug: string): LessonProgress | null {
-    return progressMap[slug] ?? null
-  }
+  // Stable function reference between renders
+  const getProgress = useCallback(
+    (slug: string): LessonProgress | null => progressMap[slug] ?? null,
+    [progressMap]
+  )
 
   return {
     lessons,
