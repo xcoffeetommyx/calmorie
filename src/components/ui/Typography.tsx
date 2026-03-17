@@ -12,6 +12,13 @@
  *   Labels:  label, label-sm — Plus Jakarta Sans, medium weight
  *   Small:   caption — Plus Jakarta Sans, muted colour
  *
+ * v2 changes:
+ *   - `body` line-height bumped to leading-[1.8] for comfortable
+ *     paragraph reading on mobile (was leading-relaxed / ~1.625)
+ *   - `body` font-size bumped to text-[1.0625rem] (17px) for improved
+ *     legibility on small screens (was text-base / 16px)
+ *   - `body-sm` line-height bumped to leading-[1.75] for consistency
+ *
  * Usage:
  *   <Typography variant="h1">Welcome to Calmorie</Typography>
  *   <Typography variant="body-sm" as="span" className="mt-1">Subtitle</Typography>
@@ -74,17 +81,19 @@ const typographyVariants = cva('', {
       ].join(' '),
 
       // ── Body text ─────────────────────────────────────────────────────
+      // Bumped from text-base (16px) → 17px and leading-relaxed → 1.8
+      // for improved mobile legibility across paragraph-heavy content.
       body: [
         'font-body',
-        'text-base font-normal',
-        'leading-relaxed',
+        'text-[1.0625rem] font-normal',
+        'leading-[1.8]',
         'text-ink-secondary',
       ].join(' '),
 
       'body-sm': [
         'font-body',
         'text-sm font-normal',
-        'leading-relaxed',
+        'leading-[1.75]',
         'text-ink-secondary',
       ].join(' '),
 

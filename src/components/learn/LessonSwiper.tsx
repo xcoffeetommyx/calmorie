@@ -18,11 +18,19 @@
  *   Pointer events on the content wrapper detect horizontal swipes. The
  *   threshold (40px) prevents accidental triggers on taps. Vertical-dominant
  *   gestures are ignored so scrolling inside a step works normally.
+ *
+ * Visual design (v2 — rounded reading surface):
+ *   Step content now sits inside an elevated card surface (bg-surface,
+ *   rounded-2xl, shadow-card) rather than bare text on the background.
+ *   Body text is larger (text-lg) with a generous line-height for comfortable
+ *   mobile reading. The step label is styled as a compact pill badge.
+ *   The takeaway screen has a stronger visual hierarchy with a decorative
+ *   sparkle icon and larger display-size text.
  */
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, BookMarked } from 'lucide-react'
+import { ChevronLeft, ChevronRight, BookMarked, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { LessonProgress } from './LessonProgress'
 import { SourcesDrawer } from './SourcesDrawer'
@@ -62,10 +70,6 @@ interface LessonSwiperProps {
 
 export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
   // ── Stable selector — same function reference across renders ──────────────
-  // This is the root-cause fix. Without useMemo, selectResumeStep(slug) creates
-  // a new closure on every render. Zustand's useSyncExternalStore sees the
-  // snapshot value flicker when markComplete fires, which under React concurrent
-  // rendering can cause currentScreen and isTakeaway to desync.
   const resumeStepSelector = useMemo(
     () => selectResumeStep(lesson.slug),
     [lesson.slug]
@@ -120,15 +124,11 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
   }, [currentScreen])
 
   // ── Swipe detection ───────────────────────────────────────────────────────
-  // Pointer events on the content wrapper. We record the start position and
-  // compare on release. Vertical-dominant gestures (abs(dy) > abs(dx)) are
-  // ignored so content scrolling is unaffected.
 
   const swipeStartX = useRef<number | null>(null)
   const swipeStartY = useRef<number | null>(null)
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
-    // Only track primary (touch/mouse) pointer, not stylus hover
     if (e.pointerType === 'mouse' && e.buttons !== 1) return
     swipeStartX.current = e.clientX
     swipeStartY.current = e.clientY
@@ -143,7 +143,6 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
     swipeStartX.current = null
     swipeStartY.current = null
 
-    // Ignore vertical-dominant gestures (scrolling)
     if (Math.abs(dy) > Math.abs(dx)) return
 
     if (dx < -SWIPE_THRESHOLD) {
@@ -160,7 +159,7 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* ── Progress + sources bar ─────────────────────────── */}
-      <div className="flex items-center justify-between px-5 py-2">
+      <div className="flex items-center justify-between px-5 py-2.5">
         <LessonProgress
           currentStep={currentScreen}
           totalSteps={totalSteps}
@@ -185,7 +184,7 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
 
       {/* ── Step content — swipe-enabled ─────────────────────── */}
       <div
-        className="relative flex-1 min-h-0 overflow-hidden px-5"
+        className="relative flex-1 min-h-0 overflow-hidden px-4"
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
       >
@@ -211,14 +210,14 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
       </div>
 
       {/* ── Navigation buttons ─────────────────────────────── */}
-      <div className="flex items-center justify-between px-5 py-3 border-t border-border shrink-0">
+      <div className="flex items-center justify-between px-4 py-3 border-t border-border shrink-0">
         <button
           type="button"
           onClick={goPrev}
           disabled={currentScreen === 0}
           className={cn(
             'flex items-center gap-1.5',
-            'h-10 px-4 rounded-full',
+            'h-11 px-5 rounded-full',
             'font-body text-sm font-medium',
             'border border-border bg-surface text-ink-secondary',
             'hover:bg-surface-raised hover:text-ink',
@@ -238,7 +237,7 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
             onClick={goNext}
             className={cn(
               'flex items-center gap-1.5',
-              'h-10 px-5 rounded-full',
+              'h-11 px-6 rounded-full',
               'font-body text-sm font-semibold',
               'bg-primary text-ink-on-primary',
               'shadow-sm hover:bg-primary-dark active:scale-[0.97]',
@@ -258,7 +257,7 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
             onClick={onClose}
             className={cn(
               'flex items-center gap-1.5',
-              'h-10 px-5 rounded-full',
+              'h-11 px-6 rounded-full',
               'font-body text-sm font-semibold',
               'bg-primary text-ink-on-primary',
               'shadow-sm hover:bg-primary-dark active:scale-[0.97]',
@@ -284,6 +283,20 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
 
 // ── Sub-components ─────────────────────────────────────────────────────────
 
+/**
+ * StepScreen
+ *
+ * Renders a single lesson step inside a rounded reading card.
+ * The card gives the text a deliberate, inviting reading surface —
+ * distinct from the background — so it feels like a premium content
+ * card rather than a plain document page.
+ *
+ * Typography:
+ *   - Heading: text-[1.65rem] / leading-snug — anchors the page without
+ *     overwhelming a narrow phone viewport
+ *   - Body: text-lg / leading-[1.85] — comfortable for paragraph-heavy
+ *     wellness content; wraps well at 360px viewport widths
+ */
 function StepScreen({
   direction,
   stepNumber,
@@ -304,30 +317,74 @@ function StepScreen({
       initial="enter"
       animate="center"
       exit="exit"
-      className="absolute inset-0 overflow-y-auto overscroll-contain pb-4"
+      className="absolute inset-0 overflow-y-auto overscroll-contain"
     >
-      <div className="space-y-5 pt-4 pb-8">
-        <p className="font-body text-xs text-ink-muted/70 tabular-nums">
-          Step {stepNumber} of {totalSteps}
-        </p>
-        <h3 className="font-display text-2xl font-semibold text-ink tracking-tight leading-tight text-balance">
-          {heading}
-        </h3>
-        <div className="space-y-4">
-          {body.split('\n\n').map((para, i) => (
-            <p
-              key={i}
-              className="font-body text-base text-ink leading-[1.75]"
-            >
-              {para}
-            </p>
-          ))}
+      {/* Vertical breathing room around the card */}
+      <div className="py-2 pb-6">
+
+        {/* ── Reading card surface ─────────────────────────── */}
+        <div
+          className={cn(
+            'bg-surface rounded-2xl shadow-card',
+            'border border-border/50',
+            'px-6 pt-6 pb-8',
+            'space-y-5',
+          )}
+        >
+          {/* Step pill badge */}
+          <span
+            className={cn(
+              'inline-flex items-center',
+              'px-3 py-1 rounded-full',
+              'bg-primary-light text-primary',
+              'font-body text-[11px] font-semibold tracking-wide',
+            )}
+          >
+            {stepNumber} of {totalSteps}
+          </span>
+
+          {/* Section heading */}
+          <h3
+            className={cn(
+              'font-display font-semibold text-ink',
+              'text-[1.65rem] leading-snug tracking-tight',
+              'text-balance',
+            )}
+          >
+            {heading}
+          </h3>
+
+          {/* Decorative accent rule */}
+          <div className="w-10 h-[3px] rounded-full bg-primary/25" />
+
+          {/* Body paragraphs */}
+          <div className="space-y-5">
+            {body.split('\n\n').map((para, i) => (
+              <p
+                key={i}
+                className={cn(
+                  'font-body text-lg text-ink',
+                  'leading-[1.85]',
+                )}
+              >
+                {para}
+              </p>
+            ))}
+          </div>
         </div>
+
       </div>
     </motion.div>
   )
 }
 
+/**
+ * TakeawayScreen
+ *
+ * The final screen after all steps. Styled as a full-bleed accent card
+ * with a Sparkles icon to signal "key insight". The takeaway text renders
+ * at a large display size so it lands as a memorable closing statement.
+ */
 function TakeawayScreen({
   direction,
   takeaway,
@@ -344,24 +401,49 @@ function TakeawayScreen({
       initial="enter"
       animate="center"
       exit="exit"
-      className="absolute inset-0 flex flex-col justify-center overflow-y-auto overscroll-contain pb-4"
+      className="absolute inset-0 flex flex-col justify-center overflow-y-auto overscroll-contain"
     >
-      <div
-        className={cn(
-          'bg-primary-light border border-primary-mid rounded-2xl',
-          'px-5 py-8 space-y-5',
-        )}
-      >
-        <p className="font-body text-[11px] font-semibold text-primary uppercase tracking-wider">
-          Key takeaway
-        </p>
-        <p className="font-display text-xl font-semibold text-primary-text leading-snug tracking-tight text-balance">
-          {takeaway}
-        </p>
-        <p className="font-body text-xs text-primary-text/70 leading-relaxed">
-          Tap &ldquo;Done&rdquo; to return to the lesson library, or review
-          the sources below.
-        </p>
+      <div className="py-4">
+        <div
+          className={cn(
+            'bg-primary-light rounded-2xl',
+            'border border-primary-mid',
+            'px-6 py-9 space-y-6',
+          )}
+        >
+          {/* Icon + label */}
+          <div className="flex items-center gap-2.5">
+            <span
+              className={cn(
+                'flex items-center justify-center shrink-0',
+                'w-8 h-8 rounded-full bg-primary/15',
+              )}
+              aria-hidden="true"
+            >
+              <Sparkles className="w-4 h-4 text-primary" strokeWidth={2} />
+            </span>
+            <p className="font-body text-[11px] font-semibold text-primary uppercase tracking-widest">
+              Key takeaway
+            </p>
+          </div>
+
+          {/* Takeaway quote — display-weight for impact */}
+          <p
+            className={cn(
+              'font-display font-semibold text-primary-text',
+              'text-[1.55rem] leading-snug tracking-tight',
+              'text-balance',
+            )}
+          >
+            {takeaway}
+          </p>
+
+          {/* Supporting hint */}
+          <p className="font-body text-sm text-primary-text/65 leading-relaxed">
+            Tap &ldquo;Done&rdquo; to return to the lesson library, or view
+            the sources to explore the research behind this lesson.
+          </p>
+        </div>
       </div>
     </motion.div>
   )

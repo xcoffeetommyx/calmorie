@@ -14,6 +14,11 @@
  *   border-border       → colors.border.DEFAULT
  *   hover:shadow-card-hover → boxShadow.card-hover
  *
+ * v2 changes:
+ *   - Default `radius` bumped from `lg` (20px) to `xl` (24px) to match
+ *     the overall rounder, more modern feel of the app's redesigned surfaces.
+ *     Call sites that need the original 20px radius can pass radius="lg".
+ *
  * Sub-components (CardHeader, CardTitle, etc.) provide a consistent
  * layout structure for cards with titled sections.
  */
@@ -71,7 +76,7 @@ const cardVariants = cva(
       },
     },
     defaultVariants: {
-      radius:      'lg',
+      radius:      'xl',   // 24px — rounder than the previous 20px default
       shadow:      'card',
       padding:     'md',
       border:      false,
@@ -153,7 +158,7 @@ const CardDescription = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      'font-body text-sm text-ink-secondary leading-relaxed',
+      'font-body text-sm text-ink-secondary leading-[1.75]',
       className
     )}
     {...props}

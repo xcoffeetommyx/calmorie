@@ -19,11 +19,12 @@
  *     with the step the user reached ("Continue from step 3/6")
  *   – Completed: shows "Read again" CTA
  *
- * This uses the lessonStore to read current progress without needing
- * any lifecycle hooks — the selector is read synchronously.
- *
- * Props:
- *   lesson — the full Lesson object (fetched by the page)
+ * Visual design (v2 — premium intro surface):
+ *   The intro screen uses a rounded card for the sections list so each
+ *   step feels intentional and inviting. The step numbering uses filled
+ *   circle badges instead of plain text numerals. The summary text is
+ *   slightly larger for comfortable reading. The overall layout has more
+ *   breathing room between sections.
  */
 
 import { useState } from 'react'
@@ -52,7 +53,6 @@ export function LessonReader({ lesson }: LessonReaderProps) {
   const categoryLabel  = LESSON_CATEGORY_LABELS[lesson.category]
   const categoryColors = LESSON_CATEGORY_COLORS[lesson.category]
 
-  // Derive progress state from the record (see types/lesson.ts for semantics)
   const isInProgress = !!progress && !progress.completed
   const isCompleted  = progress?.completed === true
   const resumeStep   = isInProgress ? progress.lastStepIndex : 0
@@ -78,14 +78,14 @@ export function LessonReader({ lesson }: LessonReaderProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="page-container py-5 flex flex-col gap-5"
+            className="page-container py-6 flex flex-col gap-6"
           >
             {/* Category badge */}
             <span
               className={cn(
                 'self-start inline-flex items-center gap-1.5',
-                'px-3 py-1.5 rounded-full',
-                'font-body text-sm font-semibold',
+                'px-3.5 py-1.5 rounded-full',
+                'font-body text-xs font-semibold tracking-wide',
                 categoryColors.bg,
                 categoryColors.text,
               )}
@@ -93,13 +93,19 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               {categoryLabel}
             </span>
 
-            {/* Title */}
-            <h1 className="font-display text-3xl font-semibold text-ink tracking-tight leading-tight text-balance">
+            {/* Title — large and bold to anchor the page */}
+            <h1
+              className={cn(
+                'font-display font-semibold text-ink',
+                'text-[2rem] leading-tight tracking-tight',
+                'text-balance',
+              )}
+            >
               {lesson.title}
             </h1>
 
-            {/* Summary */}
-            <p className="font-body text-base text-ink leading-relaxed">
+            {/* Summary — slightly larger than before for comfortable scanning */}
+            <p className="font-body text-[1.0625rem] text-ink leading-[1.8]">
               {lesson.summary}
             </p>
 
@@ -119,18 +125,18 @@ export function LessonReader({ lesson }: LessonReaderProps) {
             {isInProgress && (
               <div
                 className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-xl',
+                  'flex items-start gap-3 px-4 py-3.5 rounded-2xl',
                   'bg-primary-light border border-primary-mid',
                 )}
                 role="note"
                 aria-label="Lesson in progress"
               >
                 <PlayCircle
-                  className="w-4 h-4 text-primary shrink-0"
+                  className="w-4 h-4 text-primary shrink-0 mt-0.5"
                   strokeWidth={1.75}
                   aria-hidden="true"
                 />
-                <p className="font-body text-xs text-primary-text leading-snug">
+                <p className="font-body text-sm text-primary-text leading-relaxed">
                   You&rsquo;ve read up to{' '}
                   <strong>
                     section {resumeStep + 1} of {totalSteps}
@@ -144,40 +150,49 @@ export function LessonReader({ lesson }: LessonReaderProps) {
             {isCompleted && (
               <div
                 className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-xl',
+                  'flex items-start gap-3 px-4 py-3.5 rounded-2xl',
                   'bg-success-bg border border-success/20',
                 )}
                 role="note"
                 aria-label="Lesson completed"
               >
                 <CheckCircle2
-                  className="w-4 h-4 text-success shrink-0"
+                  className="w-4 h-4 text-success shrink-0 mt-0.5"
                   strokeWidth={2}
                   aria-hidden="true"
                 />
-                <p className="font-body text-xs text-success leading-snug">
+                <p className="font-body text-sm text-success leading-relaxed">
                   You&rsquo;ve completed this lesson. Tap below to read it again.
                 </p>
               </div>
             )}
 
-            {/* Steps preview */}
-            <div className="bg-surface rounded-xl shadow-card overflow-hidden">
-              <div className="px-4 py-2.5 border-b border-border">
+            {/* Sections preview card — rounded, intentional surface */}
+            <div className="bg-surface rounded-2xl shadow-card overflow-hidden border border-border/50">
+              {/* Card header */}
+              <div className="px-5 py-3 border-b border-border bg-background/50">
                 <p className="font-body text-[11px] font-semibold text-ink-muted uppercase tracking-wider">
-                  {lesson.steps.length} sections
+                  {lesson.steps.length} {lesson.steps.length === 1 ? 'section' : 'sections'}
                 </p>
               </div>
-              <ul className="divide-y divide-border">
+
+              {/* Step list */}
+              <ul className="divide-y divide-border/60">
                 {lesson.steps.map((step, i) => (
-                  <li key={i} className="flex items-center gap-3 px-4 py-2.5">
+                  <li key={i} className="flex items-center gap-4 px-5 py-3.5">
+                    {/* Numbered circle badge */}
                     <span
-                      className="font-body text-xs font-semibold text-ink-muted tabular-nums w-5 shrink-0"
+                      className={cn(
+                        'flex items-center justify-center shrink-0',
+                        'w-6 h-6 rounded-full',
+                        'bg-primary-light text-primary',
+                        'font-body text-[11px] font-bold',
+                      )}
                       aria-hidden="true"
                     >
                       {i + 1}
                     </span>
-                    <p className="font-body text-sm text-ink-secondary leading-snug">
+                    <p className="font-body text-sm text-ink leading-snug">
                       {step.heading}
                     </p>
                   </li>
@@ -190,8 +205,8 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               type="button"
               onClick={() => setStarted(true)}
               className={cn(
-                'w-full h-12 rounded-2xl',
-                'font-body text-sm font-semibold',
+                'w-full h-13 rounded-2xl',
+                'font-body text-[0.9375rem] font-semibold',
                 'shadow-sm active:scale-[0.97]',
                 'transition-all duration-fast ease-smooth',
                 'focus-visible:outline-none focus-visible:ring-2',
@@ -200,6 +215,7 @@ export function LessonReader({ lesson }: LessonReaderProps) {
                   ? 'bg-surface border border-border text-ink hover:bg-surface-raised'
                   : 'bg-primary text-ink-on-primary hover:bg-primary-dark',
               )}
+              style={{ height: '3.25rem' }}
               aria-label={
                 isCompleted
                   ? `Read ${lesson.title} again`
@@ -219,6 +235,9 @@ export function LessonReader({ lesson }: LessonReaderProps) {
                     : 'Start lesson'}
               </span>
             </button>
+
+            {/* Bottom breathing room (above bottom nav) */}
+            <div className="h-2" aria-hidden="true" />
           </motion.div>
         ) : (
           /* ── Lesson swiper ───────────────────────────────────── */
