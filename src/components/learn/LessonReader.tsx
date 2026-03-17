@@ -230,7 +230,7 @@ export function LessonReader({ lesson }: LessonReaderProps) {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="flex-1 flex flex-col"
           >
-            <LessonSwiper lesson={lesson} onClose={handleDone} />
+            <LessonSwiper key={lesson.slug} lesson={lesson} onClose={handleDone} />
           </motion.div>
         )}
       </AnimatePresence>

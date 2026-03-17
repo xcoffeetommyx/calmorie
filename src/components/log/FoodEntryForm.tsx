@@ -4,29 +4,31 @@
  * FoodEntryForm
  *
  * A lightweight bottom sheet form for adding a single food entry.
- * Slides up from the bottom on open; dismisses on cancel, backdrop tap,
- * or after the user is done logging.
  *
  * Fields:
- *   meal (radio buttons — pre-filled from caller, changeable)
- *   name (text — required, max 80 chars)
- *   calories (number — required, 1–9999)
- *   notes (text — optional)
+ *   meal     — pill selector (controlled via RHF Controller)
+ *   name     — text input (required, max 80 chars)
+ *   calories — numeric text input (required, 1–9999)
+ *   notes    — text input (optional)
  *
  * Pre-fill support:
- *   initialMeal     — which meal tab to pre-select (from MealSection add buttons)
- *   initialName     — pre-fill the food name (from quick-add chips)
- *   initialCalories — pre-fill the calorie value (from common food chips)
+ *   initialMeal / initialName / initialCalories come from the caller.
+ *   Applied via reset() whenever isOpen or any initial value changes.
  *
- * When the sheet opens, all three initial values are applied via reset().
- * When it closes, the form is cleared so it starts fresh next time.
+ * Meal selection fix:
+ *   The previous implementation used hidden radio inputs inside wrapping
+ *   <label> elements spread with {...register('meal')}. Tapping the label
+ *   on mobile fired a click that bubbled to the <form>, triggering an
+ *   early submit attempt before the radio value was committed to RHF state.
+ *   This caused validation to fail silently when a meal was manually selected.
  *
- * Uses React Hook Form + Zod. Submit calls `onAdd` and resets the name/
- * calorie fields (keeping the meal selection) to support rapid logging.
+ *   Fix: replaced with Controller + explicit styled <button type="button">
+ *   pills. setValue('meal', meal) updates RHF state directly; no radio input,
+ *   no label-click-to-form propagation.
  */
 
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -51,23 +53,16 @@ const entrySchema = z.object({
 type EntryFormValues = z.infer<typeof entrySchema>
 
 // ── Constants ────────────────────────────────────────────────────────────────
-// Use an empty string as the controlled-input representation of "no value".
-// RHF + type="text" inputMode="numeric" with '' as default is fully controlled.
-// z.coerce.number()('') → NaN → fails .min(1) → shows the error message.
-// Using undefined would make the input uncontrolled (value={undefined} === no
-// value prop in React), causing RHF to lose track of user-typed values on
-// the first open from a clean state.
+// Empty string keeps the calories input controlled while representing
+// "no value yet". z.coerce.number()('') = NaN → fails .min(1) correctly.
 const EMPTY_CALORIES = '' as unknown as number
 
 // ── Component ──────────────────────────────────────────────────────────────
 
 interface FoodEntryFormProps {
   isOpen: boolean
-  /** Which meal section to pre-select (changeable in-form) */
   initialMeal?: MealType
-  /** Pre-fill the food name — used by quick-add chips */
   initialName?: string
-  /** Pre-fill the calorie value — used by common food chips */
   initialCalories?: number
   onAdd: (input: FoodEntryInput) => void
   onClose: () => void
@@ -85,6 +80,7 @@ export function FoodEntryForm({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<EntryFormValues>({
     resolver: zodResolver(entrySchema),
@@ -96,27 +92,6 @@ export function FoodEntryForm({
     },
   })
 
-  /**
-   * Sync all initial values whenever the sheet opens or its prefill
-   * values change. Using reset() is the correct RHF pattern for
-   * externally-driven value changes — it updates both the field values
-   * and the internal defaultValues reference in one call.
-   *
-   * When the sheet closes, reset to blank (not to prefill values) so
-   * the next open starts clean unless new prefill values are provided.
-   */
-  /**
-   * Sync form values whenever the sheet opens OR its prefill values change.
-   *
-   * Dependencies include initialMeal/initialName/initialCalories so that
-   * if openForm() is called while the sheet is already open (e.g. tapping
-   * a meal section's + button when the sheet is visible), the form correctly
-   * re-initialises with the new prefill values rather than keeping stale ones.
-   *
-   * reset() is stable (same reference across renders), so it's safe in deps.
-   * initialMeal/initialName/initialCalories only change via openForm(), never
-   * while the user is typing, so including them won't clobber user input.
-   */
   useEffect(() => {
     if (isOpen) {
       reset({
@@ -142,7 +117,7 @@ export function FoodEntryForm({
       calories: data.calories,
       notes:    data.notes || undefined,
     })
-    // Reset name + calories only; keep meal selection for rapid logging
+    // Keep meal; clear name + calories for rapid logging
     reset({
       meal:     data.meal,
       name:     '',
@@ -155,7 +130,7 @@ export function FoodEntryForm({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* ── Backdrop ──────────────────────────────────────── */}
+          {/* Backdrop */}
           <motion.div
             key="backdrop"
             variants={overlayVariants}
@@ -167,7 +142,7 @@ export function FoodEntryForm({
             aria-hidden="true"
           />
 
-          {/* ── Sheet ─────────────────────────────────────────── */}
+          {/* Sheet */}
           <motion.div
             key="sheet"
             variants={bottomSheetVariants}
@@ -214,20 +189,43 @@ export function FoodEntryForm({
               className="px-5 py-4 space-y-4"
               noValidate
             >
-              {/* Meal selector */}
+              {/* Meal selector — Controller pattern avoids label-click-to-submit bug */}
               <div className="space-y-1.5">
-                <label className="block font-body text-sm font-medium text-ink" htmlFor="meal">
+                <p className="font-body text-sm font-medium text-ink">
                   Meal
-                </label>
-                <div className="grid grid-cols-4 gap-1.5">
-                  {MEAL_TYPE_ORDER.map((meal) => (
-                    <MealButton
-                      key={meal}
-                      meal={meal}
-                      {...register('meal')}
-                    />
-                  ))}
-                </div>
+                </p>
+                <Controller
+                  name="meal"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="grid grid-cols-4 gap-1.5" role="radiogroup" aria-label="Select meal">
+                      {MEAL_TYPE_ORDER.map((meal) => (
+                        <button
+                          key={meal}
+                          type="button"
+                          role="radio"
+                          aria-checked={field.value === meal}
+                          onClick={() => field.onChange(meal)}
+                          className={cn(
+                            'flex flex-col items-center justify-center gap-0.5',
+                            'h-14 rounded-xl border text-center',
+                            'font-body text-xs font-medium',
+                            'transition-all duration-fast ease-smooth',
+                            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
+                            field.value === meal
+                              ? 'bg-primary-light border-primary-mid text-primary-text'
+                              : 'border-border text-ink-secondary hover:bg-surface-raised',
+                          )}
+                        >
+                          <span className="text-base select-none leading-none" aria-hidden="true">
+                            {MEAL_EMOJI[meal]}
+                          </span>
+                          <span>{MEAL_TYPE_LABELS[meal]}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                />
               </div>
 
               {/* Food name */}
@@ -263,7 +261,7 @@ export function FoodEntryForm({
                 {errors.calories && <FieldError message={errors.calories.message} />}
               </div>
 
-              {/* Notes (optional) */}
+              {/* Notes */}
               <div className="space-y-1.5">
                 <label htmlFor="notes" className="block font-body text-sm font-medium text-ink">
                   Notes{' '}
@@ -302,42 +300,7 @@ export function FoodEntryForm({
   )
 }
 
-// ── Sub-components ─────────────────────────────────────────────────────────
-
-/**
- * Hidden radio + visible styled label pattern for meal selection.
- * `has-[:checked]` CSS makes the label reflect the checked radio state
- * without any JavaScript toggle logic.
- */
-function MealButton({
-  meal,
-  ...rest
-}: { meal: MealType } & React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <label
-      className={cn(
-        'relative cursor-pointer',
-        'flex flex-col items-center justify-center gap-0.5',
-        'h-14 rounded-xl border text-center',
-        'font-body text-xs font-medium',
-        'transition-all duration-fast ease-smooth',
-        'has-[:checked]:bg-primary-light has-[:checked]:border-primary-mid has-[:checked]:text-primary-text',
-        'border-border text-ink-secondary hover:bg-surface-raised',
-      )}
-    >
-      <input
-        type="radio"
-        value={meal}
-        className="sr-only"
-        {...rest}
-      />
-      <span className="text-base select-none leading-none" aria-hidden="true">
-        {MEAL_EMOJI[meal]}
-      </span>
-      <span>{MEAL_TYPE_LABELS[meal]}</span>
-    </label>
-  )
-}
+// ── Helpers ────────────────────────────────────────────────────────────────
 
 const MEAL_EMOJI: Record<MealType, string> = {
   breakfast: '🌅',

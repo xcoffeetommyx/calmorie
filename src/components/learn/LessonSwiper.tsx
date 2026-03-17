@@ -3,30 +3,24 @@
 /**
  * LessonSwiper
  *
- * The interactive step-by-step lesson content player.
+ * Step-by-step lesson content player.
  *
- * Manages:
- *   – Current step state (0-indexed through lesson.steps, then takeaway)
- *   – Forward/back navigation via buttons
- *   – LessonProgress dot indicator
- *   – Animated directional step transitions
- *   – Final takeaway screen
- *   – "Sources" button that opens SourcesDrawer
+ * Bug fix (root cause: unstable selector per render):
+ *   selectResumeStep(lesson.slug) previously created a new closure on every
+ *   render. Passed to Zustand's useSyncExternalStore, this caused React to
+ *   see a snapshot value change (lastStepIndex → 0) when markComplete fired
+ *   and set completed:true. Under concurrent rendering, this extra re-render
+ *   could corrupt the currentScreen/isTakeaway relationship, locking the Next
+ *   button. Fix: the selector is memoised with useMemo so the same function
+ *   reference is reused, preventing spurious snapshot comparisons.
  *
- * Progress tracking:
- *   – markStarted() called on mount
- *   – markProgress() called when currentScreen advances (not when regressing)
- *   – markComplete() called when the takeaway screen is reached
- *
- * All derived values (totalSteps, totalScreens, isTakeaway) are
- * declared before any useEffect that references them.
- *
- * Props:
- *   lesson   — the full Lesson object
- *   onClose  — called when the user taps "Done" on the takeaway screen
+ * Swipe navigation:
+ *   Pointer events on the content wrapper detect horizontal swipes. The
+ *   threshold (40px) prevents accidental triggers on taps. Vertical-dominant
+ *   gestures are ignored so scrolling inside a step works normally.
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, BookMarked } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
@@ -34,6 +28,11 @@ import { LessonProgress } from './LessonProgress'
 import { SourcesDrawer } from './SourcesDrawer'
 import type { Lesson } from '@/types/lesson'
 import { useLessonStore, selectResumeStep } from '@/stores/lessonStore'
+
+// ── Constants ──────────────────────────────────────────────────────────────
+
+/** Minimum horizontal distance (px) for a swipe to register */
+const SWIPE_THRESHOLD = 40
 
 // ── Step slide variants (directional) ─────────────────────────────────────
 
@@ -62,57 +61,99 @@ interface LessonSwiperProps {
 }
 
 export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
-  const resumeStep   = useLessonStore(selectResumeStep(lesson.slug))
+  // ── Stable selector — same function reference across renders ──────────────
+  // This is the root-cause fix. Without useMemo, selectResumeStep(slug) creates
+  // a new closure on every render. Zustand's useSyncExternalStore sees the
+  // snapshot value flicker when markComplete fires, which under React concurrent
+  // rendering can cause currentScreen and isTakeaway to desync.
+  const resumeStepSelector = useMemo(
+    () => selectResumeStep(lesson.slug),
+    [lesson.slug]
+  )
+  const resumeStep = useLessonStore(resumeStepSelector)
+
   const markStarted  = useLessonStore((s) => s.markStarted)
   const markProgress = useLessonStore((s) => s.markProgress)
   const markComplete = useLessonStore((s) => s.markComplete)
 
-  // Resume from where the user left off (0 for first-time or re-read)
   const [currentScreen, setCurrentScreen] = useState(() => resumeStep)
   const [direction,      setDirection]     = useState(1)
   const [sourcesOpen,    setSourcesOpen]   = useState(false)
 
-  // ── Derived values — declared BEFORE any useEffect that references them ──
+  // ── Derived values ────────────────────────────────────────────────────────
   const totalSteps   = lesson.steps.length
-  const totalScreens = totalSteps + 1     // steps + takeaway
+  const totalScreens = totalSteps + 1   // steps + takeaway
   const isTakeaway   = currentScreen === totalSteps
 
-  // ── Progress tracking effects ─────────────────────────────────────────────
+  // ── Progress tracking ─────────────────────────────────────────────────────
 
-  // Mark lesson as started on first open (no-op if already started)
   useEffect(() => {
     markStarted(lesson.slug)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Advance progress record when the user moves to a new step
   useEffect(() => {
     if (!isTakeaway) {
       markProgress(lesson.slug, currentScreen)
     }
   }, [currentScreen, isTakeaway]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Mark complete when the takeaway screen is reached for the first time
   useEffect(() => {
     if (isTakeaway) {
       markComplete(lesson.slug)
     }
   }, [isTakeaway]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Navigation ─────────────────────────────────────────────────────────────
+  // ── Navigation ────────────────────────────────────────────────────────────
 
-  function goNext() {
+  const goNext = useCallback(() => {
     if (currentScreen < totalScreens - 1) {
       setDirection(1)
       setCurrentScreen((s) => s + 1)
     }
-  }
+  }, [currentScreen, totalScreens])
 
-  function goPrev() {
+  const goPrev = useCallback(() => {
     if (currentScreen > 0) {
       setDirection(-1)
       setCurrentScreen((s) => s - 1)
     }
-  }
+  }, [currentScreen])
+
+  // ── Swipe detection ───────────────────────────────────────────────────────
+  // Pointer events on the content wrapper. We record the start position and
+  // compare on release. Vertical-dominant gestures (abs(dy) > abs(dx)) are
+  // ignored so content scrolling is unaffected.
+
+  const swipeStartX = useRef<number | null>(null)
+  const swipeStartY = useRef<number | null>(null)
+
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    // Only track primary (touch/mouse) pointer, not stylus hover
+    if (e.pointerType === 'mouse' && e.buttons !== 1) return
+    swipeStartX.current = e.clientX
+    swipeStartY.current = e.clientY
+  }, [])
+
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    if (swipeStartX.current === null || swipeStartY.current === null) return
+
+    const dx = e.clientX - swipeStartX.current
+    const dy = e.clientY - swipeStartY.current
+
+    swipeStartX.current = null
+    swipeStartY.current = null
+
+    // Ignore vertical-dominant gestures (scrolling)
+    if (Math.abs(dy) > Math.abs(dx)) return
+
+    if (dx < -SWIPE_THRESHOLD) {
+      goNext()
+    } else if (dx > SWIPE_THRESHOLD) {
+      goPrev()
+    }
+  }, [goNext, goPrev])
+
+  // ── Render ────────────────────────────────────────────────────────────────
 
   const step = !isTakeaway ? lesson.steps[currentScreen] : null
 
@@ -142,8 +183,12 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
         </button>
       </div>
 
-      {/* ── Step content ──────────────────────────────────────── */}
-      <div className="relative flex-1 min-h-0 overflow-hidden px-5">
+      {/* ── Step content — swipe-enabled ─────────────────────── */}
+      <div
+        className="relative flex-1 min-h-0 overflow-hidden px-5"
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+      >
         <AnimatePresence mode="wait" custom={direction}>
           {isTakeaway ? (
             <TakeawayScreen
