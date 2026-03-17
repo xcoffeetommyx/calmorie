@@ -242,21 +242,10 @@ export function LessonReader({ lesson }: LessonReaderProps) {
           </motion.div>
 
         ) : (
-          {/* ── Lesson swiper ───────────────────────────────────────
-           *
-           * Explicit calc() height bypasses the flex chain.
-           *
-           * WHY: flex-1 on this motion.div relies on all ancestors
-           * propagating a definite height (not just min-height). That
-           * chain can silently collapse to 0 on some Android Chrome
-           * builds, making the content area 0px tall and everything
-           * visually cut off.
-           *
-           * INSTEAD: anchor the swiper to exactly the viewport height
-           * minus the TopBar. Combined with overflow-hidden, no content
-           * escapes and the internal flex-1/min-h-0 chain inside
-           * LessonSwiper now has a concrete height to distribute.
-           ──────────────────────────────────────────────────────── */}
+          /* Swiper: explicit calc() height bypasses the flex chain so the
+             content area is always the viewport minus the TopBar, regardless
+             of how intermediate wrappers (AnimatePresence, Next.js) handle
+             min-height propagation on Android Chrome. */
           <motion.div
             key="swiper"
             initial={{ opacity: 0, x: '20%' }}
