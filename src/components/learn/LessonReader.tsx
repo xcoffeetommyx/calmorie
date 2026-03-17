@@ -78,7 +78,7 @@ export function LessonReader({ lesson }: LessonReaderProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="page-container py-6 flex flex-col gap-6"
+            className="page-container py-5 flex flex-col gap-5"
           >
             {/* Category badge */}
             <span
@@ -99,7 +99,7 @@ export function LessonReader({ lesson }: LessonReaderProps) {
             </h1>
 
             {/* Summary */}
-            <p className="font-body text-base text-ink-secondary leading-relaxed">
+            <p className="font-body text-base text-ink leading-relaxed">
               {lesson.summary}
             </p>
 
@@ -163,14 +163,14 @@ export function LessonReader({ lesson }: LessonReaderProps) {
 
             {/* Steps preview */}
             <div className="bg-surface rounded-xl shadow-card overflow-hidden">
-              <div className="px-4 py-3 border-b border-border">
+              <div className="px-4 py-2.5 border-b border-border">
                 <p className="font-body text-[11px] font-semibold text-ink-muted uppercase tracking-wider">
                   {lesson.steps.length} sections
                 </p>
               </div>
               <ul className="divide-y divide-border">
                 {lesson.steps.map((step, i) => (
-                  <li key={i} className="flex items-center gap-3 px-4 py-3">
+                  <li key={i} className="flex items-center gap-3 px-4 py-2.5">
                     <span
                       className="font-body text-xs font-semibold text-ink-muted tabular-nums w-5 shrink-0"
                       aria-hidden="true"
@@ -190,7 +190,7 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               type="button"
               onClick={() => setStarted(true)}
               className={cn(
-                'w-full h-12 rounded-full',
+                'w-full h-12 rounded-2xl',
                 'font-body text-sm font-semibold',
                 'shadow-sm active:scale-[0.97]',
                 'transition-all duration-fast ease-smooth',

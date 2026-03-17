@@ -50,6 +50,15 @@ const entrySchema = z.object({
 
 type EntryFormValues = z.infer<typeof entrySchema>
 
+// ── Constants ────────────────────────────────────────────────────────────────
+// Use an empty string as the controlled-input representation of "no value".
+// RHF + type="text" inputMode="numeric" with '' as default is fully controlled.
+// z.coerce.number()('') → NaN → fails .min(1) → shows the error message.
+// Using undefined would make the input uncontrolled (value={undefined} === no
+// value prop in React), causing RHF to lose track of user-typed values on
+// the first open from a clean state.
+const EMPTY_CALORIES = '' as unknown as number
+
 // ── Component ──────────────────────────────────────────────────────────────
 
 interface FoodEntryFormProps {
@@ -82,7 +91,7 @@ export function FoodEntryForm({
     defaultValues: {
       meal:     initialMeal,
       name:     initialName,
-      calories: initialCalories,
+      calories: initialCalories ?? EMPTY_CALORIES,
       notes:    '',
     },
   })
@@ -96,25 +105,35 @@ export function FoodEntryForm({
    * When the sheet closes, reset to blank (not to prefill values) so
    * the next open starts clean unless new prefill values are provided.
    */
+  /**
+   * Sync form values whenever the sheet opens OR its prefill values change.
+   *
+   * Dependencies include initialMeal/initialName/initialCalories so that
+   * if openForm() is called while the sheet is already open (e.g. tapping
+   * a meal section's + button when the sheet is visible), the form correctly
+   * re-initialises with the new prefill values rather than keeping stale ones.
+   *
+   * reset() is stable (same reference across renders), so it's safe in deps.
+   * initialMeal/initialName/initialCalories only change via openForm(), never
+   * while the user is typing, so including them won't clobber user input.
+   */
   useEffect(() => {
     if (isOpen) {
       reset({
         meal:     initialMeal,
         name:     initialName,
-        calories: initialCalories,
+        calories: initialCalories ?? EMPTY_CALORIES,
         notes:    '',
       })
     } else {
       reset({
         meal:     initialMeal,
         name:     '',
-        calories: undefined,
+        calories: EMPTY_CALORIES,
         notes:    '',
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    // Intentionally depend on isOpen — the other values are stable per-open
-  }, [isOpen]) // eslint-disable-line
+  }, [isOpen, initialMeal, initialName, initialCalories, reset]) // eslint-disable-line
 
   function onSubmit(data: EntryFormValues) {
     onAdd({
@@ -127,7 +146,7 @@ export function FoodEntryForm({
     reset({
       meal:     data.meal,
       name:     '',
-      calories: undefined,
+      calories: EMPTY_CALORIES,
       notes:    '',
     })
   }
@@ -234,8 +253,9 @@ export function FoodEntryForm({
                 </label>
                 <input
                   id="calories"
-                  type="number"
+                  type="text"
                   inputMode="numeric"
+                  pattern="[0-9]*"
                   placeholder="e.g. 320"
                   className={inputClass(!!errors.calories)}
                   {...register('calories')}

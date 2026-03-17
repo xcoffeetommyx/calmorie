@@ -119,7 +119,7 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* ── Progress + sources bar ─────────────────────────── */}
-      <div className="flex items-center justify-between px-5 py-3">
+      <div className="flex items-center justify-between px-5 py-2">
         <LessonProgress
           currentStep={currentScreen}
           totalSteps={totalSteps}
@@ -166,7 +166,7 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
       </div>
 
       {/* ── Navigation buttons ─────────────────────────────── */}
-      <div className="flex items-center justify-between px-5 py-4 border-t border-border shrink-0">
+      <div className="flex items-center justify-between px-5 py-3 border-t border-border shrink-0">
         <button
           type="button"
           onClick={goPrev}
@@ -261,18 +261,18 @@ function StepScreen({
       exit="exit"
       className="absolute inset-0 overflow-y-auto overscroll-contain pb-4"
     >
-      <div className="space-y-4 py-2">
-        <p className="font-body text-[11px] font-semibold text-ink-muted uppercase tracking-wider">
-          {stepNumber} / {totalSteps}
+      <div className="space-y-5 pt-4 pb-8">
+        <p className="font-body text-xs text-ink-muted/70 tabular-nums">
+          Step {stepNumber} of {totalSteps}
         </p>
-        <h3 className="font-display text-xl font-semibold text-ink tracking-tight leading-snug text-balance">
+        <h3 className="font-display text-2xl font-semibold text-ink tracking-tight leading-tight text-balance">
           {heading}
         </h3>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {body.split('\n\n').map((para, i) => (
             <p
               key={i}
-              className="font-body text-[15px] text-ink-secondary leading-relaxed"
+              className="font-body text-base text-ink leading-[1.75]"
             >
               {para}
             </p>
@@ -304,13 +304,13 @@ function TakeawayScreen({
       <div
         className={cn(
           'bg-primary-light border border-primary-mid rounded-2xl',
-          'px-5 py-7 space-y-4',
+          'px-5 py-8 space-y-5',
         )}
       >
         <p className="font-body text-[11px] font-semibold text-primary uppercase tracking-wider">
           Key takeaway
         </p>
-        <p className="font-display text-lg font-semibold text-primary-text leading-snug tracking-tight text-balance">
+        <p className="font-display text-xl font-semibold text-primary-text leading-snug tracking-tight text-balance">
           {takeaway}
         </p>
         <p className="font-body text-xs text-primary-text/70 leading-relaxed">
