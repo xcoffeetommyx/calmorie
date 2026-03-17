@@ -5,9 +5,7 @@ import { cn } from '@/lib/utils/cn'
 import '@/styles/globals.css'
 
 /* ── Fonts ──────────────────────────────────────────────────────────────────
- * next/font self-hosts these at build time, making them fully offline-capable.
- * The `variable` option injects CSS custom properties (--font-display,
- * --font-body) that tokens.css and the Tailwind config reference.
+ * next/font self-hosts these at build time — fully offline-capable.
  */
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -24,7 +22,23 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: 'swap',
 })
 
+/* ── Base path ───────────────────────────────────────────────────────────────
+ * This must match basePath in next.config.mjs exactly.
+ *
+ * We write manifest and icon <link> tags explicitly in <head> rather than
+ * using the Next.js metadata.icons / metadata.manifest API, because in
+ * output: 'export' (static export) mode Next.js does NOT automatically
+ * prepend basePath to those URLs when generating the HTML. The result is
+ * <link rel="manifest" href="/manifest.json"> pointing at the GitHub Pages
+ * domain root instead of /calmorie/manifest.json, causing a 404.
+ *
+ * Writing raw <link> tags with the correct prefix sidesteps this entirely.
+ */
+const BASE = '/calmorie'
+
 /* ── Metadata ───────────────────────────────────────────────────────────── */
+// manifest and icons are intentionally omitted here — they are handled
+// via explicit <link> tags in RootLayout's <head> below.
 export const metadata: Metadata = {
   title: {
     default: 'Calmorie',
@@ -42,38 +56,14 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Calmorie' }],
   creator: 'Calmorie',
-
-  // PWA — Next.js prepends basePath to these paths automatically
-  manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: 'Calmorie',
   },
-
-  // Icons — Next.js prepends basePath when rendering <link> and <meta> tags
-  icons: {
-    icon: [
-      { url: '/icons/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/icons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icons/icon-192x192.png',  sizes: '192x192', type: 'image/png' },
-      { url: '/icons/icon-512x512.png',  sizes: '512x512', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-    other: [
-      // Windows tile
-      { rel: 'msapplication-TileImage', url: '/icons/icon-144x144.png' },
-    ],
-  },
-
-  // Prevent telephone auto-linking
   formatDetection: {
     telephone: false,
   },
-
-  // Open Graph (for sharing)
   openGraph: {
     type: 'website',
     siteName: 'Calmorie',
@@ -109,15 +99,29 @@ export default function RootLayout({
     >
       <head>
         {/*
-          Windows tile colour — not covered by Next.js metadata API.
-          The basePath is NOT prepended to content= values here, but
-          msapplication-TileColor is a plain colour, not a path.
+          Manifest — explicit path required for static export + basePath.
+          The Next.js metadata API does not prepend basePath to manifest/icon
+          URLs in output: 'export' mode, causing 404s on GitHub Pages.
+          Using a raw <link> tag with the correct /calmorie/ prefix fixes this.
         */}
-        <meta name="msapplication-TileColor" content="#3d7558" />
+        <link rel="manifest" href={`${BASE}/manifest.json`} />
+
+        {/* Favicons */}
+        <link rel="icon" type="image/png" sizes="16x16" href={`${BASE}/icons/favicon-16x16.png`} />
+        <link rel="icon" type="image/png" sizes="32x32" href={`${BASE}/icons/favicon-32x32.png`} />
+        <link rel="icon" type="image/png" sizes="192x192" href={`${BASE}/icons/icon-192x192.png`} />
+        <link rel="icon" type="image/png" sizes="512x512" href={`${BASE}/icons/icon-512x512.png`} />
+
+        {/* Apple touch icon */}
+        <link rel="apple-touch-icon" sizes="180x180" href={`${BASE}/icons/apple-touch-icon.png`} />
+
+        {/* PWA / platform meta */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Calmorie" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="msapplication-TileColor" content="#3d7558" />
+        <meta name="msapplication-TileImage" content={`${BASE}/icons/icon-144x144.png`} />
       </head>
 
       <body
