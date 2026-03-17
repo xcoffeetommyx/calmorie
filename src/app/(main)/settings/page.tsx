@@ -6,7 +6,7 @@
  * Four sections:
  *   1. Profile — shows real name and calorie target from userStore
  *   2. About   — version, mission statement
- *   3. Support — donation link placeholder
+ *   3. Support — PayPal donation link
  *   4. Disclaimer — always visible medical disclaimer
  *
  * The profile section displays live data when the user has completed
@@ -172,25 +172,25 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <button
-              disabled
+            <a
+              href="https://www.paypal.com/donate/?hosted_button_id=5M7R79QNBEJE2"
+              target="_blank"
+              rel="noopener noreferrer"
               className={cn(
                 'w-full flex items-center justify-center gap-2',
                 'h-10 rounded-full',
-                'border border-border text-ink-secondary',
-                'font-body text-sm font-medium',
-                'opacity-50 cursor-default',
+                'bg-primary text-ink-on-primary',
+                'font-body text-sm font-semibold',
+                'hover:bg-primary-dark active:scale-[0.97]',
+                'transition-all duration-fast ease-smooth',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
               )}
-              aria-label="Support link — coming soon"
-              aria-disabled="true"
+              aria-label="Support Calmorie via PayPal (opens in new tab)"
             >
-              <Heart size={15} strokeWidth={2} className="text-rose-400" aria-hidden="true" />
+              <Heart size={15} strokeWidth={2} aria-hidden="true" />
               Support Calmorie
-              <ExternalLink size={13} strokeWidth={2} className="opacity-60" aria-hidden="true" />
-            </button>
-            <p className="font-body text-xs text-ink-muted text-center">
-              Link available in a future update
-            </p>
+              <ExternalLink size={13} strokeWidth={2} className="opacity-70" aria-hidden="true" />
+            </a>
           </div>
         </motion.div>
 
