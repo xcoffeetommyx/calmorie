@@ -117,7 +117,7 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
   const step = !isTakeaway ? lesson.steps[currentScreen] : null
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col flex-1 min-h-0">
       {/* ── Progress + sources bar ─────────────────────────── */}
       <div className="flex items-center justify-between px-5 py-3">
         <LessonProgress
@@ -143,7 +143,7 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
       </div>
 
       {/* ── Step content ──────────────────────────────────────── */}
-      <div className="relative flex-1 overflow-hidden px-5">
+      <div className="relative flex-1 min-h-0 overflow-hidden px-5">
         <AnimatePresence mode="wait" custom={direction}>
           {isTakeaway ? (
             <TakeawayScreen
