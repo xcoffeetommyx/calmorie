@@ -6,28 +6,25 @@
     <meta name="theme-color" content="#3d7558" />
     <title>Calmorie — You're offline</title>
     <style>
-      /* All styles are inline — no external resources can load offline */
+      /* All styles inline — no external resources load offline */
 
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
 
       :root {
-        --brand:        #3d7558;
-        --brand-dark:   #2e5d44;
-        --brand-light:  #d6eadb;
-        --bg:           #faf9f7;
-        --surface:      #ffffff;
-        --text:         #17130f;
-        --text-muted:   #7c746b;
-        --border:       #ebe8e2;
-        --radius-full:  9999px;
-        --safe-bottom:  env(safe-area-inset-bottom, 0px);
-        --safe-top:     env(safe-area-inset-top, 0px);
+        --brand:       #3d7558;
+        --brand-dark:  #2e5d44;
+        --brand-light: #d6eadb;
+        --bg:          #faf9f7;
+        --surface:     #ffffff;
+        --text:        #17130f;
+        --text-muted:  #7c746b;
+        --border:      #ebe8e2;
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+        --safe-top:    env(safe-area-inset-top, 0px);
       }
 
       html {
@@ -36,9 +33,8 @@
       }
 
       body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-          Helvetica, Arial, sans-serif;
-        background-color: var(--bg);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--bg);
         color: var(--text);
         min-height: 100dvh;
         display: flex;
@@ -53,7 +49,7 @@
         -webkit-user-select: none;
       }
 
-      /* ── Brand mark ── */
+      /* Brand wordmark */
       .brand {
         position: absolute;
         top: calc(1.25rem + var(--safe-top));
@@ -62,34 +58,28 @@
         display: flex;
         align-items: center;
         gap: 0.375rem;
-        font-size: 1rem;
+        font-size: 0.9375rem;
         font-weight: 700;
         color: var(--brand);
-        letter-spacing: -0.025em;
+        letter-spacing: -0.02em;
         white-space: nowrap;
       }
 
-      .brand svg {
-        flex-shrink: 0;
-      }
-
-      /* ── Icon container ── */
+      /* Offline icon container */
       .icon-wrap {
-        width: 88px;
-        height: 88px;
-        background-color: var(--brand-light);
+        width: 80px;
+        height: 80px;
+        background: var(--brand-light);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 1.75rem;
+        margin: 0 auto 1.5rem;
       }
 
-      /* ── Copy ── */
       h1 {
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--text);
         letter-spacing: -0.025em;
         line-height: 1.2;
         margin-bottom: 0.625rem;
@@ -99,11 +89,11 @@
         font-size: 0.9375rem;
         color: var(--text-muted);
         line-height: 1.6;
-        max-width: 300px;
-        margin: 0 auto 2.25rem;
+        max-width: 280px;
+        margin: 0 auto 2rem;
       }
 
-      /* ── Button ── */
+      /* Primary retry button */
       .btn {
         display: inline-flex;
         align-items: center;
@@ -111,65 +101,75 @@
         gap: 0.5rem;
         height: 48px;
         padding: 0 1.75rem;
-        background-color: var(--brand);
+        background: var(--brand);
         color: #ffffff;
         border: none;
-        border-radius: var(--radius-full);
+        border-radius: 9999px;
         font-family: inherit;
         font-size: 0.9375rem;
         font-weight: 600;
-        cursor: pointer;
-        transition: background-color 200ms, transform 120ms;
         letter-spacing: -0.01em;
+        cursor: pointer;
+        transition: background 180ms, transform 100ms;
         text-decoration: none;
       }
+      .btn:hover  { background: var(--brand-dark); }
+      .btn:active { transform: scale(0.97); }
 
-      .btn:hover {
-        background-color: var(--brand-dark);
-      }
-
-      .btn:active {
-        transform: scale(0.97);
-      }
-
-      /* ── Tip card ── */
-      .tip-card {
-        margin-top: 1.75rem;
-        background-color: var(--surface);
+      /* What works offline card */
+      .card {
+        margin-top: 2rem;
+        background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 16px;
         padding: 1rem 1.25rem;
-        max-width: 300px;
+        max-width: 288px;
         text-align: left;
+        width: 100%;
       }
 
-      .tip-label {
+      .card-label {
         font-size: 0.6875rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: var(--brand);
-        margin-bottom: 0.375rem;
+        margin-bottom: 0.625rem;
       }
 
-      .tip-text {
+      .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        list-style: none;
+      }
+
+      .feature-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         font-size: 0.875rem;
         color: var(--text-muted);
-        line-height: 1.55;
+        line-height: 1.4;
       }
 
-      /* ── Footer hint ── */
-      .footer-hint {
+      .feature-list li::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--brand);
+        opacity: 0.6;
+        flex-shrink: 0;
+      }
+
+      /* Footer */
+      .footer {
         position: absolute;
         bottom: calc(1.25rem + var(--safe-bottom));
         font-size: 0.6875rem;
-        color: #aea79d;
+        color: #bab3aa;
         letter-spacing: 0.01em;
-      }
-
-      /* Wifi-off SVG colours */
-      .icon-stroke {
-        stroke: var(--brand);
       }
     </style>
   </head>
@@ -180,8 +180,7 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path
           d="M12 2C8 2 4.5 5.5 4.5 9.5c0 5.25 7.5 12.5 7.5 12.5s7.5-7.25 7.5-12.5C19.5 5.5 16 2 12 2z"
-          fill="currentColor"
-          opacity="0.25"
+          fill="currentColor" opacity="0.25"
         />
         <path
           d="M12 5.5c-2.2 0-4 1.8-4 4 0 2.9 4 7.5 4 7.5s4-4.6 4-7.5c0-2.2-1.8-4-4-4z"
@@ -193,63 +192,27 @@
 
     <!-- Wifi-off icon -->
     <div class="icon-wrap" aria-hidden="true">
-      <svg
-        width="40"
-        height="40"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke-width="1.75"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <line x1="2" y1="2" x2="22" y2="22" class="icon-stroke" />
-        <path
-          d="M8.5 16.5a5 5 0 0 1 7 0"
-          class="icon-stroke"
-          opacity="0.35"
-        />
-        <path
-          d="M2 8.82a15 15 0 0 1 4.17-2.65"
-          class="icon-stroke"
-        />
-        <path
-          d="M10.66 5c4.01-.36 8.14.9 11.34 3.76"
-          class="icon-stroke"
-          opacity="0.5"
-        />
-        <path
-          d="M16.85 11.25a10 10 0 0 1 2.22 1.68"
-          class="icon-stroke"
-          opacity="0.5"
-        />
-        <path
-          d="M5 12.85A10 10 0 0 1 9.58 10"
-          class="icon-stroke"
-        />
-        <circle cx="12" cy="20" r="1" fill="#3d7558" />
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3d7558"
+           stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="2" y1="2" x2="22" y2="22" />
+        <path d="M8.5 16.5a5 5 0 0 1 7 0" opacity="0.35" />
+        <path d="M2 8.82a15 15 0 0 1 4.17-2.65" />
+        <path d="M10.66 5c4.01-.36 8.14.9 11.34 3.76" opacity="0.5" />
+        <path d="M16.85 11.25a10 10 0 0 1 2.22 1.68" opacity="0.5" />
+        <path d="M5 12.85A10 10 0 0 1 9.58 10" />
+        <circle cx="12" cy="20" r="1" fill="#3d7558" stroke="none" />
       </svg>
     </div>
 
-    <!-- Message -->
-    <h1>You're offline</h1>
+    <h1>You&rsquo;re offline</h1>
     <p class="subtitle">
-      No internet connection right now. Your saved lessons and recent data are
-      still available.
+      No connection right now. Your data is safe on-device and most of the app still works.
     </p>
 
-    <!-- Retry -->
     <button class="btn" onclick="window.location.reload()" aria-label="Try reconnecting">
-      <svg
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.25"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.25" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
         <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
         <path d="M21 3v5h-5" />
         <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
@@ -258,16 +221,17 @@
       Try again
     </button>
 
-    <!-- Tip card -->
-    <div class="tip-card" role="note">
-      <p class="tip-label">Did you know?</p>
-      <p class="tip-text">
-        Calmorie works offline for lessons, meal logging, and daily check-ins.
-        Your data is stored safely on your device.
-      </p>
+    <!-- What still works offline -->
+    <div class="card" role="note">
+      <p class="card-label">Still available offline</p>
+      <ul class="feature-list">
+        <li>Log meals and calories</li>
+        <li>Complete your daily check-in</li>
+        <li>Read lessons you&rsquo;ve already opened</li>
+        <li>View your food history</li>
+      </ul>
     </div>
 
-    <!-- Footer -->
-    <p class="footer-hint" aria-hidden="true">Calmorie · Offline mode · v0.1</p>
+    <p class="footer" aria-hidden="true">Calmorie &middot; Offline &middot; v0.1</p>
   </body>
 </html>
