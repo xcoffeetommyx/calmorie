@@ -4,8 +4,6 @@ import withPWAInit from '@ducanh2912/next-pwa'
 
 const repo = 'calmorie'
 
-// Service worker scope must match the GitHub Pages basePath so the SW
-// controls all pages under /calmorie/.
 const withPWA = withPWAInit({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
@@ -13,7 +11,6 @@ const withPWA = withPWAInit({
   reloadOnOnline: true,
   workboxOptions: {
     disableDevLogs: true,
-    scope: `/${repo}/`,
     runtimeCaching: [
       {
         urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
