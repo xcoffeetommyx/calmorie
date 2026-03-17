@@ -9,23 +9,35 @@
  *   selectResumeStep(lesson.slug) previously created a new closure on every
  *   render. Passed to Zustand's useSyncExternalStore, this caused React to
  *   see a snapshot value change (lastStepIndex → 0) when markComplete fired
- *   and set completed:true. Under concurrent rendering, this extra re-render
- *   could corrupt the currentScreen/isTakeaway relationship, locking the Next
- *   button. Fix: the selector is memoised with useMemo so the same function
- *   reference is reused, preventing spurious snapshot comparisons.
+ *   and set completed:true. Fix: selector is memoised with useMemo.
  *
- * Swipe navigation:
- *   Pointer events on the content wrapper detect horizontal swipes. The
- *   threshold (40px) prevents accidental triggers on taps. Vertical-dominant
- *   gestures are ignored so scrolling inside a step works normally.
+ * Swipe navigation — v3 fix (Android Chrome pointer event reliability):
+ *   onPointerDown/Up registered on the outer container did not reliably fire
+ *   on Android Chrome because the inner overflow-y-auto div caused the
+ *   browser to claim the touch for scroll handling, dispatching pointercancel
+ *   instead of pointerup. Fixes applied:
+ *     1. touch-action: pan-y on the swipe container — tells Chrome to handle
+ *        vertical panning natively and pass horizontal gestures to JS.
+ *     2. onPointerCancel clears the start-position refs so a cancelled touch
+ *        does not leave stale state that blocks the next gesture.
  *
- * Visual design (v2 — rounded reading surface):
- *   Step content now sits inside an elevated card surface (bg-surface,
- *   rounded-2xl, shadow-card) rather than bare text on the background.
- *   Body text is larger (text-lg) with a generous line-height for comfortable
- *   mobile reading. The step label is styled as a compact pill badge.
- *   The takeaway screen has a stronger visual hierarchy with a decorative
- *   sparkle icon and larger display-size text.
+ * Layout clipping — v3 fix:
+ *   absolute inset-0 children fill from the border edge of their containing
+ *   block, not the content edge, so px-4 on the outer "relative overflow-hidden"
+ *   container did nothing for the card inside. The card spanned full width.
+ *   Its shadow-card extended past the container edge and was hard-clipped by
+ *   overflow-hidden, making the card look cut off.
+ *   Fixes:
+ *     1. Removed px-4 from the outer container (it was a no-op for absolute children).
+ *     2. Moved horizontal padding into a wrapper div INSIDE the absolute scroll child.
+ *     3. Replaced shadow-card with border border-border/60 (shadow cannot show through
+ *        overflow-hidden on the container that clips the animation slides).
+ *
+ * Bottom-nav safe area — v3 fix:
+ *   The swiper motion.div in LessonReader is now given an explicit calc() height,
+ *   so its bottom aligns with the viewport bottom. The fixed BottomNav (64px) sits
+ *   over that. The nav-buttons bar now carries enough bottom padding on mobile to
+ *   keep the Back/Next buttons above the BottomNav.
  */
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
@@ -39,10 +51,9 @@ import { useLessonStore, selectResumeStep } from '@/stores/lessonStore'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-/** Minimum horizontal distance (px) for a swipe to register */
 const SWIPE_THRESHOLD = 40
 
-// ── Step slide variants (directional) ─────────────────────────────────────
+// ── Step slide variants ────────────────────────────────────────────────────
 
 const stepVariants = {
   enter: (dir: number) => ({
@@ -69,7 +80,6 @@ interface LessonSwiperProps {
 }
 
 export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
-  // ── Stable selector — same function reference across renders ──────────────
   const resumeStepSelector = useMemo(
     () => selectResumeStep(lesson.slug),
     [lesson.slug]
@@ -84,9 +94,8 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
   const [direction,      setDirection]     = useState(1)
   const [sourcesOpen,    setSourcesOpen]   = useState(false)
 
-  // ── Derived values ────────────────────────────────────────────────────────
   const totalSteps   = lesson.steps.length
-  const totalScreens = totalSteps + 1   // steps + takeaway
+  const totalScreens = totalSteps + 1
   const isTakeaway   = currentScreen === totalSteps
 
   // ── Progress tracking ─────────────────────────────────────────────────────
@@ -96,15 +105,11 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (!isTakeaway) {
-      markProgress(lesson.slug, currentScreen)
-    }
+    if (!isTakeaway) markProgress(lesson.slug, currentScreen)
   }, [currentScreen, isTakeaway]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (isTakeaway) {
-      markComplete(lesson.slug)
-    }
+    if (isTakeaway) markComplete(lesson.slug)
   }, [isTakeaway]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Navigation ────────────────────────────────────────────────────────────
@@ -124,6 +129,15 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
   }, [currentScreen])
 
   // ── Swipe detection ───────────────────────────────────────────────────────
+  //
+  // touch-action: pan-y is set on the container (via inline style — Tailwind's
+  // touch-pan-y utility is not configured in this project). This tells Android
+  // Chrome: "handle vertical scroll natively; pass horizontal gestures to JS."
+  // Without this hint the browser may claim the entire touch for scroll and
+  // dispatch pointercancel instead of pointerup, silently swallowing swipes.
+  //
+  // onPointerCancel resets refs so a scroll-cancelled touch does not leave
+  // stale state that would misfire on the next legitimate swipe.
 
   const swipeStartX = useRef<number | null>(null)
   const swipeStartY = useRef<number | null>(null)
@@ -143,14 +157,18 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
     swipeStartX.current = null
     swipeStartY.current = null
 
+    // Ignore vertical-dominant gestures (native scroll)
     if (Math.abs(dy) > Math.abs(dx)) return
 
-    if (dx < -SWIPE_THRESHOLD) {
-      goNext()
-    } else if (dx > SWIPE_THRESHOLD) {
-      goPrev()
-    }
+    if (dx < -SWIPE_THRESHOLD) goNext()
+    else if (dx > SWIPE_THRESHOLD) goPrev()
   }, [goNext, goPrev])
+
+  // Clears stale refs when the browser cancels the pointer (e.g. to handle scroll)
+  const handlePointerCancel = useCallback(() => {
+    swipeStartX.current = null
+    swipeStartY.current = null
+  }, [])
 
   // ── Render ────────────────────────────────────────────────────────────────
 
@@ -158,14 +176,14 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
+
       {/* ── Progress + sources bar ─────────────────────────── */}
-      <div className="flex items-center justify-between px-5 py-2.5">
+      <div className="flex items-center justify-between px-5 py-2.5 shrink-0">
         <LessonProgress
           currentStep={currentScreen}
           totalSteps={totalSteps}
           showTakeaway
         />
-
         <button
           type="button"
           onClick={() => setSourcesOpen(true)}
@@ -182,11 +200,24 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
         </button>
       </div>
 
-      {/* ── Step content — swipe-enabled ─────────────────────── */}
+      {/* ── Step content — swipe-enabled ─────────────────────
+        *
+        * overflow-hidden: clips the entering/exiting slide during animation.
+        * px-4 is intentionally ABSENT here — absolute inset-0 children fill
+        * from the border edge of their containing block, not the content edge,
+        * so padding on this container has no effect on them. Horizontal padding
+        * is applied inside each step's inner wrapper instead.
+        *
+        * touch-action: pan-y (inline) — the key swipe fix. Without this hint,
+        * Android Chrome claims the entire touch for scroll handling and fires
+        * pointercancel before pointerup, silently dropping horizontal swipes.
+        ──────────────────────────────────────────────────── */}
       <div
-        className="relative flex-1 min-h-0 overflow-hidden px-4"
+        className="relative flex-1 min-h-0 overflow-hidden"
+        style={{ touchAction: 'pan-y' }}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
       >
         <AnimatePresence mode="wait" custom={direction}>
           {isTakeaway ? (
@@ -209,8 +240,24 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
         </AnimatePresence>
       </div>
 
-      {/* ── Navigation buttons ─────────────────────────────── */}
-      <div className="flex items-center justify-between px-4 py-3 border-t border-border shrink-0">
+      {/* ── Navigation buttons ─────────────────────────────────
+        *
+        * Bottom padding:
+        *   On mobile the swiper container's bottom aligns with the viewport
+        *   bottom (see LessonReader for the calc() height). The app's fixed
+        *   BottomNav (64px) sits on top of that. pb-[calc(…)] pushes the
+        *   buttons above the BottomNav so they remain tappable. lg:pb-3
+        *   resets to normal padding on desktop where BottomNav is hidden.
+        ────────────────────────────────────────────────────── */}
+      <div
+        className={cn(
+          'flex items-center justify-between px-5 pt-3 border-t border-border shrink-0',
+          // Clear the fixed BottomNav (64px) plus the original 12px bottom padding
+          'pb-[calc(0.75rem+var(--bottom-nav-height))]',
+          // Desktop: BottomNav is hidden, reset to normal padding
+          'lg:pb-3',
+        )}
+      >
         <button
           type="button"
           onClick={goPrev}
@@ -286,16 +333,21 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
 /**
  * StepScreen
  *
- * Renders a single lesson step inside a rounded reading card.
- * The card gives the text a deliberate, inviting reading surface —
- * distinct from the background — so it feels like a premium content
- * card rather than a plain document page.
+ * Key layout notes (v3 fix):
  *
- * Typography:
- *   - Heading: text-[1.65rem] / leading-snug — anchors the page without
- *     overwhelming a narrow phone viewport
- *   - Body: text-lg / leading-[1.85] — comfortable for paragraph-heavy
- *     wellness content; wraps well at 360px viewport widths
+ *   The motion.div uses absolute inset-0 to fill the swipe container and
+ *   enable overflow-y-auto scrolling within a bounded area. It also drives
+ *   the horizontal slide animation.
+ *
+ *   Horizontal padding lives on the inner wrapper div (px-4), NOT on the
+ *   outer "relative overflow-hidden" container. This is important because
+ *   absolute inset-0 elements fill from the border edge of their containing
+ *   block — px-4 on the outer container would have zero effect on them.
+ *
+ *   The reading card uses border border-border/60 instead of shadow-card.
+ *   Box-shadows are clipped by any ancestor with overflow:hidden, and the
+ *   swipe container must use overflow-hidden to clip the animation. A subtle
+ *   border gives visual separation without the hard-cut appearance.
  */
 function StepScreen({
   direction,
@@ -319,16 +371,18 @@ function StepScreen({
       exit="exit"
       className="absolute inset-0 overflow-y-auto overscroll-contain"
     >
-      {/* Vertical breathing room around the card */}
-      <div className="py-2 pb-6">
+      {/* px-4: horizontal card inset (cannot live on the outer container — see notes above) */}
+      <div className="px-4 pt-3 pb-6">
 
-        {/* ── Reading card surface ─────────────────────────── */}
+        {/* Reading card surface
+          * border-only (no shadow) — shadows are clipped by ancestor overflow-hidden.
+          * rounded-2xl gives the modern, bubbly feel without needing elevation. */}
         <div
           className={cn(
-            'bg-surface rounded-2xl shadow-card',
-            'border border-border/50',
-            'px-6 pt-6 pb-8',
-            'space-y-5',
+            'bg-surface rounded-2xl',
+            'border border-border/60',
+            'px-5 pt-5 pb-8',
+            'space-y-4',
           )}
         >
           {/* Step pill badge */}
@@ -347,25 +401,22 @@ function StepScreen({
           <h3
             className={cn(
               'font-display font-semibold text-ink',
-              'text-[1.65rem] leading-snug tracking-tight',
+              'text-[1.6rem] leading-snug tracking-tight',
               'text-balance',
             )}
           >
             {heading}
           </h3>
 
-          {/* Decorative accent rule */}
-          <div className="w-10 h-[3px] rounded-full bg-primary/25" />
+          {/* Thin accent rule */}
+          <div className="w-8 h-[3px] rounded-full bg-primary/30" />
 
-          {/* Body paragraphs */}
+          {/* Body paragraphs — text-lg for comfortable mobile reading */}
           <div className="space-y-5">
             {body.split('\n\n').map((para, i) => (
               <p
                 key={i}
-                className={cn(
-                  'font-body text-lg text-ink',
-                  'leading-[1.85]',
-                )}
+                className="font-body text-lg text-ink leading-[1.8]"
               >
                 {para}
               </p>
@@ -381,9 +432,9 @@ function StepScreen({
 /**
  * TakeawayScreen
  *
- * The final screen after all steps. Styled as a full-bleed accent card
- * with a Sparkles icon to signal "key insight". The takeaway text renders
- * at a large display size so it lands as a memorable closing statement.
+ * Final step. Same horizontal padding approach as StepScreen.
+ * Uses a centered flex layout to push the card to mid-screen on tall
+ * viewports; on short viewports it falls back to top-aligned scroll.
  */
 function TakeawayScreen({
   direction,
@@ -401,14 +452,15 @@ function TakeawayScreen({
       initial="enter"
       animate="center"
       exit="exit"
-      className="absolute inset-0 flex flex-col justify-center overflow-y-auto overscroll-contain"
+      className="absolute inset-0 overflow-y-auto overscroll-contain"
     >
-      <div className="py-4">
+      {/* Use flex + justify-center for vertical centering on tall screens */}
+      <div className="px-4 py-6 flex flex-col justify-center min-h-full">
         <div
           className={cn(
             'bg-primary-light rounded-2xl',
             'border border-primary-mid',
-            'px-6 py-9 space-y-6',
+            'px-5 py-8 space-y-6',
           )}
         >
           {/* Icon + label */}
@@ -427,18 +479,18 @@ function TakeawayScreen({
             </p>
           </div>
 
-          {/* Takeaway quote — display-weight for impact */}
+          {/* Takeaway — large display text for impact */}
           <p
             className={cn(
               'font-display font-semibold text-primary-text',
-              'text-[1.55rem] leading-snug tracking-tight',
+              'text-[1.5rem] leading-snug tracking-tight',
               'text-balance',
             )}
           >
             {takeaway}
           </p>
 
-          {/* Supporting hint */}
+          {/* Hint */}
           <p className="font-body text-sm text-primary-text/65 leading-relaxed">
             Tap &ldquo;Done&rdquo; to return to the lesson library, or view
             the sources to explore the research behind this lesson.

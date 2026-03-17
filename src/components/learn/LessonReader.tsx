@@ -7,24 +7,32 @@
  *
  * Structure:
  *   ┌─────────────────────────────┐
- *   │  TopBar (back, title)       │  ← sticky
+ *   │  TopBar (back, title)       │  ← sticky, h = var(--top-bar-height) = 56px
  *   ├─────────────────────────────┤
  *   │  Lesson intro screen        │  ← shown before reading starts
  *   │  (or LessonSwiper)          │
  *   └─────────────────────────────┘
  *
- * Progress-aware intro screen:
- *   – No progress (not started): shows "Start lesson" CTA
- *   – In-progress (started, not completed): shows "Continue lesson" CTA
- *     with the step the user reached ("Continue from step 3/6")
- *   – Completed: shows "Read again" CTA
+ * Swiper height — v3 fix:
+ *   The previous design used flex-1 on the swiper motion.div and relied on
+ *   min-h-screen-dynamic (min-height: 100dvh) propagating a definite flex
+ *   container height down the chain. This is fragile: while Chrome 84+ does
+ *   treat min-height as definite for flex in most cases, the behaviour can
+ *   break when intermediate elements (AnimatePresence, Next.js page wrappers)
+ *   are not flex children in the expected way.
  *
- * Visual design (v2 — premium intro surface):
- *   The intro screen uses a rounded card for the sections list so each
- *   step feels intentional and inviting. The step numbering uses filled
- *   circle badges instead of plain text numerals. The summary text is
- *   slightly larger for comfortable reading. The overall layout has more
- *   breathing room between sections.
+ *   Fix: give the swiper motion.div an EXPLICIT height using CSS calc(),
+ *   bypassing the flex chain entirely:
+ *     height: calc(100dvh - var(--top-bar-height))
+ *   This gives the swiper exactly the viewport below the TopBar regardless
+ *   of what any ancestor does.
+ *
+ *   The BottomNav (64px, position: fixed) sits on top of the viewport bottom.
+ *   LessonSwiper's nav-buttons bar compensates with extra bottom padding on
+ *   mobile (see LessonSwiper.tsx).
+ *
+ * Intro screen:
+ *   Uses min-h-screen-dynamic and normal block scroll — unchanged from v2.
  */
 
 import { useState } from 'react'
@@ -93,7 +101,7 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               {categoryLabel}
             </span>
 
-            {/* Title — large and bold to anchor the page */}
+            {/* Title */}
             <h1
               className={cn(
                 'font-display font-semibold text-ink',
@@ -104,7 +112,7 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               {lesson.title}
             </h1>
 
-            {/* Summary — slightly larger than before for comfortable scanning */}
+            {/* Summary */}
             <p className="font-body text-[1.0625rem] text-ink leading-[1.8]">
               {lesson.summary}
             </p>
@@ -138,10 +146,8 @@ export function LessonReader({ lesson }: LessonReaderProps) {
                 />
                 <p className="font-body text-sm text-primary-text leading-relaxed">
                   You&rsquo;ve read up to{' '}
-                  <strong>
-                    section {resumeStep + 1} of {totalSteps}
-                  </strong>
-                  . Tap &ldquo;Continue&rdquo; to pick up where you left off.
+                  <strong>section {resumeStep + 1} of {totalSteps}</strong>.
+                  {' '}Tap &ldquo;Continue&rdquo; to pick up where you left off.
                 </p>
               </div>
             )}
@@ -167,20 +173,16 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               </div>
             )}
 
-            {/* Sections preview card — rounded, intentional surface */}
+            {/* Sections preview card */}
             <div className="bg-surface rounded-2xl shadow-card overflow-hidden border border-border/50">
-              {/* Card header */}
               <div className="px-5 py-3 border-b border-border bg-background/50">
                 <p className="font-body text-[11px] font-semibold text-ink-muted uppercase tracking-wider">
                   {lesson.steps.length} {lesson.steps.length === 1 ? 'section' : 'sections'}
                 </p>
               </div>
-
-              {/* Step list */}
               <ul className="divide-y divide-border/60">
                 {lesson.steps.map((step, i) => (
                   <li key={i} className="flex items-center gap-4 px-5 py-3.5">
-                    {/* Numbered circle badge */}
                     <span
                       className={cn(
                         'flex items-center justify-center shrink-0',
@@ -200,12 +202,12 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               </ul>
             </div>
 
-            {/* CTA — label changes based on progress state */}
+            {/* CTA */}
             <button
               type="button"
               onClick={() => setStarted(true)}
               className={cn(
-                'w-full h-13 rounded-2xl',
+                'w-full rounded-2xl',
                 'font-body text-[0.9375rem] font-semibold',
                 'shadow-sm active:scale-[0.97]',
                 'transition-all duration-fast ease-smooth',
@@ -236,18 +238,33 @@ export function LessonReader({ lesson }: LessonReaderProps) {
               </span>
             </button>
 
-            {/* Bottom breathing room (above bottom nav) */}
             <div className="h-2" aria-hidden="true" />
           </motion.div>
+
         ) : (
-          /* ── Lesson swiper ───────────────────────────────────── */
+          /* ── Lesson swiper ───────────────────────────────────────
+           *
+           * Explicit calc() height bypasses the flex chain.
+           *
+           * WHY: flex-1 on this motion.div relies on all ancestors
+           * propagating a definite height (not just min-height). That
+           * chain can silently collapse to 0 on some Android Chrome
+           * builds, making the content area 0px tall and everything
+           * visually cut off.
+           *
+           * INSTEAD: anchor the swiper to exactly the viewport height
+           * minus the TopBar. Combined with overflow-hidden, no content
+           * escapes and the internal flex-1/min-h-0 chain inside
+           * LessonSwiper now has a concrete height to distribute.
+           ──────────────────────────────────────────────────────── */}
           <motion.div
             key="swiper"
             initial={{ opacity: 0, x: '20%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="flex-1 flex flex-col"
+            className="flex flex-col overflow-hidden"
+            style={{ height: 'calc(100dvh - var(--top-bar-height))' }}
           >
             <LessonSwiper key={lesson.slug} lesson={lesson} onClose={handleDone} />
           </motion.div>
