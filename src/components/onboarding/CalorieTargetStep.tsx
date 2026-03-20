@@ -11,9 +11,12 @@
  *   – Plain-language explanation of how the number was derived
  *   – A brief, honest disclaimer about formula accuracy
  *
- * The user confirms by tapping "Start tracking" which calls onSubmit.
- * The hook then writes the UserProfile to the store and the page
- * navigates to /dashboard.
+ * Layout v2:
+ *   The hero result card and breakdown table are unchanged in content.
+ *   Bottom nav uses the same back-circle + primary-pill pattern as other steps,
+ *   with a small `pb-2` added so the buttons sit comfortably above the safe area.
+ *
+ * Logic is unchanged from v1.
  */
 
 import { useMemo } from 'react'
@@ -36,12 +39,7 @@ export function CalorieTargetStep({
   onSubmit,
   onBack,
 }: CalorieTargetStepProps) {
-  // Calculate on every render — pure function, no side effects
-  const result = useMemo(
-    () => calculateFromProfile(profileInput),
-    [profileInput]
-  )
-
+  const result      = useMemo(() => calculateFromProfile(profileInput), [profileInput])
   const explanation = explainCalorieTarget(result, profileInput.goal)
   const isEducate   = profileInput.goal === 'educate'
 
@@ -50,12 +48,12 @@ export function CalorieTargetStep({
       variants={staggerContainer}
       initial="initial"
       animate="enter"
-      className="space-y-5"
+      className="space-y-4"
     >
-      {/* ── Hero result card ─────────────────────────────── */}
+      {/* ── Hero result card ─────────────────────────────────── */}
       <motion.div
         variants={staggerItem}
-        className="bg-primary-light border border-primary-mid rounded-2xl px-5 py-6 text-center space-y-3"
+        className="bg-primary-light border border-primary-mid rounded-2xl px-5 py-7 text-center space-y-3"
       >
         {isEducate ? (
           <>
@@ -64,7 +62,7 @@ export function CalorieTargetStep({
             </p>
             <motion.p
               variants={scaleSpring}
-              className="font-display text-4xl font-semibold text-primary tracking-tight"
+              className="font-display text-5xl font-semibold text-primary tracking-tight"
               aria-label={`Estimated maintenance: ${result.tdee.toLocaleString()} kilocalories per day`}
             >
               {result.tdee.toLocaleString()}
@@ -80,7 +78,7 @@ export function CalorieTargetStep({
             </p>
             <motion.p
               variants={scaleSpring}
-              className="font-display text-4xl font-semibold text-primary tracking-tight"
+              className="font-display text-5xl font-semibold text-primary tracking-tight"
               aria-label={`Daily calorie target: ${result.calorieTarget.toLocaleString()} kilocalories`}
             >
               {result.calorieTarget.toLocaleString()}
@@ -92,20 +90,14 @@ export function CalorieTargetStep({
         )}
       </motion.div>
 
-      {/* ── Breakdown ────────────────────────────────────── */}
+      {/* ── Breakdown ────────────────────────────────────────── */}
       {!isEducate && (
         <motion.div
           variants={staggerItem}
-          className="bg-surface rounded-xl shadow-card divide-y divide-border overflow-hidden"
+          className="bg-surface rounded-2xl border border-border/60 shadow-xs divide-y divide-border overflow-hidden"
         >
-          <ResultRow
-            label="Maintenance (TDEE)"
-            value={`${result.tdee.toLocaleString()} kcal`}
-          />
-          <ResultRow
-            label="Goal"
-            value={GOAL_LABELS[profileInput.goal]}
-          />
+          <ResultRow label="Maintenance (TDEE)"  value={`${result.tdee.toLocaleString()} kcal`} />
+          <ResultRow label="Goal"                value={GOAL_LABELS[profileInput.goal]} />
           <ResultRow
             label="Adjustment"
             value={
@@ -122,7 +114,7 @@ export function CalorieTargetStep({
         </motion.div>
       )}
 
-      {/* ── Plain-language explanation ────────────────────── */}
+      {/* ── Plain-language explanation ────────────────────────── */}
       <motion.p
         variants={staggerItem}
         className="font-body text-sm text-ink-secondary leading-relaxed"
@@ -130,7 +122,7 @@ export function CalorieTargetStep({
         {explanation}
       </motion.p>
 
-      {/* ── Honest disclaimer ────────────────────────────── */}
+      {/* ── Honest disclaimer ────────────────────────────────── */}
       <motion.div
         variants={staggerItem}
         className={cn(
@@ -153,8 +145,8 @@ export function CalorieTargetStep({
         </p>
       </motion.div>
 
-      {/* ── Navigation ───────────────────────────────────── */}
-      <motion.div variants={staggerItem} className="flex gap-3 pt-1">
+      {/* ── Navigation ───────────────────────────────────────── */}
+      <motion.div variants={staggerItem} className="flex gap-3 pt-1 pb-2">
         <button
           type="button"
           onClick={onBack}

@@ -6,9 +6,13 @@
  * Onboarding step 2 of 3.
  * Collects: activity level, goal.
  *
+ * Layout v2:
+ *   Each selection group (activity, goal) is wrapped in a card container
+ *   with a clear section label, giving each group visual elevation and
+ *   breaking the long vertical wall of options into two distinct chunks.
+ *
  * Both fields use card-based selection (no dropdowns) for touch-friendliness.
- * Activity level has 5 options; goal has 3.
- * Descriptions are plain-language and non-clinical.
+ * All logic is unchanged from v1.
  */
 
 import { useState } from 'react'
@@ -70,70 +74,78 @@ export function GoalStep({ defaultValues, onNext, onBack }: GoalStepProps) {
       initial="initial"
       animate="enter"
       onSubmit={handleSubmit}
-      className="space-y-6"
+      className="space-y-4"
       noValidate
     >
-      {/* ── Activity level ─────────────────────────────────── */}
-      <motion.div variants={staggerItem} className="space-y-2">
-        <div>
-          <p className="font-body text-sm font-medium text-ink">
+      {/* ── Card: Activity level ───────────────────────────────── */}
+      <motion.div variants={staggerItem}>
+        <div className={cn('bg-surface rounded-2xl border border-border/60 px-4 py-4 shadow-xs')}>
+          <p className="font-body text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">
+            Daily activity
+          </p>
+          <p className="font-body text-sm font-medium text-ink mb-0.5">
             How active are you day-to-day?
           </p>
-          <p className="font-body text-xs text-ink-muted mt-0.5">
+          <p className="font-body text-xs text-ink-muted mb-3">
             Think about your typical week, including work and leisure.
           </p>
-        </div>
 
-        <div className="space-y-2" role="radiogroup" aria-label="Activity level">
-          {ACTIVITY_OPTIONS.map((level) => (
-            <ActivityCard
-              key={level}
-              level={level}
-              isSelected={activityLevel === level}
-              onSelect={() => {
-                setActivityLevel(level)
-                setSubmitted(false)
-              }}
-            />
-          ))}
-        </div>
+          <div className="space-y-2" role="radiogroup" aria-label="Activity level">
+            {ACTIVITY_OPTIONS.map((level) => (
+              <ActivityCard
+                key={level}
+                level={level}
+                isSelected={activityLevel === level}
+                onSelect={() => {
+                  setActivityLevel(level)
+                  setSubmitted(false)
+                }}
+              />
+            ))}
+          </div>
 
-        {activityError && (
-          <p className="font-body text-xs text-error" role="alert">
-            Please select your activity level
-          </p>
-        )}
+          {activityError && (
+            <p className="font-body text-xs text-error mt-2" role="alert">
+              Please select your activity level
+            </p>
+          )}
+        </div>
       </motion.div>
 
-      {/* ── Goal ──────────────────────────────────────────── */}
-      <motion.div variants={staggerItem} className="space-y-2">
-        <p className="font-body text-sm font-medium text-ink">
-          What&rsquo;s your main goal?
-        </p>
-
-        <div className="space-y-2" role="radiogroup" aria-label="Goal">
-          {GOAL_OPTIONS.map((g) => (
-            <GoalCard
-              key={g}
-              goal={g}
-              isSelected={goal === g}
-              onSelect={() => {
-                setGoal(g)
-                setSubmitted(false)
-              }}
-            />
-          ))}
-        </div>
-
-        {goalError && (
-          <p className="font-body text-xs text-error" role="alert">
-            Please select a goal
+      {/* ── Card: Goal ────────────────────────────────────────── */}
+      <motion.div variants={staggerItem}>
+        <div className={cn('bg-surface rounded-2xl border border-border/60 px-4 py-4 shadow-xs')}>
+          <p className="font-body text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">
+            Your goal
           </p>
-        )}
+          <p className="font-body text-sm font-medium text-ink mb-3">
+            What&rsquo;s your main goal?
+          </p>
+
+          <div className="space-y-2" role="radiogroup" aria-label="Goal">
+            {GOAL_OPTIONS.map((g) => (
+              <GoalCard
+                key={g}
+                goal={g}
+                isSelected={goal === g}
+                onSelect={() => {
+                  setGoal(g)
+                  setSubmitted(false)
+                }}
+              />
+            ))}
+          </div>
+
+          {goalError && (
+            <p className="font-body text-xs text-error mt-2" role="alert">
+              Please select a goal
+            </p>
+          )}
+        </div>
       </motion.div>
 
-      {/* ── Navigation ────────────────────────────────────── */}
-      <motion.div variants={staggerItem} className="flex gap-3 pt-1">
+      {/* ── Navigation ────────────────────────────────────────── */}
+      <motion.div variants={staggerItem} className="flex gap-3 pt-1 pb-2">
         <button
           type="button"
           onClick={onBack}
@@ -190,7 +202,7 @@ function ActivityCard({
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
         isSelected
           ? 'bg-primary-light border-primary-mid'
-          : 'bg-surface border-border hover:bg-surface-raised hover:border-border-strong',
+          : 'bg-background border-border hover:bg-surface-raised hover:border-border-strong',
       )}
     >
       <div className="flex items-center justify-between gap-2">
@@ -244,7 +256,7 @@ function GoalCard({
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
         isSelected
           ? 'bg-primary-light border-primary-mid'
-          : 'bg-surface border-border hover:bg-surface-raised hover:border-border-strong',
+          : 'bg-background border-border hover:bg-surface-raised hover:border-border-strong',
       )}
     >
       <div className="flex items-center justify-between gap-2">
