@@ -101,10 +101,19 @@ export const selectTopWarning = (
   return record?.habitWarnings[0] ?? null
 }
 
-export const selectStreakData = (state: CheckInState): StreakData => {
-  const dates = Object.keys(state.records)
-  return computeStreaks(dates)
-}
+/**
+ * Stable selector — returns the records map reference directly.
+ * The reference only changes when a record is added or the store is cleared,
+ * not on every render. Use this with useMemo in hooks for derived values.
+ *
+ * NOTE: selectStreakData was removed because it called Object.keys() and
+ * returned a new object on every invocation. Zustand compares selector
+ * results by reference, so a new object every render == infinite loop
+ * (React production error #185). Derived streak data lives in useStreakData().
+ */
+export const selectCheckinRecords = (
+  state: CheckInState
+): Record<string, CheckInRecordFull> => state.records
 
 // ── Streak computation ─────────────────────────────────────────────────────
 
@@ -112,9 +121,9 @@ const STREAK_MILESTONES = [3, 7, 14, 30] as const
 
 /**
  * Derives streak statistics from an array of 'YYYY-MM-DD' check-in dates.
- * Pure function — safe to call in any context.
+ * Pure function — safe to call in any context, including useMemo.
  */
-function computeStreaks(dates: string[]): StreakData {
+export function computeStreaks(dates: string[]): StreakData {
   if (dates.length === 0) {
     return { currentStreak: 0, bestStreak: 0, weeklyCount: 0, milestoneReached: null }
   }

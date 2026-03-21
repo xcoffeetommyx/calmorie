@@ -27,7 +27,8 @@ import { useCalorieTarget }                     from '@/hooks/useCalorieTarget'
 import { useLessons }                           from '@/hooks/useLessons'
 import { useTodayLog }                          from '@/hooks/useTodayLog'
 import { useHabitAlerts }                       from '@/hooks/useHabitAlerts'
-import { useCheckinStore, selectIsCompletedToday, selectStreakData, selectTodayRecord } from '@/stores/checkinStore'
+import { useCheckinStore, selectIsCompletedToday, selectTodayRecord } from '@/stores/checkinStore'
+import { useStreakData } from '@/hooks/useStreakData'
 
 const FALLBACK_TARGET = 2000
 
@@ -71,7 +72,7 @@ export default function DashboardPage() {
   const { entries: todayEntries, totalCalories: caloriesEaten, isHydrated: logHydrated } = useTodayLog()
   const isCheckedIn    = useCheckinStore(selectIsCompletedToday)
   const todayRecord    = useCheckinStore(selectTodayRecord)
-  const streakData     = useCheckinStore(selectStreakData)
+  const streakData     = useStreakData()
   const { topWarning } = useHabitAlerts()
   const { lessonOfTheDay } = useLessons()
 

@@ -28,7 +28,7 @@ import { scaleSpring, staggerContainer, staggerItem } from '@/lib/animations/var
 import { scoreToTier } from '@/lib/utils/format'
 import { calculateScore, getScoreDescription, getLessonSlugForFactor } from '@/lib/engine/scoreEngine'
 import { getLessonBySlug } from '@/lib/content/lessons'
-import { useCheckinStore, selectStreakData } from '@/stores/checkinStore'
+import { useStreakData } from '@/hooks/useStreakData'
 import { HabitWarning } from './HabitWarning'
 import type { CheckInRecordFull } from '@/stores/checkinStore'
 
@@ -64,8 +64,8 @@ export function CheckInScore({ record, onDone }: CheckInScoreProps) {
   const circumference   = 2 * Math.PI * 42  // r=42
   const dashOffset      = circumference * (1 - record.score / 100)
 
-  // Streak data — live from store (record was just saved so today is included)
-  const streakData = useCheckinStore(selectStreakData)
+  // Streak data — memoized derivation via stable records reference
+  const streakData = useStreakData()
 
   // Lesson recommendation — re-derive weakest factor from the stored answers
   const { weakestFactor } = calculateScore(record.answers)
