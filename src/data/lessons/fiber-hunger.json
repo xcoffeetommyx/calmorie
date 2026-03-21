@@ -1,0 +1,53 @@
+{
+  "slug": "fiber-hunger",
+  "title": "Fiber & Hunger Control",
+  "category": "digestion",
+  "summary": "Fibre slows digestion, steadies blood sugar, and feeds the gut bacteria that influence your appetite. Most people eat far too little of it.",
+  "readTimeMinutes": 3,
+  "steps": [
+    {
+      "heading": "How fibre slows digestion",
+      "body": "Soluble fibre — found in oats, beans, apples, and flaxseed — dissolves in water and forms a gel in your gut. This gel slows the movement of food through the digestive tract, which means glucose enters your bloodstream more gradually, preventing the sharp spikes and crashes that drive hunger between meals."
+    },
+    {
+      "heading": "Volume without calories",
+      "body": "Insoluble fibre adds physical bulk to your meals without contributing meaningful calories. High-fibre foods like vegetables, whole grains, and legumes take up more space in your stomach and trigger stretch receptors that signal fullness to your brain. Eating the same weight of food, but with more fibre, naturally reduces your calorie intake."
+    },
+    {
+      "heading": "Fibre and your gut microbiome",
+      "body": "The bacteria in your gut ferment undigested fibre and produce short-chain fatty acids (SCFAs) in the process. SCFAs help regulate appetite hormones, reduce inflammation, and support the gut lining. A healthy, diverse microbiome — fed by a variety of fibre sources — is increasingly linked to healthier weight management."
+    },
+    {
+      "heading": "Most people fall well short",
+      "body": "Health guidelines recommend 25–38 grams of fibre per day. The average person eats about half that. Ultra-processed foods, which make up a large share of most diets, are almost entirely fibre-free. Shifting even a few meals toward whole food sources makes a meaningful difference."
+    },
+    {
+      "heading": "Practical ways to eat more fibre",
+      "body": "Swap refined grains for whole grain versions. Add legumes (lentils, chickpeas, black beans) to soups, salads, or stews. Eat the peel on fruit and vegetables where possible. Snack on nuts, seeds, or raw vegetables rather than processed options. Aim to build up gradually — sudden large increases in fibre can cause bloating and discomfort until your gut adapts."
+    }
+  ],
+  "takeaway": "Fibre is one of the most under-appreciated tools for hunger control. Adding more whole plant foods to your meals costs nothing and has a direct impact on how full you feel throughout the day.",
+  "sources": [
+    {
+      "title": "Dietary fiber and body weight",
+      "organization": "Nutrition",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0899900704003041",
+      "year": 2005,
+      "note": "Reviews mechanisms by which dietary fibre reduces appetite and calorie intake."
+    },
+    {
+      "title": "Gut microbiota, short-chain fatty acids, and appetite",
+      "organization": "Nature Reviews Endocrinology",
+      "url": "https://www.nature.com/articles/nrendo.2017.195",
+      "year": 2017,
+      "note": "Covers how gut fermentation of fibre influences appetite-regulating hormones."
+    },
+    {
+      "title": "Fiber intake among US adults",
+      "organization": "American Journal of Medicine",
+      "url": "https://www.amjmed.com/article/S0002-9343(12)00567-X/fulltext",
+      "year": 2012,
+      "note": "Documents the gap between recommended and actual fibre intake in modern diets."
+    }
+  ]
+}

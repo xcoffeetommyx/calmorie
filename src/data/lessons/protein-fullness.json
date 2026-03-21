@@ -1,0 +1,53 @@
+{
+  "slug": "protein-fullness",
+  "title": "Protein & Fullness",
+  "category": "metabolism",
+  "summary": "Protein is the most filling macronutrient. Understanding why — and how to use it — can make eating less feel effortless.",
+  "readTimeMinutes": 3,
+  "steps": [
+    {
+      "heading": "Why protein keeps you full longer",
+      "body": "Of the three macronutrients, protein suppresses hunger most effectively. It slows how quickly your stomach empties and triggers the release of satiety hormones like GLP-1 and PYY. The result is that a protein-rich meal keeps you feeling full for longer than the same number of calories from carbs or fat."
+    },
+    {
+      "heading": "The thermic effect: protein costs more to digest",
+      "body": "Your body burns roughly 20–30% of a protein's calories just digesting and processing it — compared to about 5–10% for carbohydrates and 0–3% for fat. This means high-protein foods deliver fewer net calories than their label suggests, giving you a small but real metabolic advantage."
+    },
+    {
+      "heading": "Muscle preservation during a calorie deficit",
+      "body": "When you eat less than you burn, your body will use both fat and muscle for energy. Eating enough protein — around 1.2–1.6 g per kg of body weight — helps protect muscle mass. More muscle means a higher resting metabolic rate, which makes maintaining a healthy weight easier over time."
+    },
+    {
+      "heading": "Simple ways to add protein to each meal",
+      "body": "You don't need protein shakes. Eggs, Greek yoghurt, cottage cheese, legumes, tofu, fish, and lean meat are all practical sources. Aim to have a palm-sized serving of protein at each meal. Starting meals with protein before eating carbohydrates can also help you eat less overall."
+    },
+    {
+      "heading": "High protein doesn't mean no carbs",
+      "body": "Protein works best alongside balanced eating, not as a replacement for carbohydrates. Whole food carbs provide fibre, vitamins, and sustained energy. The goal is to make protein a consistent, prominent part of your plate — not to eliminate other food groups."
+    }
+  ],
+  "takeaway": "Prioritising protein at each meal is one of the most practical levers for managing hunger and protecting muscle. It doesn't require complicated tracking — just ensure every meal has a clear protein source.",
+  "sources": [
+    {
+      "title": "A high-protein diet for reducing body fat",
+      "organization": "Nutrition & Metabolism",
+      "url": "https://nutritionandmetabolism.biomedcentral.com/articles/10.1186/1743-7075-9-40",
+      "year": 2012,
+      "note": "Reviews mechanisms by which protein promotes satiety and weight loss."
+    },
+    {
+      "title": "Dietary protein and muscle mass",
+      "organization": "Advances in Nutrition",
+      "url": "https://academic.oup.com/advances/article/10/suppl_1/S58/5516330",
+      "year": 2019,
+      "note": "Evidence on protein requirements for maintaining lean mass during energy restriction."
+    },
+    {
+      "title": "Protein, weight management, and satiety",
+      "organization": "American Journal of Clinical Nutrition",
+      "url": "https://academic.oup.com/ajcn/article/87/5/1558S/4650426",
+      "year": 2008,
+      "note": "Describes the thermic effect of protein and its impact on appetite-regulating hormones."
+    }
+  ]
+}

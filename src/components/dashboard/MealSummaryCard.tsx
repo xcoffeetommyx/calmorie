@@ -90,15 +90,15 @@ export function MealSummaryCard({ entries, calorieTarget, className }: MealSumma
 
                 {/* Micro progress bar */}
                 <div
-                  className="h-1.5 bg-border rounded-full overflow-hidden"
+                  className="h-1.5 bg-surface-raised rounded-full overflow-hidden"
                   role="presentation"
                   aria-hidden="true"
                 >
                   <motion.div
-                    className="h-full bg-primary/70 rounded-full"
+                    className="h-full bg-primary rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${proportion * 100}%` }}
-                    transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+                    transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
                   />
                 </div>
 

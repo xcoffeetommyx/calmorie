@@ -40,7 +40,7 @@ import { ProfileStep } from './ProfileStep'
 import { GoalStep } from './GoalStep'
 import { CalorieTargetStep } from './CalorieTargetStep'
 import { WelcomeStep } from './WelcomeStep'
-import type { UserProfileInput, ActivityLevel, UserGoal, BiologicalSex } from '@/types/user'
+import type { UserProfileInput, ActivityLevel, UserGoal, BiologicalSex, UnitPreference } from '@/types/user'
 
 // ── Step metadata ──────────────────────────────────────────────────────────
 
@@ -273,11 +273,12 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                     {step === 0 && (
                       <ProfileStep
                         defaultValues={{
-                          name:     partialInput.name,
-                          age:      partialInput.age,
-                          sex:      partialInput.sex as BiologicalSex | undefined,
-                          heightCm: partialInput.heightCm,
-                          weightKg: partialInput.weightKg,
+                          name:           partialInput.name,
+                          age:            partialInput.age,
+                          sex:            partialInput.sex as BiologicalSex | undefined,
+                          heightCm:       partialInput.heightCm,
+                          weightKg:       partialInput.weightKg,
+                          unitPreference: partialInput.unitPreference as UnitPreference | undefined,
                         }}
                         onNext={(data) => handleNext(data)}
                         onBack={() => { setDirection(-1); setShowWelcome(true) }}

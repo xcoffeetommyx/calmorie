@@ -34,6 +34,14 @@ import { ChevronLeft } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { checkInStepVariants } from '@/lib/animations/variants'
 
+const ANSWER_STAGGER = {
+  container: { animate: { transition: { staggerChildren: 0.055, delayChildren: 0.12 } } },
+  item: {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },
+  },
+}
+
 // ── Types ──────────────────────────────────────────────────────────────────
 
 export type StepAnswerType = 'number_select' | 'rating' | 'yes_no' | 'option_select'
@@ -138,12 +146,20 @@ export function CheckInStep({
 function NumberSelect({ onAnswer }: { onAnswer: (v: number) => void }) {
   const choices = [1, 2, 3, 4, 5]
   return (
-    <div className="flex gap-2 justify-between" role="group" aria-label="Number of meals">
+    <motion.div
+      className="flex gap-2 justify-between"
+      role="group"
+      aria-label="Number of meals"
+      variants={ANSWER_STAGGER.container}
+      initial="initial"
+      animate="animate"
+    >
       {choices.map((n) => (
-        <button
+        <motion.button
           key={n}
           type="button"
           onClick={() => onAnswer(n)}
+          variants={ANSWER_STAGGER.item}
           className={cn(
             'flex-1 h-14 rounded-xl',
             'font-body text-lg font-semibold text-ink',
@@ -155,9 +171,9 @@ function NumberSelect({ onAnswer }: { onAnswer: (v: number) => void }) {
           aria-label={`${n} meal${n !== 1 ? 's' : ''}`}
         >
           {n}
-        </button>
+        </motion.button>
       ))}
-    </div>
+    </motion.div>
   )
 }
 
@@ -175,12 +191,20 @@ function RatingSelect({
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-2 justify-between" role="group" aria-label="Rating 1 to 5">
+      <motion.div
+        className="flex gap-2 justify-between"
+        role="group"
+        aria-label="Rating 1 to 5"
+        variants={ANSWER_STAGGER.container}
+        initial="initial"
+        animate="animate"
+      >
         {[1, 2, 3, 4, 5].map((n) => (
-          <button
+          <motion.button
             key={n}
             type="button"
             onClick={() => onAnswer(n as 1|2|3|4|5)}
+            variants={ANSWER_STAGGER.item}
             className={cn(
               'flex-1 flex flex-col items-center gap-1.5 py-3 rounded-xl',
               'bg-background border-2 border-border',
@@ -194,9 +218,9 @@ function RatingSelect({
               {RATING_EMOJI[n]}
             </span>
             <span className="font-body text-xs font-semibold text-ink">{n}</span>
-          </button>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
 
       {anchors && (
         <div className="flex justify-between px-1">
@@ -211,15 +235,23 @@ function RatingSelect({
 /** Binary Yes / No buttons */
 function YesNoSelect({ onAnswer }: { onAnswer: (v: boolean) => void }) {
   return (
-    <div className="grid grid-cols-2 gap-3" role="group" aria-label="Yes or No">
+    <motion.div
+      className="grid grid-cols-2 gap-3"
+      role="group"
+      aria-label="Yes or No"
+      variants={ANSWER_STAGGER.container}
+      initial="initial"
+      animate="animate"
+    >
       {[
         { label: 'Yes', value: true,  style: 'hover:border-success hover:bg-success-bg hover:text-success' },
         { label: 'No',  value: false, style: 'hover:border-primary hover:bg-primary-light hover:text-primary-text' },
       ].map(({ label, value, style }) => (
-        <button
+        <motion.button
           key={label}
           type="button"
           onClick={() => onAnswer(value)}
+          variants={ANSWER_STAGGER.item}
           className={cn(
             'h-14 rounded-xl',
             'font-body text-base font-semibold text-ink',
@@ -230,13 +262,13 @@ function YesNoSelect({ onAnswer }: { onAnswer: (v: boolean) => void }) {
           )}
         >
           {label}
-        </button>
+        </motion.button>
       ))}
-    </div>
+    </motion.div>
   )
 }
 
-/** Multi-option labelled grid (for steps range) */
+/** Multi-option labelled grid (for daily focus) */
 function OptionSelect({
   options,
   onAnswer,
@@ -245,12 +277,20 @@ function OptionSelect({
   onAnswer: (v: string | number | boolean) => void
 }) {
   return (
-    <div className="grid grid-cols-1 gap-2" role="group" aria-label="Select an option">
+    <motion.div
+      className="grid grid-cols-1 gap-2"
+      role="group"
+      aria-label="Select an option"
+      variants={ANSWER_STAGGER.container}
+      initial="initial"
+      animate="animate"
+    >
       {options.map((opt) => (
-        <button
+        <motion.button
           key={String(opt.value)}
           type="button"
           onClick={() => onAnswer(opt.value)}
+          variants={ANSWER_STAGGER.item}
           className={cn(
             'w-full text-left px-4 py-3 rounded-xl',
             'bg-background border-2 border-border',
@@ -267,8 +307,8 @@ function OptionSelect({
               {opt.sublabel}
             </p>
           )}
-        </button>
+        </motion.button>
       ))}
-    </div>
+    </motion.div>
   )
 }

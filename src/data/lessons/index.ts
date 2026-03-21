@@ -16,13 +16,18 @@
 
 import type { Lesson } from '@/types/lesson'
 
-import calories101   from './calories-101.json'
-import metabolism    from './metabolism.json'
-import genetics      from './genetics.json'
-import sleepWeight   from './sleep-weight.json'
-import stressEating  from './stress-eating.json'
-import ultraProcessed from './ultra-processed.json'
-import digestion     from './digestion.json'
+import calories101      from './calories-101.json'
+import metabolism       from './metabolism.json'
+import genetics         from './genetics.json'
+import sleepWeight      from './sleep-weight.json'
+import stressEating     from './stress-eating.json'
+import ultraProcessed   from './ultra-processed.json'
+import digestion        from './digestion.json'
+import proteinFullness  from './protein-fullness.json'
+import fiberHunger      from './fiber-hunger.json'
+import liquidCalories   from './liquid-calories.json'
+import portionSize      from './portion-size.json'
+import weightFluctuation from './weight-fluctuation.json'
 
 /**
  * All lessons, in the intended library display order.
@@ -33,13 +38,18 @@ import digestion     from './digestion.json'
  * the Lesson interface at compile time via `resolveJsonModule: true`.
  */
 export const LESSONS: Lesson[] = [
-  calories101    as Lesson,
-  metabolism     as Lesson,
-  sleepWeight    as Lesson,
-  stressEating   as Lesson,
-  ultraProcessed as Lesson,
-  genetics       as Lesson,
-  digestion      as Lesson,
+  calories101       as Lesson,
+  metabolism        as Lesson,
+  sleepWeight       as Lesson,
+  stressEating      as Lesson,
+  ultraProcessed    as Lesson,
+  genetics          as Lesson,
+  digestion         as Lesson,
+  proteinFullness   as Lesson,
+  fiberHunger       as Lesson,
+  liquidCalories    as Lesson,
+  portionSize       as Lesson,
+  weightFluctuation as Lesson,
 ]
 
 /**

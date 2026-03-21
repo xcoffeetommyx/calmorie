@@ -102,6 +102,7 @@ export function useOnboarding(): UseOnboardingReturn {
       tdee,
       calorieTarget,
       onboardingComplete: true,
+      unitPreference:     input.unitPreference ?? 'metric',
       createdAt:          now,
       updatedAt:          now,
     }

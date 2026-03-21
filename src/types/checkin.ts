@@ -1,24 +1,34 @@
 // ── Enums / union types ────────────────────────────────────────────────────
 
-export type StepsRange = 'under_2k' | '2k_5k' | '5k_10k' | 'over_10k'
-
 /** 1–5 rating scale used for sleep quality and stress level */
 export type CheckInRating = 1 | 2 | 3 | 4 | 5
 
+/**
+ * Optional focus intention the user sets at the end of a morning check-in.
+ * Stored as-is; not used in scoring. 'none' = no particular focus today.
+ */
+export type DailyFocus =
+  | 'regular_meals'
+  | 'drink_more_water'
+  | 'walk_more'
+  | 'sleep_earlier'
+  | 'reduce_sugary_drinks'
+  | 'none'
+
 // ── Core models ───────────────────────────────────────────────────────────
 
-/** The raw answers collected from the check-in wizard */
+/** The raw answers collected from the Morning Check-In wizard */
 export interface CheckInAnswers {
-  mealsEaten: number           // 1–5 meals today
-  sugaryDrinks: boolean
-  stepsRange: StepsRange
-  sleepQuality: CheckInRating  // 1 = poor, 5 = excellent
-  stressLevel: CheckInRating   // 1 = none, 5 = very high
-  lateNightEating: boolean
-  skippedMeals: boolean
+  sleepQuality: CheckInRating    // 1 = very poor, 5 = excellent
+  lateNightEating: boolean       // did you eat after 9 PM last night?
+  mealsEaten: number             // how many meals yesterday (1–5)
+  skippedMeals: boolean          // did you skip any meals yesterday?
+  sugaryDrinks: boolean          // did you have sugary drinks yesterday?
+  stressLevel: CheckInRating     // 1 = none, 5 = very high (how you feel right now)
+  dailyFocus: DailyFocus         // today's focus intention ('none' = no focus)
 }
 
-/** Persisted record after check-in is completed and scored */
+/** Persisted record after a Morning Check-In is completed and scored */
 export interface CheckInRecord {
   id: string                   // 'YYYY-MM-DD' — enforces one per day
   date: string
@@ -30,20 +40,6 @@ export interface CheckInRecord {
 }
 
 // ── Display helpers ────────────────────────────────────────────────────────
-
-export const STEPS_RANGE_LABELS: Record<StepsRange, string> = {
-  under_2k: 'Under 2,000 steps',
-  '2k_5k':  '2,000 – 5,000 steps',
-  '5k_10k': '5,000 – 10,000 steps',
-  over_10k: 'Over 10,000 steps',
-}
-
-export const STEPS_RANGE_ORDER: StepsRange[] = [
-  'under_2k',
-  '2k_5k',
-  '5k_10k',
-  'over_10k',
-]
 
 export const SLEEP_QUALITY_LABELS: Record<CheckInRating, string> = {
   1: 'Very poor',
@@ -59,4 +55,13 @@ export const STRESS_LEVEL_LABELS: Record<CheckInRating, string> = {
   3: 'Moderate',
   4: 'High',
   5: 'Very high',
+}
+
+export const DAILY_FOCUS_LABELS: Record<DailyFocus, string> = {
+  regular_meals:        'Eat regular meals',
+  drink_more_water:     'Drink more water',
+  walk_more:            'Walk more today',
+  sleep_earlier:        'Sleep earlier tonight',
+  reduce_sugary_drinks: 'Reduce sugary drinks',
+  none:                 'No particular focus',
 }

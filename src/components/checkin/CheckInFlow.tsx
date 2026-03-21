@@ -3,7 +3,7 @@
 /**
  * CheckInFlow
  *
- * Orchestrates the 7-step daily check-in wizard and the result screen.
+ * Orchestrates the 7-step Morning Check-In wizard and the result screen.
  *
  * Phases:
  *   1. Questions — 7 steps, one per field in CheckInAnswers
@@ -20,10 +20,6 @@
  *   the fully-merged partialAnswers (including the last answer), we
  *   track a `pendingSubmit` flag. When goNext() advances past the last
  *   step index, the next render detects the flag and calls submit().
- *   This avoids the async state flush problem cleanly.
- *
- * Props:
- *   onComplete — called after user taps "Back to dashboard"
  */
 
 import { useState, useEffect } from 'react'
@@ -32,8 +28,8 @@ import { cn } from '@/lib/utils/cn'
 import { useCheckIn } from '@/hooks/useCheckIn'
 import { CheckInStep, type StepOption } from './CheckInStep'
 import { CheckInScore } from './CheckInScore'
-import type { CheckInAnswers } from '@/types/checkin'
-import { STEPS_RANGE_LABELS, STEPS_RANGE_ORDER } from '@/types/checkin'
+import type { CheckInAnswers, DailyFocus } from '@/types/checkin'
+import { DAILY_FOCUS_LABELS } from '@/types/checkin'
 
 // ── Step configuration ─────────────────────────────────────────────────────
 
@@ -46,35 +42,20 @@ interface StepConfig {
   ratingAnchors?: { low: string; high: string }
 }
 
+// Daily focus options — ordered from most to least actionable.
+// 'none' is placed last so it doesn't anchor the default choice.
+const DAILY_FOCUS_OPTIONS: StepOption[] = (
+  [
+    'regular_meals',
+    'drink_more_water',
+    'walk_more',
+    'sleep_earlier',
+    'reduce_sugary_drinks',
+    'none',
+  ] as DailyFocus[]
+).map((v) => ({ value: v, label: DAILY_FOCUS_LABELS[v] }))
+
 const STEPS_CONFIG: StepConfig[] = [
-  {
-    key:        'mealsEaten',
-    question:   'How many meals did you eat today?',
-    helperText: 'Count snacks as meals if they replaced a main meal.',
-    type:       'number_select',
-  },
-  {
-    key:        'skippedMeals',
-    question:   'Did you skip any meals today?',
-    helperText: "A skipped meal is one you intended to have but didn't.",
-    type:       'yes_no',
-  },
-  {
-    key:        'sugaryDrinks',
-    question:   'Did you have any sugary drinks today?',
-    helperText: 'Includes soft drinks, juice, sweetened coffee, or energy drinks.',
-    type:       'yes_no',
-  },
-  {
-    key:        'stepsRange',
-    question:   'How active were you today?',
-    helperText: 'Give your best estimate — no device needed.',
-    type:       'option_select',
-    options:    STEPS_RANGE_ORDER.map((v) => ({
-      value: v,
-      label: STEPS_RANGE_LABELS[v],
-    })),
-  },
   {
     key:           'sleepQuality',
     question:      'How well did you sleep last night?',
@@ -83,17 +64,42 @@ const STEPS_CONFIG: StepConfig[] = [
     ratingAnchors: { low: 'Very poor', high: 'Excellent' },
   },
   {
+    key:        'lateNightEating',
+    question:   'Did you eat after 9 PM last night?',
+    helperText: 'Include any snacks or small meals in the two hours before bed.',
+    type:       'yes_no',
+  },
+  {
+    key:        'mealsEaten',
+    question:   'How many meals did you eat yesterday?',
+    helperText: 'Count snacks as meals if they replaced a main meal.',
+    type:       'number_select',
+  },
+  {
+    key:        'skippedMeals',
+    question:   'Did you skip any meals yesterday?',
+    helperText: "A skipped meal is one you intended to have but didn't.",
+    type:       'yes_no',
+  },
+  {
+    key:        'sugaryDrinks',
+    question:   'Did you have any sugary drinks yesterday?',
+    helperText: 'Includes soft drinks, juice, sweetened coffee, or energy drinks.',
+    type:       'yes_no',
+  },
+  {
     key:           'stressLevel',
-    question:      'How stressed are you feeling today?',
-    helperText:    'Think about your overall mood and tension level.',
+    question:      'How stressed are you feeling right now?',
+    helperText:    'Think about your overall mood and tension level this morning.',
     type:          'rating',
     ratingAnchors: { low: 'None at all', high: 'Very high' },
   },
   {
-    key:        'lateNightEating',
-    question:   'Did you eat after 9 PM last night?',
-    helperText: 'Include any snacks or meals in the two hours before bed.',
-    type:       'yes_no',
+    key:        'dailyFocus',
+    question:   "What's your focus for today?",
+    helperText: 'Pick one thing to be intentional about — or skip if nothing stands out.',
+    type:       'option_select',
+    options:    DAILY_FOCUS_OPTIONS,
   },
 ]
 
@@ -115,13 +121,12 @@ export function CheckInFlow({ onComplete }: CheckInFlowProps) {
     canGoBack,
   } = useCheckIn()
 
-  const [direction,      setDirection]      = useState(1)
-  const [pendingSubmit,  setPendingSubmit]  = useState(false)
+  const [direction,     setDirection]     = useState(1)
+  const [pendingSubmit, setPendingSubmit] = useState(false)
 
   /**
    * When pendingSubmit becomes true (set after the last goNext call),
    * useEffect runs after the state flush so partialAnswers is complete.
-   * We call submit() here and clear the flag.
    */
   useEffect(() => {
     if (pendingSubmit && !isSubmitted) {
@@ -135,7 +140,6 @@ export function CheckInFlow({ onComplete }: CheckInFlowProps) {
     setDirection(1)
     goNext({ [key]: value } as Partial<CheckInAnswers>)
     if (isLast) {
-      // Schedule submit for after state flush
       setPendingSubmit(true)
     }
   }
@@ -157,7 +161,7 @@ export function CheckInFlow({ onComplete }: CheckInFlowProps) {
           aria-valuenow={step + 1}
           aria-valuemin={1}
           aria-valuemax={stepCount}
-          aria-label={`Check-in step ${step + 1} of ${stepCount}`}
+          aria-label={`Morning check-in step ${step + 1} of ${stepCount}`}
         >
           <div className="flex gap-1.5 mb-1">
             {Array.from({ length: stepCount }).map((_, i) => (

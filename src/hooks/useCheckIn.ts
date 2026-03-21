@@ -1,7 +1,7 @@
 /**
  * src/hooks/useCheckIn.ts
  *
- * Manages the daily check-in wizard flow.
+ * Manages the Morning Check-In wizard flow.
  *
  * Responsibilities:
  *   – Tracks current step (0-indexed)
@@ -13,13 +13,13 @@
  * handles any routing after the wizard completes.
  *
  * Step order (7 questions, one per step):
- *   0 — mealsEaten
- *   1 — skippedMeals
- *   2 — sugaryDrinks
- *   3 — stepsRange
- *   4 — sleepQuality
+ *   0 — sleepQuality
+ *   1 — lateNightEating
+ *   2 — mealsEaten
+ *   3 — skippedMeals
+ *   4 — sugaryDrinks
  *   5 — stressLevel
- *   6 — lateNightEating
+ *   6 — dailyFocus
  */
 
 import { useState, useCallback } from 'react'
@@ -76,15 +76,15 @@ export function useCheckIn(): UseCheckInReturn {
   const submit = useCallback((): CheckInRecordFull | null => {
     const answers = partialAnswers as CheckInAnswers
 
-    // Guard: all required fields must be present
+    // Guard: all required fields must be present (dailyFocus is always set)
     if (
-      answers.mealsEaten === undefined ||
-      answers.sugaryDrinks === undefined ||
-      answers.stepsRange === undefined ||
       answers.sleepQuality === undefined ||
-      answers.stressLevel === undefined ||
       answers.lateNightEating === undefined ||
-      answers.skippedMeals === undefined
+      answers.mealsEaten === undefined ||
+      answers.skippedMeals === undefined ||
+      answers.sugaryDrinks === undefined ||
+      answers.stressLevel === undefined ||
+      answers.dailyFocus === undefined
     ) {
       console.warn('[useCheckIn] submit called with incomplete answers', partialAnswers)
       return null

@@ -3,18 +3,28 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
-  User, Target, Heart, Info, Shield, ExternalLink, ChevronRight, Leaf,
+  User, Target, Heart, Info, Shield, ExternalLink, ChevronRight, Leaf, Ruler,
 } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { TopBar } from '@/components/layout/TopBar'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { useUserStore, selectIsOnboarded, selectDisplayName } from '@/stores/userStore'
 import { formatCalories } from '@/lib/utils/format'
+import { formatHeight, formatWeight } from '@/lib/utils/units'
+import type { UnitPreference } from '@/types/user'
 
 export default function SettingsPage() {
-  const profile     = useUserStore((s) => s.profile)
-  const isOnboarded = useUserStore(selectIsOnboarded)
-  const displayName = useUserStore(selectDisplayName)
+  const profile        = useUserStore((s) => s.profile)
+  const isOnboarded    = useUserStore(selectIsOnboarded)
+  const displayName    = useUserStore(selectDisplayName)
+  const updateProfile  = useUserStore((s) => s.updateProfile)
+
+  const unit: UnitPreference = profile?.unitPreference ?? 'metric'
+
+  function handleUnitChange(next: UnitPreference) {
+    if (!profile || next === unit) return
+    updateProfile({ unitPreference: next })
+  }
 
   return (
     <div className="flex flex-col min-h-full bg-background">
@@ -91,6 +101,54 @@ export default function SettingsPage() {
               }
               disabled
             />
+          </div>
+        </motion.div>
+
+        {/* ══ Units ════════════════════════════════════════════ */}
+        <motion.div variants={staggerItem} className="space-y-2">
+          <SectionLabel>Units</SectionLabel>
+
+          <div className="bg-surface rounded-xl shadow-card overflow-hidden">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <span className="shrink-0" aria-hidden="true">
+                <Ruler size={16} strokeWidth={1.75} className="text-ink-muted" />
+              </span>
+              <div className="flex-1 min-w-0">
+                <p className="font-body text-sm text-ink">Display units</p>
+                {isOnboarded && profile?.heightCm && profile?.weightKg && (
+                  <p className="font-body text-xs text-ink-muted mt-0.5">
+                    {formatHeight(profile.heightCm, unit)} · {formatWeight(profile.weightKg, unit)}
+                  </p>
+                )}
+              </div>
+              {/* Inline toggle */}
+              <div
+                className="flex rounded-lg border border-border bg-background p-0.5 gap-0.5 shrink-0"
+                role="group"
+                aria-label="Unit system"
+              >
+                {(['metric', 'imperial'] as const).map((u) => (
+                  <button
+                    key={u}
+                    type="button"
+                    onClick={() => handleUnitChange(u)}
+                    disabled={!isOnboarded}
+                    className={cn(
+                      'px-3 py-1 rounded-md font-body text-xs font-medium',
+                      'transition-all duration-fast ease-smooth',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
+                      'disabled:opacity-40 disabled:cursor-not-allowed',
+                      unit === u
+                        ? 'bg-primary text-ink-on-primary shadow-sm'
+                        : 'text-ink-muted hover:text-ink',
+                    )}
+                    aria-pressed={unit === u}
+                  >
+                    {u === 'metric' ? 'Metric' : 'Imperial'}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </motion.div>
 

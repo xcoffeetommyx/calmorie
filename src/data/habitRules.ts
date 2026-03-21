@@ -4,9 +4,9 @@
  * Rules-based habit engine data.
  *
  * Each rule has a `trigger` function evaluated against the user's
- * daily check-in answers. When a trigger fires, the habitEngine
- * generates a HabitWarning displayed in the check-in result and
- * on the dashboard.
+ * morning check-in answers. When a trigger fires, the habitEngine
+ * generates a HabitWarning displayed on the check-in result screen
+ * and the dashboard.
  *
  * Design principles:
  *   – Gentle and educational, never shame-based or alarmist
@@ -18,6 +18,9 @@
  *
  * Rule IDs must be stable across app versions (they are stored in
  * CheckInRecord.habitWarningIds). Do not rename existing IDs.
+ *
+ * Note: stepsRange-based rules were removed when the check-in moved
+ * to a morning framing (yesterday's activity is not collected).
  */
 
 import type { HabitRule } from '@/types/habit'
@@ -53,33 +56,6 @@ export const HABIT_RULES: HabitRule[] = [
     actionSuggestion:
       'Try swapping one sugary drink today with sparkling water, plain water, or unsweetened tea. Small swaps like this add up meaningfully over a week.',
     relatedLessonSlug: 'calories-101',
-  },
-
-  // ── Very low activity ────────────────────────────────────────────────────
-  {
-    id: 'very-low-activity',
-    trigger: (answers: CheckInAnswers) => answers.stepsRange === 'under_2k',
-    severity: 'gentle',
-    title: 'Very little movement today',
-    message:
-      'Fewer than 2,000 steps suggests a largely sedentary day. Regular movement throughout the day — even in small amounts — supports metabolism, mood, and cardiovascular health. The goal does not need to be intense exercise.',
-    actionSuggestion:
-      'A 10-minute walk after a meal is one of the simplest ways to add movement. It also supports digestion and helps build a manageable daily habit.',
-    relatedLessonSlug: 'metabolism',
-  },
-
-  // ── Moderate activity (positive reinforcement) ───────────────────────────
-  {
-    id: 'good-activity',
-    trigger: (answers: CheckInAnswers) =>
-      answers.stepsRange === '5k_10k' || answers.stepsRange === 'over_10k',
-    severity: 'info',
-    title: 'Good activity level today',
-    message:
-      'Reaching 5,000 or more steps in a day is genuinely meaningful for metabolic health. Physical activity accounts for the largest variable portion of your daily calorie burn and has benefits well beyond weight management.',
-    actionSuggestion:
-      'Keep it up. Consistency over weeks and months matters far more than intensity on any single day.',
-    relatedLessonSlug: 'metabolism',
   },
 
   // ── Poor sleep ───────────────────────────────────────────────────────────
@@ -127,11 +103,11 @@ export const HABIT_RULES: HabitRule[] = [
     trigger: (answers: CheckInAnswers) =>
       answers.mealsEaten <= 1 && !answers.skippedMeals,
     severity: 'info',
-    title: 'Only one meal today',
+    title: 'Only one meal yesterday',
     message:
       'Eating only once in a day can create a large calorie deficit that may lead to stronger hunger and larger portions later, reduce energy and concentration, and make it harder to get adequate nutrients. Most people do well with 2–4 meals spread across the day.',
     actionSuggestion:
-      'Try adding a second meal tomorrow, even a small one. Consistent eating patterns tend to produce more stable energy and better appetite regulation than large single meals.',
+      'Try adding a second meal today, even a small one. Consistent eating patterns tend to produce more stable energy and better appetite regulation than large single meals.',
     relatedLessonSlug: 'metabolism',
   },
 
@@ -147,20 +123,6 @@ export const HABIT_RULES: HabitRule[] = [
     actionSuggestion:
       'Prioritise one sleep improvement tonight — even just going to bed 30 minutes earlier. This often has an outsized effect on how manageable the following day feels.',
     relatedLessonSlug: 'sleep-weight',
-  },
-
-  // ── Sugary drinks + low activity ─────────────────────────────────────────
-  {
-    id: 'sugary-drinks-low-activity',
-    trigger: (answers: CheckInAnswers) =>
-      answers.sugaryDrinks === true && answers.stepsRange === 'under_2k',
-    severity: 'gentle',
-    title: 'Liquid calories with low movement today',
-    message:
-      'On lower-activity days, the calories from sugary drinks are less easily offset by movement. This combination can quietly contribute to a calorie surplus without feeling like overeating, since drinks do not produce the same fullness signals as food.',
-    actionSuggestion:
-      'On quieter days, it is especially worth swapping sweetened drinks for water or unsweetened alternatives. Even a short walk adds meaningful movement to an otherwise sedentary day.',
-    relatedLessonSlug: 'ultra-processed',
   },
 ]
 

@@ -27,7 +27,7 @@ import { useCalorieTarget }                     from '@/hooks/useCalorieTarget'
 import { useLessons }                           from '@/hooks/useLessons'
 import { useTodayLog }                          from '@/hooks/useTodayLog'
 import { useHabitAlerts }                       from '@/hooks/useHabitAlerts'
-import { useCheckinStore, selectIsCompletedToday } from '@/stores/checkinStore'
+import { useCheckinStore, selectIsCompletedToday, selectStreakData, selectTodayRecord } from '@/stores/checkinStore'
 
 const FALLBACK_TARGET = 2000
 
@@ -70,6 +70,8 @@ export default function DashboardPage() {
 
   const { entries: todayEntries, totalCalories: caloriesEaten, isHydrated: logHydrated } = useTodayLog()
   const isCheckedIn    = useCheckinStore(selectIsCompletedToday)
+  const todayRecord    = useCheckinStore(selectTodayRecord)
+  const streakData     = useCheckinStore(selectStreakData)
   const { topWarning } = useHabitAlerts()
   const { lessonOfTheDay } = useLessons()
 
@@ -122,7 +124,11 @@ export default function DashboardPage() {
 
         {/* ── Check-in CTA ──────────────────────────────────── */}
         <motion.div variants={staggerItem}>
-          <CheckInCTA isCompleted={isCheckedIn} />
+          <CheckInCTA
+            isCompleted={isCheckedIn}
+            score={todayRecord?.score}
+            streak={streakData.currentStreak}
+          />
         </motion.div>
 
         {/* ── Two-card row: lesson + burn ───────────────────── */}

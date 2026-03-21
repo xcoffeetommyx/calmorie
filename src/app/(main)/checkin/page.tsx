@@ -47,7 +47,7 @@ export default function CheckInPage() {
   if (!isHydrated) {
     return (
       <div className="flex flex-col min-h-full bg-background">
-        <TopBar title="Daily Check-in" />
+        <TopBar title="Morning Check-In" />
         <div className="page-container py-8 space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="bg-surface-raised rounded-xl h-20 animate-pulse-soft" />
@@ -61,7 +61,7 @@ export default function CheckInPage() {
   if (isCompleted && todayRecord) {
     return (
       <div className="flex flex-col min-h-full bg-background">
-        <TopBar title="Daily Check-in" />
+        <TopBar title="Morning Check-In" />
         <div className="page-container py-5">
           {/* Completion header */}
           <motion.div
@@ -96,7 +96,7 @@ export default function CheckInPage() {
   if (!started) {
     return (
       <div className="flex flex-col min-h-full bg-background">
-        <TopBar title="Daily Check-in" />
+        <TopBar title="Morning Check-In" />
         <motion.div
           className="page-container py-5 space-y-5"
           variants={staggerContainer}
@@ -121,11 +121,10 @@ export default function CheckInPage() {
             <div className="space-y-1.5">
               <p className="font-body text-xs text-ink-muted">{dateLabel}</p>
               <h2 className="font-display text-xl font-semibold text-ink tracking-tight">
-                Ready for your check-in?
+                Good morning — ready to check in?
               </h2>
               <p className="font-body text-sm text-ink-secondary leading-relaxed max-w-xs mx-auto">
-                Seven quick questions about your day. You&rsquo;ll get a wellness
-                score and a personalised tip at the end.
+                Seven quick questions about last night and how you&rsquo;re feeling now. You&rsquo;ll get a wellness score and a personalised tip at the end.
               </p>
             </div>
 
@@ -176,9 +175,9 @@ export default function CheckInPage() {
                 'focus-visible:outline-none focus-visible:ring-2',
                 'focus-visible:ring-border-focus focus-visible:ring-offset-2',
               )}
-              aria-label="Start today's check-in"
+              aria-label="Start this morning's check-in"
             >
-              Start today&rsquo;s check-in
+              Start morning check-in
               <ChevronRight size={18} strokeWidth={2.25} aria-hidden="true" />
             </button>
           </motion.div>
@@ -198,7 +197,7 @@ export default function CheckInPage() {
   // ── Wizard ───────────────────────────────────────────────────────────────
   return (
     <div className="flex flex-col min-h-full bg-background">
-      <TopBar title="Daily Check-in" />
+      <TopBar title="Morning Check-In" />
       <div className="page-container py-5">
         <CheckInFlow onComplete={() => setStarted(false)} />
       </div>
@@ -209,11 +208,11 @@ export default function CheckInPage() {
 // ── Static preview data ────────────────────────────────────────────────────
 
 const QUESTION_PREVIEWS = [
-  { emoji: '🍽️', text: 'How many meals did you eat today?' },
-  { emoji: '⏭️', text: 'Did you skip any meals?' },
-  { emoji: '🥤', text: 'Did you have any sugary drinks?' },
-  { emoji: '🚶', text: 'How active were you?' },
   { emoji: '😴', text: 'How well did you sleep last night?' },
-  { emoji: '😤', text: 'How stressed are you feeling?' },
-  { emoji: '🌙', text: 'Did you eat after 9 PM?' },
+  { emoji: '🌙', text: 'Did you eat after 9 PM last night?' },
+  { emoji: '🍽️', text: 'How many meals did you eat yesterday?' },
+  { emoji: '⏭️', text: 'Did you skip any meals yesterday?' },
+  { emoji: '🥤', text: 'Did you have any sugary drinks yesterday?' },
+  { emoji: '😤', text: 'How stressed are you feeling right now?' },
+  { emoji: '🎯', text: "What's your focus for today?" },
 ] as const

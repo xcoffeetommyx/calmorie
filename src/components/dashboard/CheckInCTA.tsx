@@ -2,21 +2,23 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { CheckCircle2, ChevronRight, Sparkles } from 'lucide-react'
+import { CheckCircle2, ChevronRight, Sun, Flame } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { scaleSpring } from '@/lib/animations/variants'
 
 interface CheckInCTAProps {
   isCompleted: boolean
   score?: number
+  /** Current check-in streak — shown in completed state when > 0 */
+  streak?: number
   className?: string
 }
 
-export function CheckInCTA({ isCompleted, score, className }: CheckInCTAProps) {
+export function CheckInCTA({ isCompleted, score, streak, className }: CheckInCTAProps) {
   return (
     <AnimatePresence mode="wait" initial={false}>
       {isCompleted ? (
-        <CompletedState key="completed" score={score} className={className} />
+        <CompletedState key="completed" score={score} streak={streak} className={className} />
       ) : (
         <PendingState key="pending" className={className} />
       )}
@@ -45,15 +47,15 @@ function PendingState({ className }: { className?: string }) {
           'focus-visible:ring-border-focus focus-visible:ring-offset-2',
           className,
         )}
-        aria-label="Start today's daily check-in"
+        aria-label="Start today's morning check-in"
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center shrink-0">
-            <Sparkles className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
+            <Sun className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
           </div>
           <div className="space-y-0.5">
             <p className="font-body text-sm font-semibold leading-snug">
-              Daily check-in
+              Morning Check-In
             </p>
             <p className="font-body text-xs opacity-75">
               7 questions · about 2 minutes
@@ -66,7 +68,15 @@ function PendingState({ className }: { className?: string }) {
   )
 }
 
-function CompletedState({ score, className }: { score?: number; className?: string }) {
+function CompletedState({
+  score,
+  streak,
+  className,
+}: {
+  score?: number
+  streak?: number
+  className?: string
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -80,7 +90,7 @@ function CompletedState({ score, className }: { score?: number; className?: stri
         className,
       )}
       role="status"
-      aria-label="Today's check-in is complete"
+      aria-label="Today's morning check-in is complete"
     >
       <div className="flex items-center gap-3">
         <motion.div
@@ -93,27 +103,48 @@ function CompletedState({ score, className }: { score?: number; className?: stri
         </motion.div>
         <div className="space-y-0.5">
           <p className="font-body text-sm font-semibold text-ink leading-snug">
-            Check-in complete
+            Check-in done
           </p>
           <p className="font-body text-xs text-ink-muted">
-            See you again tomorrow
+            {streak && streak > 1
+              ? `${streak}-day streak`
+              : 'See you again tomorrow'}
           </p>
         </div>
       </div>
 
-      {score !== undefined && (
-        <motion.div
-          variants={scaleSpring}
-          initial="initial"
-          animate="enter"
-          className="shrink-0 w-10 h-10 rounded-full bg-success-bg flex items-center justify-center"
-          aria-label={`Today's score: ${score} out of 100`}
-        >
-          <span className="font-body text-sm font-bold text-success tabular-nums">
-            {score}
-          </span>
-        </motion.div>
-      )}
+      <div className="flex items-center gap-2 shrink-0">
+        {/* Streak flame — only when streak ≥ 3 */}
+        {streak && streak >= 3 && (
+          <motion.div
+            variants={scaleSpring}
+            initial="initial"
+            animate="enter"
+            className="flex items-center gap-1 px-2 py-1 rounded-full bg-warning-bg"
+            aria-label={`${streak}-day streak`}
+          >
+            <Flame size={13} className="text-warning" strokeWidth={2} aria-hidden="true" />
+            <span className="font-body text-xs font-bold text-warning tabular-nums">
+              {streak}
+            </span>
+          </motion.div>
+        )}
+
+        {/* Score badge */}
+        {score !== undefined && (
+          <motion.div
+            variants={scaleSpring}
+            initial="initial"
+            animate="enter"
+            className="w-10 h-10 rounded-full bg-success-bg flex items-center justify-center"
+            aria-label={`Today's score: ${score} out of 100`}
+          >
+            <span className="font-body text-sm font-bold text-success tabular-nums">
+              {score}
+            </span>
+          </motion.div>
+        )}
+      </div>
     </motion.div>
   )
 }

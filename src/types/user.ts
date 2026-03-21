@@ -1,5 +1,7 @@
 // ── Enums / union types ────────────────────────────────────────────────────
 
+export type UnitPreference = 'metric' | 'imperial'
+
 export type ActivityLevel =
   | 'sedentary'
   | 'light'
@@ -25,6 +27,7 @@ export interface UserProfile {
   calorieTarget: number       // TDEE adjusted for goal
   tdee: number                // total daily energy expenditure (unadjusted)
   onboardingComplete: boolean
+  unitPreference?: UnitPreference  // defaults to 'metric' when absent
   createdAt: string           // ISO datetime
   updatedAt: string           // ISO datetime
 }
@@ -38,6 +41,7 @@ export interface UserProfileInput {
   weightKg: number
   activityLevel: ActivityLevel
   goal: UserGoal
+  unitPreference?: UnitPreference
 }
 
 // ── Display labels ─────────────────────────────────────────────────────────

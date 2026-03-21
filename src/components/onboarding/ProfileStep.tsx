@@ -6,14 +6,12 @@
  * Onboarding step 1 of 3.
  * Collects: name (optional), age, biological sex, height, weight.
  *
- * Layout v2:
- *   Fields are grouped into two card sections for visual clarity:
- *     "About you"   — name, age, biological sex
- *     "Your stats"  — height, weight
- *   Navigation row is outside the cards with back (→ welcome) + next buttons.
+ * Unit toggle:
+ *   metric   — height in cm, weight in kg
+ *   imperial — height in ft + in, weight in lb
  *
- * Validation: React Hook Form + Zod (unchanged from v1).
- * All non-name fields are required with practical range limits.
+ * Conversion happens before calling onNext so the parent always receives
+ * canonical metric values (heightCm, weightKg).
  */
 
 import { useForm } from 'react-hook-form'
@@ -23,19 +21,58 @@ import { motion } from 'framer-motion'
 import { ChevronLeft } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
-import type { BiologicalSex } from '@/types/user'
+import { ftInToCm, lbToKg, cmToFtIn, kgToLb } from '@/lib/utils/units'
+import type { BiologicalSex, UnitPreference } from '@/types/user'
 
 // ── Schema ─────────────────────────────────────────────────────────────────
 
-const profileSchema = z.object({
-  name:     z.string().max(40).optional().or(z.literal('')),
-  age:      z.coerce.number().int().min(13, 'Must be at least 13').max(100, 'Please enter a valid age'),
-  sex:      z.enum(['male', 'female', 'other'] as const, { required_error: 'Please select an option' }),
-  heightCm: z.coerce.number().min(100, 'Height must be at least 100 cm').max(250, 'Please enter a valid height'),
-  weightKg: z.coerce.number().min(30, 'Weight must be at least 30 kg').max(300, 'Please enter a valid weight'),
-})
+const profileSchema = z
+  .object({
+    name:     z.string().max(40).optional().or(z.literal('')),
+    age:      z.coerce.number().int().min(13, 'Must be at least 13').max(100, 'Please enter a valid age'),
+    sex:      z.enum(['male', 'female', 'other'] as const, { required_error: 'Please select an option' }),
+    unit:     z.enum(['metric', 'imperial'] as const),
+    // metric fields
+    heightCm: z.coerce.number().optional(),
+    weightKg: z.coerce.number().optional(),
+    // imperial fields
+    heightFt: z.coerce.number().optional(),
+    heightIn: z.coerce.number().optional(),
+    weightLb: z.coerce.number().optional(),
+  })
+  .superRefine((v, ctx) => {
+    if (v.unit === 'metric') {
+      if (!v.heightCm || v.heightCm < 100 || v.heightCm > 250) {
+        ctx.addIssue({ code: 'custom', path: ['heightCm'], message: 'Height must be 100–250 cm' })
+      }
+      if (!v.weightKg || v.weightKg < 30 || v.weightKg > 300) {
+        ctx.addIssue({ code: 'custom', path: ['weightKg'], message: 'Weight must be 30–300 kg' })
+      }
+    } else {
+      if (v.heightFt === undefined || v.heightFt < 3 || v.heightFt > 8) {
+        ctx.addIssue({ code: 'custom', path: ['heightFt'], message: 'Please enter a valid height' })
+      }
+      if (v.heightIn === undefined || v.heightIn < 0 || v.heightIn > 11) {
+        ctx.addIssue({ code: 'custom', path: ['heightIn'], message: 'Inches must be 0–11' })
+      }
+      if (!v.weightLb || v.weightLb < 66 || v.weightLb > 660) {
+        ctx.addIssue({ code: 'custom', path: ['weightLb'], message: 'Weight must be 66–660 lb' })
+      }
+    }
+  })
 
 type ProfileFormValues = z.infer<typeof profileSchema>
+
+// ── Output type (always metric) ─────────────────────────────────────────────
+
+export interface ProfileStepOutput {
+  name?: string
+  age: number
+  sex: BiologicalSex
+  heightCm: number
+  weightKg: number
+  unitPreference: UnitPreference
+}
 
 // ── SEX options ────────────────────────────────────────────────────────────
 
@@ -48,13 +85,30 @@ const SEX_OPTIONS: { value: BiologicalSex; label: string }[] = [
 // ── Component ──────────────────────────────────────────────────────────────
 
 interface ProfileStepProps {
-  defaultValues?: Partial<ProfileFormValues>
-  onNext: (data: ProfileFormValues) => void
-  /** Back goes to the welcome screen */
+  defaultValues?: {
+    name?:           string
+    age?:            number
+    sex?:            BiologicalSex
+    heightCm?:       number
+    weightKg?:       number
+    unitPreference?: UnitPreference
+  }
+  onNext: (data: ProfileStepOutput) => void
   onBack: () => void
 }
 
 export function ProfileStep({ defaultValues, onNext, onBack }: ProfileStepProps) {
+  const defaultUnit = defaultValues?.unitPreference ?? 'metric'
+
+  // When returning to this step with previously saved cm/kg values, convert
+  // back to imperial so the fields are pre-filled correctly.
+  const defaultImperialHeight = defaultValues?.heightCm
+    ? cmToFtIn(defaultValues.heightCm)
+    : undefined
+  const defaultImperialWeight = defaultValues?.weightKg
+    ? kgToLb(defaultValues.weightKg)
+    : undefined
+
   const {
     register,
     handleSubmit,
@@ -64,22 +118,69 @@ export function ProfileStep({ defaultValues, onNext, onBack }: ProfileStepProps)
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name:     defaultValues?.name     ?? '',
-      age:      defaultValues?.age      ?? undefined,
-      sex:      defaultValues?.sex      ?? undefined,
+      name:     defaultValues?.name ?? '',
+      age:      defaultValues?.age ?? undefined,
+      sex:      defaultValues?.sex ?? undefined,
+      unit:     defaultUnit,
       heightCm: defaultValues?.heightCm ?? undefined,
       weightKg: defaultValues?.weightKg ?? undefined,
+      heightFt: defaultImperialHeight?.ft ?? undefined,
+      heightIn: defaultImperialHeight?.in ?? undefined,
+      weightLb: defaultImperialWeight ?? undefined,
     },
   })
 
-  const selectedSex = watch('sex')
+  const selectedSex  = watch('sex')
+  const selectedUnit = watch('unit')
+
+  function handleUnitSwitch(unit: UnitPreference) {
+    // When switching, convert whatever is already entered so values persist.
+    if (unit === 'imperial') {
+      const cm = watch('heightCm')
+      const kg = watch('weightKg')
+      if (cm) {
+        const { ft, in: inches } = cmToFtIn(Number(cm))
+        setValue('heightFt', ft)
+        setValue('heightIn', inches)
+      }
+      if (kg) setValue('weightLb', kgToLb(Number(kg)))
+    } else {
+      const ft  = watch('heightFt')
+      const ins = watch('heightIn')
+      const lb  = watch('weightLb')
+      if (ft !== undefined) setValue('heightCm', ftInToCm(Number(ft), Number(ins ?? 0)))
+      if (lb) setValue('weightKg', lbToKg(Number(lb)))
+    }
+    setValue('unit', unit, { shouldValidate: false })
+  }
+
+  function onValid(data: ProfileFormValues) {
+    const heightCm =
+      data.unit === 'imperial'
+        ? ftInToCm(data.heightFt!, data.heightIn ?? 0)
+        : data.heightCm!
+
+    const weightKg =
+      data.unit === 'imperial'
+        ? lbToKg(data.weightLb!)
+        : data.weightKg!
+
+    onNext({
+      name:           data.name || undefined,
+      age:            data.age,
+      sex:            data.sex,
+      heightCm,
+      weightKg,
+      unitPreference: data.unit,
+    })
+  }
 
   return (
     <motion.form
       variants={staggerContainer}
       initial="initial"
       animate="enter"
-      onSubmit={handleSubmit(onNext)}
+      onSubmit={handleSubmit(onValid)}
       className="space-y-4"
       noValidate
     >
@@ -153,41 +254,119 @@ export function ProfileStep({ defaultValues, onNext, onBack }: ProfileStepProps)
       {/* ── Card: Your stats ──────────────────────────────────── */}
       <motion.div variants={staggerItem}>
         <SectionCard>
-          <SectionLabel>Your stats</SectionLabel>
+          <div className="flex items-center justify-between -mb-1">
+            <SectionLabel>Your stats</SectionLabel>
 
-          {/* Height */}
-          <div className="space-y-1.5">
-            <FieldLabel htmlFor="heightCm">Height (cm)</FieldLabel>
-            <p className="font-body text-xs text-ink-muted -mt-0.5">
-              Not sure in cm? 5&rsquo;7&rdquo; ≈ 170 cm &nbsp;·&nbsp; 5&rsquo;10&rdquo; ≈ 178 cm
-            </p>
-            <input
-              id="heightCm"
-              type="number"
-              inputMode="decimal"
-              placeholder="e.g. 170"
-              className={fieldClass(!!errors.heightCm)}
-              {...register('heightCm')}
-            />
-            <FieldError message={errors.heightCm?.message} />
+            {/* Unit toggle */}
+            <div
+              className={cn(
+                'flex rounded-lg border border-border bg-background p-0.5 gap-0.5',
+              )}
+              role="group"
+              aria-label="Unit system"
+            >
+              {(['metric', 'imperial'] as const).map((u) => (
+                <button
+                  key={u}
+                  type="button"
+                  onClick={() => handleUnitSwitch(u)}
+                  className={cn(
+                    'px-3 py-1 rounded-md font-body text-xs font-medium',
+                    'transition-all duration-fast ease-smooth',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
+                    selectedUnit === u
+                      ? 'bg-primary text-ink-on-primary shadow-sm'
+                      : 'text-ink-muted hover:text-ink',
+                  )}
+                  aria-pressed={selectedUnit === u}
+                >
+                  {u === 'metric' ? 'kg / cm' : 'lb / ft'}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Weight */}
-          <div className="space-y-1.5">
-            <FieldLabel htmlFor="weightKg">Weight (kg)</FieldLabel>
-            <p className="font-body text-xs text-ink-muted -mt-0.5">
-              Not sure in kg? 150 lbs ≈ 68 kg &nbsp;·&nbsp; 180 lbs ≈ 82 kg
-            </p>
-            <input
-              id="weightKg"
-              type="number"
-              inputMode="decimal"
-              placeholder="e.g. 72"
-              className={fieldClass(!!errors.weightKg)}
-              {...register('weightKg')}
-            />
-            <FieldError message={errors.weightKg?.message} />
-          </div>
+          {/* ── Metric fields ──────────────────────────────────── */}
+          {selectedUnit === 'metric' && (
+            <>
+              {/* Height cm */}
+              <div className="space-y-1.5">
+                <FieldLabel htmlFor="heightCm">Height (cm)</FieldLabel>
+                <input
+                  id="heightCm"
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="e.g. 170"
+                  className={fieldClass(!!errors.heightCm)}
+                  {...register('heightCm')}
+                />
+                <FieldError message={errors.heightCm?.message} />
+              </div>
+
+              {/* Weight kg */}
+              <div className="space-y-1.5">
+                <FieldLabel htmlFor="weightKg">Weight (kg)</FieldLabel>
+                <input
+                  id="weightKg"
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="e.g. 72"
+                  className={fieldClass(!!errors.weightKg)}
+                  {...register('weightKg')}
+                />
+                <FieldError message={errors.weightKg?.message} />
+              </div>
+            </>
+          )}
+
+          {/* ── Imperial fields ────────────────────────────────── */}
+          {selectedUnit === 'imperial' && (
+            <>
+              {/* Height ft + in */}
+              <div className="space-y-1.5">
+                <FieldLabel>Height</FieldLabel>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <input
+                      id="heightFt"
+                      type="number"
+                      inputMode="numeric"
+                      placeholder="ft"
+                      className={fieldClass(!!errors.heightFt)}
+                      {...register('heightFt')}
+                    />
+                    <p className="font-body text-[11px] text-ink-muted text-center">feet</p>
+                  </div>
+                  <div className="space-y-1">
+                    <input
+                      id="heightIn"
+                      type="number"
+                      inputMode="numeric"
+                      placeholder="in"
+                      className={fieldClass(!!errors.heightIn)}
+                      {...register('heightIn')}
+                    />
+                    <p className="font-body text-[11px] text-ink-muted text-center">inches</p>
+                  </div>
+                </div>
+                <FieldError message={errors.heightFt?.message ?? errors.heightIn?.message} />
+              </div>
+
+              {/* Weight lb */}
+              <div className="space-y-1.5">
+                <FieldLabel htmlFor="weightLb">Weight (lb)</FieldLabel>
+                <input
+                  id="weightLb"
+                  type="number"
+                  inputMode="decimal"
+                  placeholder="e.g. 160"
+                  className={fieldClass(!!errors.weightLb)}
+                  {...register('weightLb')}
+                />
+                <FieldError message={errors.weightLb?.message} />
+              </div>
+            </>
+          )}
         </SectionCard>
       </motion.div>
 
@@ -228,7 +407,6 @@ export function ProfileStep({ defaultValues, onNext, onBack }: ProfileStepProps)
 
 // ── Sub-components ─────────────────────────────────────────────────────────
 
-/** Card wrapper for a section of related fields */
 function SectionCard({ children }: { children: React.ReactNode }) {
   return (
     <div
@@ -243,10 +421,9 @@ function SectionCard({ children }: { children: React.ReactNode }) {
   )
 }
 
-/** Eyebrow label above a section card */
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="font-body text-xs font-semibold text-ink-muted uppercase tracking-wider -mb-1">
+    <p className="font-body text-xs font-semibold text-ink-muted uppercase tracking-wider">
       {children}
     </p>
   )
