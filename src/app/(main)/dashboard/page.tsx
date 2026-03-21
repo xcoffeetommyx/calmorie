@@ -5,39 +5,47 @@
  *
  * Onboarding gate: if profile is not set up, renders OnboardingFlow directly.
  * Loading state: shows a skeleton until both stores have hydrated.
+ *
+ * Card order:
+ *   1. Greeting
+ *   2. CalorieRing — hero
+ *   3. WinsRecapCard — compact wins / milestone strip (shown when there's activity)
+ *   4. HabitAlertBanner — conditional, from latest check-in
+ *   5. CheckInCTA — pending or completed state
+ *   6. DailyFocusCard — shown when checked in today
+ *   7. LessonOfTheDay + QuickTipCard — two-column grid
+ *   8. MealSummaryCard
  */
 
-import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { Settings, Leaf } from 'lucide-react'
-import { cn } from '@/lib/utils/cn'
+import { useMemo }          from 'react'
+import { useRouter }        from 'next/navigation'
+import { motion }           from 'framer-motion'
+import Link                 from 'next/link'
+import { Settings, Leaf }   from 'lucide-react'
+import { cn }               from '@/lib/utils/cn'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { getTimeGreeting, formatDateDisplay, todayISO } from '@/lib/utils/date'
 
-import { CalorieRing }                          from '@/components/dashboard/CalorieRing'
-import { DailyBurnCard, type BurnSuggestion }   from '@/components/dashboard/DailyBurnCard'
-import { MealSummaryCard }                      from '@/components/dashboard/MealSummaryCard'
-import { LessonOfTheDay }                       from '@/components/dashboard/LessonOfTheDay'
-import { HabitAlertBanner }                     from '@/components/dashboard/HabitAlertBanner'
-import { CheckInCTA }                           from '@/components/dashboard/CheckInCTA'
-import { OnboardingFlow }                       from '@/components/onboarding/OnboardingFlow'
+import { CalorieRing }      from '@/components/dashboard/CalorieRing'
+import { MealSummaryCard }  from '@/components/dashboard/MealSummaryCard'
+import { LessonOfTheDay }   from '@/components/dashboard/LessonOfTheDay'
+import { HabitAlertBanner } from '@/components/dashboard/HabitAlertBanner'
+import { CheckInCTA }       from '@/components/dashboard/CheckInCTA'
+import { DailyFocusCard }   from '@/components/dashboard/DailyFocusCard'
+import { WinsRecapCard }    from '@/components/dashboard/WinsRecapCard'
+import { QuickTipCard }     from '@/components/dashboard/QuickTipCard'
+import { OnboardingFlow }   from '@/components/onboarding/OnboardingFlow'
 
-import { useCalorieTarget }                     from '@/hooks/useCalorieTarget'
-import { useLessons }                           from '@/hooks/useLessons'
-import { useTodayLog }                          from '@/hooks/useTodayLog'
-import { useHabitAlerts }                       from '@/hooks/useHabitAlerts'
+import { useCalorieTarget }    from '@/hooks/useCalorieTarget'
+import { useLessons }          from '@/hooks/useLessons'
+import { useTodayLog }         from '@/hooks/useTodayLog'
+import { useHabitAlerts }      from '@/hooks/useHabitAlerts'
+import { useStreakData }        from '@/hooks/useStreakData'
+import { useContextualLesson } from '@/hooks/useContextualLesson'
 import { useCheckinStore, selectIsCompletedToday, selectTodayRecord } from '@/stores/checkinStore'
-import { useStreakData } from '@/hooks/useStreakData'
+import { getTipOfTheDay }      from '@/data/dailyTips'
 
 const FALLBACK_TARGET = 2000
-
-const BURN_SUGGESTION: BurnSuggestion = {
-  activity:      'Brisk walk',
-  duration:      '20 minutes',
-  estimatedKcal: '80–110 kcal',
-  tip:           'A short walk after meals can be an easy way to add daily movement and support your energy levels.',
-}
 
 // ── Skeleton ──────────────────────────────────────────────────────────────
 
@@ -51,11 +59,12 @@ function DashboardSkeleton() {
       </div>
       {/* Cards */}
       <div className="h-56 bg-surface-raised rounded-2xl animate-pulse-soft" style={{ animationDelay: '80ms' }} />
-      <div className="h-16 bg-surface-raised rounded-2xl animate-pulse-soft" style={{ animationDelay: '140ms' }} />
-      <div className="h-16 bg-surface-raised rounded-2xl animate-pulse-soft" style={{ animationDelay: '200ms' }} />
+      <div className="h-9 bg-surface-raised rounded-full animate-pulse-soft" style={{ animationDelay: '120ms' }} />
+      <div className="h-16 bg-surface-raised rounded-2xl animate-pulse-soft" style={{ animationDelay: '160ms' }} />
+      <div className="h-16 bg-surface-raised rounded-2xl animate-pulse-soft" style={{ animationDelay: '220ms' }} />
       <div className="grid grid-cols-2 gap-3">
-        <div className="h-40 bg-surface-raised rounded-xl animate-pulse-soft" style={{ animationDelay: '260ms' }} />
-        <div className="h-40 bg-surface-raised rounded-xl animate-pulse-soft" style={{ animationDelay: '320ms' }} />
+        <div className="h-40 bg-surface-raised rounded-xl animate-pulse-soft" style={{ animationDelay: '280ms' }} />
+        <div className="h-40 bg-surface-raised rounded-xl animate-pulse-soft" style={{ animationDelay: '340ms' }} />
       </div>
     </div>
   )
@@ -70,11 +79,29 @@ export default function DashboardPage() {
   const calorieTarget = realTarget ?? FALLBACK_TARGET
 
   const { entries: todayEntries, totalCalories: caloriesEaten, isHydrated: logHydrated } = useTodayLog()
-  const isCheckedIn    = useCheckinStore(selectIsCompletedToday)
-  const todayRecord    = useCheckinStore(selectTodayRecord)
-  const streakData     = useStreakData()
-  const { topWarning } = useHabitAlerts()
-  const { lessonOfTheDay } = useLessons()
+  const isCheckedIn       = useCheckinStore(selectIsCompletedToday)
+  const todayRecord       = useCheckinStore(selectTodayRecord)
+  const streakData        = useStreakData()
+  const { topWarning }    = useHabitAlerts()
+  const { progressMap }   = useLessons()
+  const contextualLesson  = useContextualLesson()
+
+  // Completed lessons count — memoized, depends on progressMap reference
+  const completedLessonsCount = useMemo(
+    () => Object.values(progressMap).filter((p) => p.completed).length,
+    [progressMap]
+  )
+
+  // WinsRecapCard shows when any chip would be populated; guard here so the
+  // stagger wrapper div doesn't consume vertical space when the card is empty.
+  const hasWins =
+    isCheckedIn ||
+    streakData.currentStreak >= 2 ||
+    streakData.weeklyCount >= 3 ||
+    completedLessonsCount > 0
+
+  // Daily tip — pure lookup, stable reference from static array
+  const tipOfDay = getTipOfTheDay(todayISO())
 
   const greeting  = getTimeGreeting()
   const dateLabel = formatDateDisplay(todayISO())
@@ -116,6 +143,19 @@ export default function DashboardPage() {
           <CalorieRing caloriesEaten={caloriesEaten} calorieTarget={calorieTarget} />
         </motion.div>
 
+        {/* ── Wins recap — compact strip (hidden for brand-new users) ─── */}
+        {hasWins && (
+          <motion.div variants={staggerItem}>
+            <WinsRecapCard
+              isCheckedIn={isCheckedIn}
+              currentStreak={streakData.currentStreak}
+              weeklyCount={streakData.weeklyCount}
+              completedLessonsCount={completedLessonsCount}
+              streakMilestone={streakData.milestoneReached}
+            />
+          </motion.div>
+        )}
+
         {/* ── Habit alert — only when present ──────────────── */}
         {topWarning && (
           <motion.div variants={staggerItem}>
@@ -132,10 +172,17 @@ export default function DashboardPage() {
           />
         </motion.div>
 
-        {/* ── Two-card row: lesson + burn ───────────────────── */}
+        {/* ── Daily focus — only when checked in ───────────── */}
+        {isCheckedIn && todayRecord && (
+          <motion.div variants={staggerItem}>
+            <DailyFocusCard focus={todayRecord.answers.dailyFocus} />
+          </motion.div>
+        )}
+
+        {/* ── Lesson (contextual) + Quick tip ───────────────── */}
         <motion.div variants={staggerItem} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <LessonOfTheDay lesson={lessonOfTheDay} />
-          <DailyBurnCard suggestion={BURN_SUGGESTION} />
+          <LessonOfTheDay lesson={contextualLesson} />
+          <QuickTipCard tip={tipOfDay} />
         </motion.div>
 
         {/* ── Meal summary ──────────────────────────────────── */}

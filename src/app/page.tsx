@@ -3,58 +3,72 @@
 /**
  * Root route — /
  *
- * Shows onboarding if the user has not completed it yet.
- * Shows the dashboard directly once onboarding is complete.
+ * Gates initial app entry based on hydration and onboarding state.
  *
- * Pattern:
- *   - While the store is hydrating, show a minimal branded loading screen.
- *   - Once hydrated: if not onboarded → render OnboardingFlow in place.
- *   - Once hydrated: if onboarded → render the dashboard directly.
+ * States:
+ *   hydrating   — IndexedDB not yet loaded: show branded loading screen
+ *   onboarding  — profile incomplete: render OnboardingFlow in place
+ *   ready       — onboarded: redirect to /dashboard via router.replace()
  *
- * This avoids any router.replace() calls (which caused the previous
- * React #185 update loop) by rendering the correct component directly
- * rather than navigating imperatively.
+ * Why router.replace() instead of rendering <Dashboard /> directly:
+ *   Rendering the dashboard page component from this route bypasses the
+ *   (main) route-group layout (AppShell / BottomNav / PageTransition).
+ *   Redirecting into /dashboard means the page is always rendered through
+ *   its correct layout, so the bottom nav is present from first load.
  *
- * /onboarding and /dashboard continue to work as their own routes.
+ * No redirect loop:
+ *   The useEffect only fires when isHydrated && isOnboarded. After
+ *   router.replace('/dashboard') executes, this component unmounts.
+ *   The /dashboard route does not redirect back to /.
  */
 
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Leaf } from 'lucide-react'
 import { useUserStore, selectIsOnboarded } from '@/stores/userStore'
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow'
-import Dashboard from './(main)/dashboard/page'
+
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen-dynamic bg-background flex items-center justify-center">
+      <div className="flex items-center gap-2 animate-pulse-soft">
+        <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+          <Leaf className="w-4 h-4 text-white" strokeWidth={2.25} aria-hidden="true" />
+        </div>
+        <span className="font-display text-lg font-semibold text-primary tracking-tight">
+          Calmorie
+        </span>
+      </div>
+    </div>
+  )
+}
 
 export default function RootPage() {
   const isHydrated  = useUserStore((s) => s.isHydrated)
   const isOnboarded = useUserStore(selectIsOnboarded)
   const router      = useRouter()
 
-  // Loading state while IndexedDB hydrates — keeps screen blank-free
+  // Once hydrated and onboarded, hand off to /dashboard so it renders
+  // through (main)/layout.tsx and receives AppShell + BottomNav.
+  useEffect(() => {
+    if (isHydrated && isOnboarded) {
+      router.replace('/dashboard')
+    }
+  }, [isHydrated, isOnboarded, router])
+
+  // Hydrating — keep screen blank-free with branded loading state
   if (!isHydrated) {
-    return (
-      <div className="min-h-screen-dynamic bg-background flex items-center justify-center">
-        <div className="flex items-center gap-2 animate-pulse-soft">
-          <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
-            <Leaf className="w-4 h-4 text-white" strokeWidth={2.25} aria-hidden="true" />
-          </div>
-          <span className="font-display text-lg font-semibold text-primary tracking-tight">
-            Calmorie
-          </span>
-        </div>
-      </div>
-    )
+    return <LoadingScreen />
   }
 
-  // Not onboarded — render OnboardingFlow directly in the root route.
-  // On complete, navigate to /dashboard (replaces this entry in history).
+  // Not onboarded — render flow in place; on complete, enter /dashboard
   if (!isOnboarded) {
     return (
-      <OnboardingFlow
-        onComplete={() => router.replace('/dashboard')}
-      />
+      <OnboardingFlow onComplete={() => router.replace('/dashboard')} />
     )
   }
 
-  // Onboarded — render the dashboard component directly
-  return <Dashboard />
+  // Onboarded — redirect is in-flight (useEffect above), show loading
+  // screen for the one render before navigation completes.
+  return <LoadingScreen />
 }
