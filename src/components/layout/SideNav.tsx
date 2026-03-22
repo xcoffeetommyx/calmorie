@@ -185,7 +185,7 @@ export function SideNav({ className }: { className?: string }) {
         </a>
 
         <p className="px-3 pt-1 font-body text-[11px] text-ink-muted opacity-50 select-none">
-          v0.1 · Free, always
+          v1.0 · Free, always
         </p>
       </div>
     </nav>
