@@ -29,6 +29,29 @@ export interface CommonFood {
   calories: number      // per standard serving
   servingDescription: string
   category?: string
+  /** Preferred meal slot for this food. Used as the default when logging. */
+  defaultMeal?: MealType
+  /**
+   * 'instant' — one tap logs immediately (predictable calorie count).
+   * 'prefill' — opens form with values pre-filled so user can adjust.
+   */
+  mode?: 'instant' | 'prefill'
+}
+
+/**
+ * Unified quick-add item — represents either a common food or a logged recent.
+ * Drives both chip display and tap behaviour in the quick-add strip.
+ */
+export interface QuickItem {
+  /** Stable unique key for the chip (e.g. "recent-banana", "cf-banana") */
+  id: string
+  name: string
+  calories: number
+  defaultMeal?: MealType
+  mode: 'instant' | 'prefill'
+  source: 'common' | 'recent'
+  /** ISO datetime of most recent log; used for sorting recents */
+  lastUsedAt?: string
 }
 
 /** Aggregated view for a single day */
