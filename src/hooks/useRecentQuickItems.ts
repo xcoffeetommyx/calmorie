@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * src/hooks/useRecentQuickItems.ts
  *
@@ -7,8 +9,6 @@
  * Items are QuickItem objects (name, calories, defaultMeal, lastUsedAt).
  * Deduplication is by normalised food name; max 10 items.
  */
-
-'use client'
 
 import { useState, useCallback } from 'react'
 import type { QuickItem }         from '@/types/food'
