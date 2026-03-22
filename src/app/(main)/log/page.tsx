@@ -3,30 +3,33 @@
 /**
  * Log page — /log
  *
- * The food log screen, fully wired to real state via useTodayLog().
+ * Two-speed food logging:
+ *   instant chips  → log immediately, no form, ✓ feedback for 1.5 s
+ *   prefill chips  → open FoodEntryForm pre-filled, user confirms
+ *   + Custom chip  → open blank form
  *
- * recentNames is computed with useMemo from the raw entries array rather
- * than via a selectRecentFoodNames selector. The old selector created a
- * new string[] on every call, which caused an infinite render loop
- * (React production error #185).
+ * Recent items: persisted in localStorage via useRecentQuickItems.
+ * Falls back to deriving QuickItems from allEntries on first use.
  */
 
-import { useState, useMemo } from 'react'
-import { motion } from 'framer-motion'
-import { Plus } from 'lucide-react'
-import { cn } from '@/lib/utils/cn'
+import { useState, useMemo }        from 'react'
+import { motion }                    from 'framer-motion'
+import { Plus }                      from 'lucide-react'
+import { cn }                        from '@/lib/utils/cn'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
-import { formatDateDisplay, todayISO } from '@/lib/utils/date'
-import { useTodayLog } from '@/hooks/useTodayLog'
+import { formatDateDisplay, todayISO }   from '@/lib/utils/date'
+import { useTodayLog }               from '@/hooks/useTodayLog'
 import { useLogStore, selectEntries } from '@/stores/logStore'
-import { TopBar } from '@/components/layout/TopBar'
-import { CalorieTargetBar } from '@/components/log/CalorieTargetBar'
-import { RecentFoodsQuick } from '@/components/log/RecentFoodsQuick'
-import { FoodLogList } from '@/components/log/FoodLogList'
-import { FoodEntryForm } from '@/components/log/FoodEntryForm'
-import type { MealType, FoodEntryInput } from '@/types/food'
+import { useRecentQuickItems }       from '@/hooks/useRecentQuickItems'
+import { buildRecentQuickItem, getMealByTimeOfDay } from '@/lib/utils/quickAddUtils'
+import { TopBar }                    from '@/components/layout/TopBar'
+import { CalorieTargetBar }          from '@/components/log/CalorieTargetBar'
+import { RecentFoodsQuick }          from '@/components/log/RecentFoodsQuick'
+import { FoodLogList }               from '@/components/log/FoodLogList'
+import { FoodEntryForm }             from '@/components/log/FoodEntryForm'
+import type { MealType, FoodEntryInput, QuickItem } from '@/types/food'
 
-const RECENT_NAMES_LIMIT = 10
+const RECENT_FALLBACK_LIMIT = 8
 
 // ── Skeleton ──────────────────────────────────────────────────────────────
 
@@ -56,21 +59,28 @@ export default function LogPage() {
     isHydrated,
   } = useTodayLog()
 
-  // Read the raw entries reference (stable selector — no new allocation).
-  // Derive recent names with useMemo so it only recomputes when entries change.
+  // Persisted recents from localStorage
+  const { recentItems, addRecentItem } = useRecentQuickItems()
+
+  // Raw entries — stable selector, no new allocation per render
   const allEntries = useLogStore(selectEntries)
-  const recentNames = useMemo(() => {
+
+  // Fallback: build QuickItems from allEntries when localStorage recents are empty
+  const derivedRecents = useMemo<QuickItem[]>(() => {
+    if (recentItems.length > 0) return []
     const seen   = new Set<string>()
-    const result: string[] = []
-    for (let i = allEntries.length - 1; i >= 0 && result.length < RECENT_NAMES_LIMIT; i--) {
-      const name = allEntries[i].name
-      if (!seen.has(name)) {
-        seen.add(name)
-        result.push(name)
+    const result: QuickItem[] = []
+    for (let i = allEntries.length - 1; i >= 0 && result.length < RECENT_FALLBACK_LIMIT; i--) {
+      const entry = allEntries[i]
+      if (!seen.has(entry.name.toLowerCase())) {
+        seen.add(entry.name.toLowerCase())
+        result.push(buildRecentQuickItem(entry))
       }
     }
     return result
-  }, [allEntries])
+  }, [allEntries, recentItems.length])
+
+  const quickRecents = recentItems.length > 0 ? recentItems : derivedRecents
 
   // ── Form state ─────────────────────────────────────────────────────────
   const [isFormOpen,  setIsFormOpen]  = useState(false)
@@ -78,19 +88,33 @@ export default function LogPage() {
   const [prefillName, setPrefillName] = useState('')
   const [prefillCals, setPrefillCals] = useState<number | undefined>(undefined)
 
-  function openForm(meal: MealType = 'snack', name = '', calories?: number) {
-    setActiveMeal(meal)
+  function openForm(meal?: MealType, name = '', calories?: number) {
+    setActiveMeal(meal ?? getMealByTimeOfDay())
     setPrefillName(name)
     setPrefillCals(calories)
     setIsFormOpen(true)
   }
 
+  // Called when form is submitted
   function handleAdd(input: FoodEntryInput) {
-    addEntry(input)
+    const entry = addEntry(input)
+    if (entry) {
+      addRecentItem(buildRecentQuickItem(entry))
+    }
   }
 
-  function handleQuickAdd({ name, calories }: { name: string; calories?: number }) {
-    openForm('snack', name, calories)
+  // One-tap instant log: no form
+  function handleInstantLog(item: QuickItem) {
+    const meal  = item.defaultMeal ?? getMealByTimeOfDay()
+    const entry = addEntry({ name: item.name, calories: item.calories, meal })
+    if (entry) {
+      addRecentItem({ ...item, defaultMeal: meal, lastUsedAt: entry.loggedAt })
+    }
+  }
+
+  // Prefill: open form with smart meal default
+  function handlePrefill({ name, calories, meal }: { name: string; calories: number; meal?: MealType }) {
+    openForm(meal, name, calories)
   }
 
   if (!isHydrated) {
@@ -144,8 +168,10 @@ export default function LogPage() {
 
         <motion.div variants={staggerItem}>
           <RecentFoodsQuick
-            recentNames={recentNames}
-            onQuickAdd={handleQuickAdd}
+            recentItems={quickRecents}
+            onInstantLog={handleInstantLog}
+            onPrefill={handlePrefill}
+            onAddManually={() => openForm()}
           />
         </motion.div>
 

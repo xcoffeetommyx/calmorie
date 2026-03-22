@@ -15,6 +15,10 @@
  * Categories:
  *   breakfast, protein, dairy, grains, fruit, vegetables,
  *   snacks, drinks, meals
+ *
+ * mode:
+ *   'instant'  — one-tap log; calories are predictable for this serving.
+ *   'prefill'  — opens form pre-filled; user should confirm/adjust amount.
  */
 
 import type { CommonFood } from '@/types/food'
@@ -27,6 +31,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 170,
     servingDescription: '1 bowl (40g oats + water, 300ml)',
     category: 'breakfast',
+    defaultMeal: 'breakfast',
+    mode: 'prefill',
   },
   {
     id: 'cf-porridge-milk',
@@ -34,6 +40,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 230,
     servingDescription: '1 bowl (40g oats + 200ml semi-skimmed milk)',
     category: 'breakfast',
+    defaultMeal: 'breakfast',
+    mode: 'prefill',
   },
   {
     id: 'cf-toast-butter',
@@ -41,6 +49,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 190,
     servingDescription: '2 slices white toast + 10g butter',
     category: 'breakfast',
+    defaultMeal: 'breakfast',
+    mode: 'instant',
   },
   {
     id: 'cf-scrambled-eggs',
@@ -48,6 +58,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 220,
     servingDescription: '2 large eggs scrambled with a little butter',
     category: 'breakfast',
+    defaultMeal: 'breakfast',
+    mode: 'prefill',
   },
   {
     id: 'cf-boiled-egg',
@@ -55,6 +67,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 78,
     servingDescription: '1 large egg (50g)',
     category: 'breakfast',
+    defaultMeal: 'breakfast',
+    mode: 'instant',
   },
   {
     id: 'cf-granola',
@@ -62,6 +76,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 320,
     servingDescription: '50g granola + 150ml semi-skimmed milk',
     category: 'breakfast',
+    defaultMeal: 'breakfast',
+    mode: 'prefill',
   },
 
   // ── Proteins ───────────────────────────────────────────────────────────
@@ -71,6 +87,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 165,
     servingDescription: '1 medium breast (130g cooked)',
     category: 'protein',
+    defaultMeal: 'dinner',
+    mode: 'prefill',
   },
   {
     id: 'cf-salmon',
@@ -78,6 +96,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 208,
     servingDescription: '1 fillet (130g cooked)',
     category: 'protein',
+    defaultMeal: 'dinner',
+    mode: 'prefill',
   },
   {
     id: 'cf-tuna-tin',
@@ -85,6 +105,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 116,
     servingDescription: '1 drained tin (100g)',
     category: 'protein',
+    defaultMeal: 'lunch',
+    mode: 'instant',
   },
   {
     id: 'cf-beef-mince',
@@ -92,6 +114,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 215,
     servingDescription: '100g cooked, 5% fat',
     category: 'protein',
+    defaultMeal: 'dinner',
+    mode: 'prefill',
   },
   {
     id: 'cf-lentils',
@@ -99,6 +123,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 116,
     servingDescription: '100g cooked',
     category: 'protein',
+    defaultMeal: 'lunch',
+    mode: 'prefill',
   },
   {
     id: 'cf-chickpeas',
@@ -106,6 +132,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 164,
     servingDescription: '100g drained',
     category: 'protein',
+    defaultMeal: 'lunch',
+    mode: 'prefill',
   },
   {
     id: 'cf-tofu',
@@ -113,6 +141,7 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 144,
     servingDescription: '150g',
     category: 'protein',
+    mode: 'prefill',
   },
 
   // ── Dairy ──────────────────────────────────────────────────────────────
@@ -122,6 +151,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 97,
     servingDescription: '170g pot, plain',
     category: 'dairy',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-greek-yogurt-full',
@@ -129,6 +160,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 170,
     servingDescription: '170g pot, plain',
     category: 'dairy',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-milk-semi',
@@ -136,6 +169,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 104,
     servingDescription: '200ml glass',
     category: 'dairy',
+    defaultMeal: 'breakfast',
+    mode: 'instant',
   },
   {
     id: 'cf-cheddar',
@@ -143,6 +178,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 166,
     servingDescription: '40g (matchbox-sized portion)',
     category: 'dairy',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-cottage-cheese',
@@ -150,6 +187,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 98,
     servingDescription: '125g pot, low-fat',
     category: 'dairy',
+    defaultMeal: 'snack',
+    mode: 'prefill',
   },
 
   // ── Grains & Carbohydrates ─────────────────────────────────────────────
@@ -159,6 +198,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 206,
     servingDescription: '150g cooked (about a mugful)',
     category: 'grains',
+    defaultMeal: 'lunch',
+    mode: 'prefill',
   },
   {
     id: 'cf-brown-rice',
@@ -166,6 +207,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 196,
     servingDescription: '150g cooked',
     category: 'grains',
+    defaultMeal: 'lunch',
+    mode: 'prefill',
   },
   {
     id: 'cf-pasta-cooked',
@@ -173,6 +216,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 220,
     servingDescription: '180g cooked (dry weight ~75g)',
     category: 'grains',
+    defaultMeal: 'dinner',
+    mode: 'prefill',
   },
   {
     id: 'cf-wholemeal-bread',
@@ -180,6 +225,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 78,
     servingDescription: '1 medium slice (32g)',
     category: 'grains',
+    defaultMeal: 'breakfast',
+    mode: 'instant',
   },
   {
     id: 'cf-potato-baked',
@@ -187,6 +234,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 217,
     servingDescription: '1 medium potato (180g), no toppings',
     category: 'grains',
+    defaultMeal: 'lunch',
+    mode: 'prefill',
   },
   {
     id: 'cf-sweet-potato',
@@ -194,6 +243,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 180,
     servingDescription: '1 medium sweet potato (150g)',
     category: 'grains',
+    defaultMeal: 'dinner',
+    mode: 'prefill',
   },
 
   // ── Fruit ──────────────────────────────────────────────────────────────
@@ -203,6 +254,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 105,
     servingDescription: '1 medium banana (120g)',
     category: 'fruit',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-apple',
@@ -210,6 +263,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 77,
     servingDescription: '1 medium apple (150g)',
     category: 'fruit',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-orange',
@@ -217,6 +272,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 62,
     servingDescription: '1 medium orange (150g)',
     category: 'fruit',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-grapes',
@@ -224,6 +281,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 104,
     servingDescription: 'Small bunch (150g)',
     category: 'fruit',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-berries-mixed',
@@ -231,6 +290,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 57,
     servingDescription: '100g (fresh or frozen)',
     category: 'fruit',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-avocado-half',
@@ -238,6 +299,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 161,
     servingDescription: 'Half a medium avocado (100g)',
     category: 'fruit',
+    defaultMeal: 'breakfast',
+    mode: 'prefill',
   },
 
   // ── Vegetables ────────────────────────────────────────────────────────
@@ -247,6 +310,7 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 34,
     servingDescription: '100g',
     category: 'vegetables',
+    mode: 'instant',
   },
   {
     id: 'cf-spinach',
@@ -254,6 +318,7 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 23,
     servingDescription: 'Large handful (100g)',
     category: 'vegetables',
+    mode: 'instant',
   },
   {
     id: 'cf-mixed-salad',
@@ -261,6 +326,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 20,
     servingDescription: 'Large bowl (100g, no dressing)',
     category: 'vegetables',
+    defaultMeal: 'lunch',
+    mode: 'instant',
   },
   {
     id: 'cf-carrot',
@@ -268,6 +335,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 41,
     servingDescription: '1 medium carrot (80g)',
     category: 'vegetables',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-tomato',
@@ -275,6 +344,7 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 22,
     servingDescription: '1 medium tomato (100g)',
     category: 'vegetables',
+    mode: 'instant',
   },
 
   // ── Snacks ────────────────────────────────────────────────────────────
@@ -284,6 +354,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 164,
     servingDescription: 'Small handful (28g, ~23 almonds)',
     category: 'snacks',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-peanut-butter',
@@ -291,6 +363,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 188,
     servingDescription: '2 tbsp (32g)',
     category: 'snacks',
+    defaultMeal: 'snack',
+    mode: 'prefill',
   },
   {
     id: 'cf-hummus',
@@ -298,6 +372,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 70,
     servingDescription: '2 tbsp (30g)',
     category: 'snacks',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-dark-chocolate',
@@ -305,6 +381,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 170,
     servingDescription: '30g (3 squares)',
     category: 'snacks',
+    defaultMeal: 'snack',
+    mode: 'prefill',
   },
   {
     id: 'cf-rice-cakes',
@@ -312,6 +390,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 70,
     servingDescription: '2 plain rice cakes',
     category: 'snacks',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-crisps',
@@ -319,6 +399,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 130,
     servingDescription: 'Small bag (25g)',
     category: 'snacks',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
 
   // ── Drinks ────────────────────────────────────────────────────────────
@@ -328,6 +410,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 130,
     servingDescription: 'Medium (355ml)',
     category: 'drinks',
+    defaultMeal: 'breakfast',
+    mode: 'instant',
   },
   {
     id: 'cf-coffee-black',
@@ -335,6 +419,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 5,
     servingDescription: 'Standard cup (240ml)',
     category: 'drinks',
+    defaultMeal: 'breakfast',
+    mode: 'instant',
   },
   {
     id: 'cf-orange-juice',
@@ -342,6 +428,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 110,
     servingDescription: '250ml glass, unsweetened',
     category: 'drinks',
+    defaultMeal: 'breakfast',
+    mode: 'instant',
   },
   {
     id: 'cf-cola',
@@ -349,6 +437,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 142,
     servingDescription: '330ml can',
     category: 'drinks',
+    defaultMeal: 'snack',
+    mode: 'instant',
   },
   {
     id: 'cf-beer',
@@ -356,6 +446,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 182,
     servingDescription: '440ml can',
     category: 'drinks',
+    defaultMeal: 'dinner',
+    mode: 'instant',
   },
   {
     id: 'cf-wine-white',
@@ -363,6 +455,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 159,
     servingDescription: '175ml standard glass (13%)',
     category: 'drinks',
+    defaultMeal: 'dinner',
+    mode: 'instant',
   },
 
   // ── Common meals ──────────────────────────────────────────────────────
@@ -372,6 +466,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 380,
     servingDescription: '2 slices bread, chicken, lettuce, light mayo',
     category: 'meals',
+    defaultMeal: 'lunch',
+    mode: 'prefill',
   },
   {
     id: 'cf-bowl-rice-veg',
@@ -379,6 +475,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 420,
     servingDescription: '150g rice, mixed veg, light sauce',
     category: 'meals',
+    defaultMeal: 'lunch',
+    mode: 'prefill',
   },
   {
     id: 'cf-soup-veg',
@@ -386,6 +484,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 120,
     servingDescription: '300ml bowl, homemade or shop-bought',
     category: 'meals',
+    defaultMeal: 'lunch',
+    mode: 'prefill',
   },
   {
     id: 'cf-pizza-slice',
@@ -393,6 +493,8 @@ export const COMMON_FOODS: CommonFood[] = [
     calories: 272,
     servingDescription: '1 slice from a 12-inch pizza (~107g)',
     category: 'meals',
+    defaultMeal: 'dinner',
+    mode: 'prefill',
   },
 ]
 
