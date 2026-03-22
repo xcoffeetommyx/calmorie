@@ -62,9 +62,9 @@ export function BottomNav() {
         // Height includes safe area for home indicator
         'pb-[env(safe-area-inset-bottom,0px)]',
         'h-auto min-h-[var(--bottom-nav-height)]',
-        // Surface
-        'bg-surface/95 backdrop-blur-ios',
-        'border-t border-border shadow-bottom-nav',
+        // Surface — /98 keeps the glass look while preventing content bleed-through
+        'bg-surface/[0.98] backdrop-blur-ios',
+        'border-t border-border/80 shadow-bottom-nav',
         // Layout
         'flex items-stretch px-1',
         // Hidden on desktop — SideNav takes over at lg breakpoint
