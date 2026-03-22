@@ -76,7 +76,7 @@ export function BottomNav() {
         // Mark /learn, /log, /checkin, /settings as active for all child routes
         const isActive =
           href === '/dashboard'
-            ? pathname === '/dashboard'
+            ? pathname === '/' || pathname === '/dashboard'
             : pathname === href || pathname.startsWith(`${href}/`)
 
         return (
