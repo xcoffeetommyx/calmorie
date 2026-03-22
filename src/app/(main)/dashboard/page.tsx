@@ -9,7 +9,7 @@
  * Card order:
  *   1. Greeting
  *   2. CalorieRing — hero
- *   3. WinsRecapCard — compact wins / milestone strip (shown when there's activity)
+ *   3. FlameStreakCard — streak hero + secondary chips (hidden for brand-new users)
  *   4. HabitAlertBanner — conditional, from latest check-in
  *   5. CheckInCTA — pending or completed state
  *   6. DailyFocusCard — shown when checked in today
@@ -21,7 +21,8 @@ import { useMemo }          from 'react'
 import { useRouter }        from 'next/navigation'
 import { motion }           from 'framer-motion'
 import Link                 from 'next/link'
-import { Settings, Leaf }   from 'lucide-react'
+import { Settings }          from 'lucide-react'
+import { AppLogo }           from '@/components/layout/AppLogo'
 import { cn }               from '@/lib/utils/cn'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { getTimeGreeting, formatDateDisplay, todayISO } from '@/lib/utils/date'
@@ -32,7 +33,7 @@ import { LessonOfTheDay }   from '@/components/dashboard/LessonOfTheDay'
 import { HabitAlertBanner } from '@/components/dashboard/HabitAlertBanner'
 import { CheckInCTA }       from '@/components/dashboard/CheckInCTA'
 import { DailyFocusCard }   from '@/components/dashboard/DailyFocusCard'
-import { WinsRecapCard }    from '@/components/dashboard/WinsRecapCard'
+import { FlameStreakCard }   from '@/components/dashboard/FlameStreakCard'
 import { QuickTipCard }     from '@/components/dashboard/QuickTipCard'
 import { OnboardingFlow }   from '@/components/onboarding/OnboardingFlow'
 
@@ -92,13 +93,9 @@ export default function DashboardPage() {
     [progressMap]
   )
 
-  // WinsRecapCard shows when any chip would be populated; guard here so the
-  // stagger wrapper div doesn't consume vertical space when the card is empty.
-  const hasWins =
-    isCheckedIn ||
-    streakData.currentStreak >= 2 ||
-    streakData.weeklyCount >= 3 ||
-    completedLessonsCount > 0
+  // FlameStreakCard shows once the user has any check-in history (bestStreak > 0)
+  // or has checked in today. Brand-new users see null inside the component.
+  const hasStreakHistory = streakData.bestStreak > 0 || isCheckedIn
 
   // Daily tip — pure lookup, stable reference from static array
   const tipOfDay = getTipOfTheDay(todayISO())
@@ -143,15 +140,17 @@ export default function DashboardPage() {
           <CalorieRing caloriesEaten={caloriesEaten} calorieTarget={calorieTarget} />
         </motion.div>
 
-        {/* ── Wins recap — compact strip (hidden for brand-new users) ─── */}
-        {hasWins && (
+        {/* ── Flame streak card (hidden for brand-new users) ───────── */}
+        {hasStreakHistory && (
           <motion.div variants={staggerItem}>
-            <WinsRecapCard
-              isCheckedIn={isCheckedIn}
+            <FlameStreakCard
               currentStreak={streakData.currentStreak}
+              bestStreak={streakData.bestStreak}
               weeklyCount={streakData.weeklyCount}
+              isCheckedIn={isCheckedIn}
               completedLessonsCount={completedLessonsCount}
               streakMilestone={streakData.milestoneReached}
+              graceActive={streakData.graceActive}
             />
           </motion.div>
         )}
@@ -217,9 +216,7 @@ function DashboardHeader() {
         )}
         aria-label="Calmorie — go to dashboard"
       >
-        <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center" aria-hidden="true">
-          <Leaf className="w-3.5 h-3.5 text-white" strokeWidth={2.25} />
-        </div>
+        <AppLogo size={24} className="rounded-md" />
         <span className="font-display text-[15px] font-semibold text-primary tracking-tight">
           Calmorie
         </span>

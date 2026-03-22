@@ -31,8 +31,12 @@ export interface StreakData {
   bestStreak: number
   /** How many of the last 7 days (including today) had a check-in */
   weeklyCount: number
-  /** Non-null when the current streak just hit a milestone (3 / 7 / 14 / 30) */
+  /** Non-null when the user checks in today at an exact milestone (3/7/14/30/60/100) */
   milestoneReached: number | null
+  /** True when the user missed yesterday but their ≥3-day streak is automatically preserved */
+  graceActive: boolean
+  /** True when the user has an active ≥3-day streak and hasn't burned a grace day today */
+  graceAvailable: boolean
 }
 
 // ── Store shape ────────────────────────────────────────────────────────────
@@ -117,30 +121,68 @@ export const selectCheckinRecords = (
 
 // ── Streak computation ─────────────────────────────────────────────────────
 
-const STREAK_MILESTONES = [3, 7, 14, 30] as const
+const STREAK_MILESTONES = [3, 7, 14, 30, 60, 100] as const
 
 /**
  * Derives streak statistics from an array of 'YYYY-MM-DD' check-in dates.
- * Pure function — safe to call in any context, including useMemo.
+ *
+ * @param dates          Array of ISO date strings the user has checked in on.
+ * @param graceBridgeDate The missed date currently bridged by grace (from
+ *                        localStorage via useStreakData). Pass null if grace
+ *                        has never been used or the window has expired.
+ *
+ * Grace model: rolling 7-day window.
+ *   – User missed exactly yesterday AND has a check-in 2 days ago → eligible
+ *   – Grace is active when eligible AND (bridgeDate === yesterday OR window open)
+ *   – Window open = graceBridgeDate is null OR daysBetween(bridgeDate, today) >= 8
+ *   – When grace is active, yesterday is bridged in the consecutive-day count
+ *     so the streak is preserved both before AND after checking in today.
  */
-export function computeStreaks(dates: string[]): StreakData {
+export function computeStreaks(
+  dates: string[],
+  graceBridgeDate: string | null = null,
+): StreakData {
   if (dates.length === 0) {
-    return { currentStreak: 0, bestStreak: 0, weeklyCount: 0, milestoneReached: null }
+    return {
+      currentStreak: 0, bestStreak: 0, weeklyCount: 0,
+      milestoneReached: null, graceActive: false, graceAvailable: false,
+    }
   }
 
-  const dateSet = new Set(dates)
-  const today   = todayISO()
+  const dateSet           = new Set(dates)
+  const today             = todayISO()
+  const yesterday         = subtractOneDay(today)
+  const dayBeforeYesterday = subtractOneDay(yesterday)
 
-  // Current streak: walk backwards from today
-  // If today hasn't been checked yet, the streak is alive from yesterday
-  const streakFromToday     = countConsecutiveBack(dateSet, today)
-  const yesterday           = subtractOneDay(today)
-  const streakFromYesterday = dateSet.has(yesterday)
-    ? countConsecutiveBack(dateSet, yesterday)
-    : 0
-  const currentStreak = Math.max(streakFromToday, streakFromYesterday)
+  // ── Grace detection ──────────────────────────────────────────────────────
+  // Eligible = missed exactly yesterday AND had a meaningful prior streak (≥3).
+  // A single stray check-in from 2 days ago does not qualify.
+  const priorRun = countConsecutiveBack(dateSet, dayBeforeYesterday)
+  const eligibleForGrace = !dateSet.has(yesterday) && priorRun >= 3
 
-  // Best streak: scan all sorted dates
+  // Rolling-window open = grace was never used, OR used far enough in the past.
+  // daysBetween(bridgeDate, today) >= 8 means grace was activated >= 7 days ago.
+  const graceWindowOpen = graceBridgeDate === null
+    || daysBetween(graceBridgeDate, today) >= 8
+
+  // Grace already bridging this exact gap = bridge was recorded for yesterday.
+  const graceAlreadyBridgingThisGap = graceBridgeDate === yesterday
+
+  const graceActive    = eligibleForGrace && (graceAlreadyBridgingThisGap || graceWindowOpen)
+  const graceAvailable = graceWindowOpen && !eligibleForGrace
+
+  // ── Streak count with optional bridge ────────────────────────────────────
+  // When grace is active, yesterday is treated as present even if missing.
+  // This keeps the streak alive before check-in AND correctly counts today
+  // (and all future days) once the user checks in.
+  const bridgeToday = graceActive ? yesterday : null
+
+  const currentStreak = Math.max(
+    countConsecutiveBackWithBridge(dateSet, today, bridgeToday),
+    dateSet.has(yesterday) ? countConsecutiveBack(dateSet, yesterday) : 0,
+  )
+
+  // Best streak: scan all sorted dates (no grace bridging — reflects real history)
   const bestStreak = computeBestStreak(dates)
 
   // Weekly count: how many of the last 7 days (today inclusive)
@@ -149,13 +191,13 @@ export function computeStreaks(dates: string[]): StreakData {
     return diff >= 0 && diff < 7
   }).length
 
-  // Milestone: only when streak is at an exact milestone value
+  // Milestone: fires only on the day the user actually checks in at that value.
   const milestoneReached =
-    (STREAK_MILESTONES as readonly number[]).includes(currentStreak)
+    dateSet.has(today) && (STREAK_MILESTONES as readonly number[]).includes(currentStreak)
       ? currentStreak
       : null
 
-  return { currentStreak, bestStreak, weeklyCount, milestoneReached }
+  return { currentStreak, bestStreak, weeklyCount, milestoneReached, graceActive, graceAvailable }
 }
 
 /** Counts consecutive days ending at (and including) startDate. */
@@ -164,6 +206,32 @@ function countConsecutiveBack(dateSet: Set<string>, startDate: string): number {
   let d     = startDate
   while (dateSet.has(d)) {
     count++
+    d = subtractOneDay(d)
+  }
+  return count
+}
+
+/**
+ * Counts consecutive days ending at startDate, bridging one missing date.
+ * The bridge is used at most once and only when the chain reaches that date.
+ */
+function countConsecutiveBackWithBridge(
+  dateSet: Set<string>,
+  startDate: string,
+  bridgeDate: string | null,
+): number {
+  let count       = 0
+  let d           = startDate
+  let bridgeUsed  = false
+  while (true) {
+    if (dateSet.has(d)) {
+      count++
+    } else if (!bridgeUsed && bridgeDate !== null && d === bridgeDate) {
+      count++
+      bridgeUsed = true
+    } else {
+      break
+    }
     d = subtractOneDay(d)
   }
   return count

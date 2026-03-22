@@ -20,15 +20,16 @@
  *   poor    → text-ink-secondary / bg-surface-raised
  */
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
-import { Flame, CalendarDays, BookOpen } from 'lucide-react'
+import { Flame, BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { scaleSpring, staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { scoreToTier } from '@/lib/utils/format'
 import { calculateScore, getScoreDescription, getLessonSlugForFactor } from '@/lib/engine/scoreEngine'
 import { getLessonBySlug } from '@/lib/content/lessons'
 import { useStreakData } from '@/hooks/useStreakData'
+import { getFlameState, FLAME_CONFIGS, getNextMilestone, MILESTONE_MESSAGES, type StreakMilestone } from '@/lib/utils/streakUtils'
 import { HabitWarning } from './HabitWarning'
 import type { CheckInRecordFull } from '@/stores/checkinStore'
 
@@ -40,15 +41,6 @@ const TIER_STYLES = {
   average: { ring: 'stroke-warning',   number: 'text-warning',       badge: 'bg-warning-bg text-amber-800' },
   poor:    { ring: 'stroke-ink-muted', number: 'text-ink-secondary', badge: 'bg-surface-raised text-ink-muted' },
 } as const
-
-// ── Milestone copy ─────────────────────────────────────────────────────────
-
-const MILESTONE_COPY: Record<number, string> = {
-  3:  'Three days in a row — a habit is starting to form.',
-  7:  'A full week of check-ins. Consistency like this adds up.',
-  14: 'Two weeks straight. You\'re building something real here.',
-  30: 'Thirty days. That\'s genuine commitment — well done.',
-}
 
 // ── Component ──────────────────────────────────────────────────────────────
 
@@ -65,7 +57,12 @@ export function CheckInScore({ record, onDone }: CheckInScoreProps) {
   const dashOffset      = circumference * (1 - record.score / 100)
 
   // Streak data — memoized derivation via stable records reference
-  const streakData = useStreakData()
+  const streakData          = useStreakData()
+  const prefersReducedMotion = useReducedMotion()
+  const flameState          = getFlameState(streakData.currentStreak)
+  const flameCfg            = FLAME_CONFIGS[flameState]
+  const breathe             = flameCfg.breathingEnabled && !prefersReducedMotion
+  const nextMilestone       = getNextMilestone(streakData.currentStreak)
 
   // Lesson recommendation — re-derive weakest factor from the stored answers
   const { weakestFactor } = calculateScore(record.answers)
@@ -129,58 +126,69 @@ export function CheckInScore({ record, onDone }: CheckInScoreProps) {
         </p>
       </motion.div>
 
-      {/* ── Streak summary ────────────────────────────────── */}
+      {/* ── Streak reward row ─────────────────────────────── */}
       {(streakData.currentStreak > 0 || streakData.weeklyCount > 0) && (
-        <motion.div variants={staggerItem}>
-          {/* Milestone moment */}
-          {streakData.milestoneReached && (
-            <div className="mb-2 bg-primary rounded-xl px-4 py-3 flex items-center gap-3">
+        <motion.div variants={staggerItem} className="space-y-2">
+          {/* Milestone banner */}
+          {streakData.milestoneReached &&
+            MILESTONE_MESSAGES[streakData.milestoneReached as StreakMilestone] && (
+            <div className="bg-primary rounded-xl px-4 py-3 flex items-center gap-3">
               <span className="text-xl select-none" aria-hidden="true">🎉</span>
               <p className="font-body text-sm font-medium text-ink-on-primary leading-snug">
-                {MILESTONE_COPY[streakData.milestoneReached]}
+                {MILESTONE_MESSAGES[streakData.milestoneReached as StreakMilestone]}
               </p>
             </div>
           )}
 
-          <div className="bg-surface rounded-xl border border-border shadow-xs flex divide-x divide-border overflow-hidden">
-            {/* Current streak */}
-            <div className="flex-1 px-4 py-3.5 flex items-center gap-2.5">
-              <Flame
-                size={16}
-                className={cn(
-                  streakData.currentStreak >= 3 ? 'text-warning' : 'text-ink-muted'
-                )}
-                strokeWidth={1.75}
-                aria-hidden="true"
-              />
-              <div>
-                <p className="font-display text-lg font-semibold text-ink leading-none">
-                  {streakData.currentStreak}
-                </p>
+          {/* Compact streak row — reward moment, not a duplicate card */}
+          <div className="bg-surface rounded-xl border border-border shadow-xs px-4 py-3 flex items-center gap-2.5">
+            <motion.div
+              variants={scaleSpring}
+              initial="initial"
+              animate="enter"
+              aria-hidden="true"
+            >
+              <motion.div
+                animate={breathe ? { scale: [1, flameCfg.breathingScale, 1] } : {}}
+                transition={breathe ? {
+                  repeat:     Infinity,
+                  repeatType: 'loop' as const,
+                  duration:   flameCfg.breathingDuration,
+                  ease:       'easeInOut',
+                } : {}}
+              >
+                <Flame
+                  size={flameCfg.size}
+                  strokeWidth={1.75}
+                  className={flameCfg.colorClass}
+                  style={{
+                    opacity: flameCfg.opacity,
+                    ...(flameCfg.glowFilter ? { filter: flameCfg.glowFilter } : {}),
+                  }}
+                />
+              </motion.div>
+            </motion.div>
+
+            <div className="flex-1 min-w-0">
+              <p className="font-body text-sm font-semibold text-ink leading-none">
+                {streakData.currentStreak > 0
+                  ? `${streakData.currentStreak} day streak`
+                  : 'Day one — great start.'}
+              </p>
+              {nextMilestone && streakData.currentStreak > 0 && (
                 <p className="font-body text-[11px] text-ink-muted mt-0.5">
-                  {streakData.currentStreak === 1 ? 'day streak' : 'day streak'}
+                  {nextMilestone.daysLeft === 1
+                    ? `1 day to ${nextMilestone.target}-day milestone`
+                    : `${nextMilestone.daysLeft} days to ${nextMilestone.target}-day milestone`}
                 </p>
-              </div>
+              )}
             </div>
 
-            {/* Weekly consistency */}
-            <div className="flex-1 px-4 py-3.5 flex items-center gap-2.5">
-              <CalendarDays
-                size={16}
-                className="text-ink-muted"
-                strokeWidth={1.75}
-                aria-hidden="true"
-              />
-              <div>
-                <p className="font-display text-lg font-semibold text-ink leading-none">
-                  {streakData.weeklyCount}
-                  <span className="font-body text-sm font-normal text-ink-muted"> / 7</span>
-                </p>
-                <p className="font-body text-[11px] text-ink-muted mt-0.5">
-                  this week
-                </p>
-              </div>
-            </div>
+            {streakData.weeklyCount > 0 && (
+              <span className="font-body text-[11px] text-ink-muted shrink-0">
+                {streakData.weeklyCount}/7 this week
+              </span>
+            )}
           </div>
         </motion.div>
       )}

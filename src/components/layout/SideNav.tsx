@@ -38,9 +38,9 @@ import {
   UtensilsCrossed,
   ClipboardList,
   Settings,
-  Leaf,
   Heart,
 } from 'lucide-react'
+import { AppLogo } from '@/components/layout/AppLogo'
 import { cn } from '@/lib/utils/cn'
 import { type LucideIcon } from 'lucide-react'
 
@@ -98,14 +98,7 @@ export function SideNav({ className }: { className?: string }) {
           )}
           aria-label="Calmorie home"
         >
-          <div
-            className={cn(
-              'w-7 h-7 rounded-lg',
-              'bg-primary flex items-center justify-center shrink-0',
-            )}
-          >
-            <Leaf className="w-[15px] h-[15px] text-white" strokeWidth={2.25} />
-          </div>
+          <AppLogo size={28} className="rounded-lg shrink-0" />
           <span className="font-display text-[15px] font-semibold text-primary tracking-tight">
             Calmorie
           </span>

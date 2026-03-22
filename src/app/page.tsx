@@ -24,7 +24,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Leaf } from 'lucide-react'
+import { AppLogo } from '@/components/layout/AppLogo'
 import { useUserStore, selectIsOnboarded } from '@/stores/userStore'
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow'
 
@@ -32,9 +32,7 @@ function LoadingScreen() {
   return (
     <div className="min-h-screen-dynamic bg-background flex items-center justify-center">
       <div className="flex items-center gap-2 animate-pulse-soft">
-        <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
-          <Leaf className="w-4 h-4 text-white" strokeWidth={2.25} aria-hidden="true" />
-        </div>
+        <AppLogo size={28} className="rounded-lg" />
         <span className="font-display text-lg font-semibold text-primary tracking-tight">
           Calmorie
         </span>

@@ -3,9 +3,10 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
-  User, Target, Heart, Info, Shield, ExternalLink, ChevronRight, Leaf, Ruler,
+  User, Target, Heart, Info, Shield, ExternalLink, ChevronRight, Ruler,
 } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
+import { AppLogo } from '@/components/layout/AppLogo'
 import { TopBar } from '@/components/layout/TopBar'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { useUserStore, selectIsOnboarded, selectDisplayName } from '@/stores/userStore'
@@ -158,9 +159,7 @@ export default function SettingsPage() {
 
           <div className="bg-surface rounded-xl shadow-card p-4 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shrink-0" aria-hidden="true">
-                <Leaf className="w-5 h-5 text-white" strokeWidth={2.25} />
-              </div>
+              <AppLogo size={40} className="rounded-xl shrink-0" />
               <div>
                 <p className="font-display text-base font-semibold text-ink tracking-tight">Calmorie</p>
                 <p className="font-body text-xs text-ink-muted">v0.1 · Free, always</p>

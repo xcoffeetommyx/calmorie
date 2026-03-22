@@ -33,7 +33,7 @@
 
 import { useState, useRef, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Leaf } from 'lucide-react'
+import { AppLogo } from '@/components/layout/AppLogo'
 import { cn } from '@/lib/utils/cn'
 import { useOnboarding, ONBOARDING_STEP_COUNT } from '@/hooks/useOnboarding'
 import { ProfileStep } from './ProfileStep'
@@ -192,9 +192,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             {/* Brand row */}
             <div className="h-[var(--top-bar-height)] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center">
-                  <Leaf className="w-3.5 h-3.5 text-white" strokeWidth={2.25} aria-hidden="true" />
-                </div>
+                <AppLogo size={24} className="rounded-md" />
                 <span className="font-display text-[15px] font-semibold text-primary tracking-tight">
                   Calmorie
                 </span>
