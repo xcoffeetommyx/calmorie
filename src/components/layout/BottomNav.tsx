@@ -53,6 +53,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export function BottomNav() {
   const pathname = usePathname()
+  const normalizedPath = pathname?.replace(/\/$/, '') || '/'
 
   return (
     <nav
@@ -62,9 +63,9 @@ export function BottomNav() {
         // Height includes safe area for home indicator
         'pb-[env(safe-area-inset-bottom,0px)]',
         'h-auto min-h-[var(--bottom-nav-height)]',
-        // Surface — use an opaque surface so labels/icons stay readable over page content
-        'bg-surface',
-        'border-t border-border shadow-bottom-nav',
+        // Surface — /98 keeps the glass look while preventing content bleed-through
+        'bg-surface/[0.98] backdrop-blur-ios',
+        'border-t border-border/80 shadow-bottom-nav',
         // Layout
         'flex items-stretch px-1',
         // Hidden on desktop — SideNav takes over at lg breakpoint
@@ -76,8 +77,10 @@ export function BottomNav() {
         // Mark /learn, /log, /checkin, /settings as active for all child routes
         const isActive =
           href === '/dashboard'
-            ? pathname === '/' || pathname === '/dashboard'
-            : pathname === href || pathname.startsWith(`${href}/`)
+            ? normalizedPath === '/' ||
+              normalizedPath === '/dashboard' ||
+              normalizedPath.startsWith('/dashboard/')
+            : normalizedPath === href || normalizedPath.startsWith(`${href}/`)
 
         return (
           <Link
