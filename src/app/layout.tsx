@@ -109,8 +109,8 @@ export default function RootLayout({
         {/* Favicons */}
         <link rel="icon" type="image/png" sizes="16x16" href={`${BASE}/icons/favicon-16x16.png`} />
         <link rel="icon" type="image/png" sizes="32x32" href={`${BASE}/icons/favicon-32x32.png`} />
-        <link rel="icon" type="image/png" sizes="192x192" href={`${BASE}/icons/icon-192x192.png`} />
-        <link rel="icon" type="image/png" sizes="512x512" href={`${BASE}/icons/icon-512x512.png`} />
+        <link rel="icon" type="image/png" sizes="192x192" href={`${BASE}/icons/android-icon-192x192.png`} />
+        <link rel="icon" type="image/png" sizes="512x512" href={`${BASE}/icons/android-icon-512x512.png`} />
 
         {/* Apple touch icon */}
         <link rel="apple-touch-icon" sizes="180x180" href={`${BASE}/icons/apple-touch-icon.png`} />

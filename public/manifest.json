@@ -8,7 +8,7 @@
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "portrait-primary",
-  "background_color": "#faf9f7",
+  "background_color": "#000000",
   "theme_color": "#3d7558",
   "lang": "en",
   "dir": "ltr",
@@ -19,11 +19,11 @@
     { "src": "icons/icon-128x128.png",            "sizes": "128x128", "type": "image/png" },
     { "src": "icons/icon-144x144.png",            "sizes": "144x144", "type": "image/png" },
     { "src": "icons/icon-152x152.png",            "sizes": "152x152", "type": "image/png" },
-    { "src": "icons/icon-192x192.png",            "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-192x192-maskable.png",   "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/android-icon-192x192.png",            "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/android-icon-192x192-maskable.png",   "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
     { "src": "icons/icon-384x384.png",            "sizes": "384x384", "type": "image/png" },
-    { "src": "icons/icon-512x512.png",            "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/icon-512x512-maskable.png",   "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icons/android-icon-512x512.png",            "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/android-icon-512x512-maskable.png",   "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "screenshots": [],
   "shortcuts": [
@@ -32,14 +32,14 @@
       "short_name": "Log",
       "description": "Quickly log what you ate",
       "url": "log",
-      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "icons/android-icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Daily check-in",
       "short_name": "Check in",
       "description": "Complete your daily wellness check-in",
       "url": "checkin",
-      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "icons/android-icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ],
   "prefer_related_applications": false,
