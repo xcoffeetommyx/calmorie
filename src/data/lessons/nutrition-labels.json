@@ -1,0 +1,50 @@
+{
+  "slug": "nutrition-labels",
+  "title": "Read Nutrition Labels Fast",
+  "category": "habits",
+  "summary": "A practical way to scan food labels without getting lost in every number or letting packaging claims make the decision for you.",
+  "readTimeMinutes": 4,
+  "steps": [
+    {
+      "heading": "Start with serving size",
+      "body": "The serving size tells you what amount the label numbers are based on. It is not a recommendation for how much you should eat. It is a reference point. If you eat two servings, the calories and nutrients are roughly doubled."
+    },
+    {
+      "heading": "Calories are context, not a verdict",
+      "body": "Calories tell you how much energy is in a serving. They can be useful for awareness, but they do not tell the whole story. A food can be higher in calories and still be nutritious, filling, or worth including. Use the number as context, not as a moral score."
+    },
+    {
+      "heading": "Scan nutrients to limit",
+      "body": "The FDA highlights saturated fat, sodium, and added sugars as nutrients many people may want to limit. A quick scan can help you compare products. This does not mean you must avoid every food with these nutrients. It means you can spot patterns and make more informed choices."
+    },
+    {
+      "heading": "Look for nutrients to get more of",
+      "body": "Fiber, vitamin D, calcium, iron, and potassium are examples of nutrients many people may benefit from getting enough of. The percent Daily Value can help: 5% DV or less is considered low, while 20% DV or more is considered high."
+    },
+    {
+      "heading": "Compare similar foods",
+      "body": "Labels are most useful when comparing similar products: two yogurts, two cereals, two frozen meals. Check that serving sizes are similar, then compare the nutrients that matter most to you. This keeps label reading practical instead of overwhelming."
+    }
+  ],
+  "takeaway": "Read labels in order: serving size, calories, nutrients to limit, nutrients to get more of, then compare similar foods. The goal is faster awareness, not perfection.",
+  "sources": [
+    {
+      "title": "How to Understand and Use the Nutrition Facts Label",
+      "organization": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/food/nutrition-facts-label/how-understand-and-use-nutrition-facts-label",
+      "note": "Official FDA guide to serving size, calories, nutrients, and percent Daily Value."
+    },
+    {
+      "title": "Food Labels",
+      "organization": "Nutrition.gov",
+      "url": "https://www.nutrition.gov/topics/shopping-cooking-and-meal-planning/food-labels",
+      "note": "Federal nutrition label resources and consumer education links."
+    },
+    {
+      "title": "Eat Healthy",
+      "organization": "MyHealthfinder / ODPHP",
+      "url": "https://odphp.health.gov/index.php/myhealthfinder/health-conditions/diabetes/eat-healthy",
+      "note": "Includes practical label-reading guidance and Daily Value thresholds."
+    }
+  ]
+}

@@ -25,7 +25,7 @@ import { nowISO } from '@/lib/utils/date'
 import type { UserProfileInput, UserProfile } from '@/types/user'
 
 // ── Step count ─────────────────────────────────────────────────────────────
-export const ONBOARDING_STEP_COUNT = 3
+export const ONBOARDING_STEP_COUNT = 4
 
 // ── Partial input accumulated across steps ─────────────────────────────────
 // Only the fields collected in steps 0 and 1 are needed; step 2 is read-only.
@@ -99,6 +99,7 @@ export function useOnboarding(): UseOnboardingReturn {
       weightKg:           input.weightKg,
       activityLevel:      input.activityLevel,
       goal:               input.goal,
+      onboardingFocus:    input.onboardingFocus,
       tdee,
       calorieTarget,
       onboardingComplete: true,

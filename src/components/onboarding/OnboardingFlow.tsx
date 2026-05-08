@@ -1,56 +1,43 @@
 'use client'
 
-/**
- * OnboardingFlow
- *
- * Orchestrates the full onboarding experience:
- *   Step 0 — WelcomeStep   (standalone full-screen, no form)
- *   Step 1 — ProfileStep   (name, age, sex, height, weight)
- *   Step 2 — GoalStep      (activityLevel, goal)
- *   Step 3 — CalorieTargetStep (read-only result, confirm)
- *
- * Architecture:
- *   - `showWelcome` boolean gates the welcome screen vs. the form flow.
- *   - `useOnboarding()` still owns steps 0-2 (the three form steps).
- *   - Progress dots reflect the 3 form steps only (welcome is pre-step).
- *   - Outer AnimatePresence handles welcome ↔ form transition.
- *   - Inner AnimatePresence handles form step transitions (directional slide).
- *
- * Layout fixes vs. original:
- *   - `overflow-x-hidden` replaces `overflow-hidden` on the step wrapper so
- *     the horizontal slide animation is still clipped, but tall form content
- *     (including navigation buttons at the bottom) is never vertically clipped.
- *   - Safe-area padding is correctly applied at both the top and bottom.
- *
- * Swipe support:
- *   - Uses touchstart / touchend (same approach as LessonSwiper) to detect
- *     horizontal swipes for going back.
- *   - Vertical-dominant gestures are ignored (scroll intent).
- *   - Swiping right from form step 0 returns to the welcome screen.
- *   - Swiping right from steps 1-2 goes to the previous form step.
- *   - Forward swipe is NOT triggered (form steps require validation on submit).
- */
-
 import { useState, useRef, useCallback } from 'react'
+import type { TouchEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { AppLogo } from '@/components/layout/AppLogo'
 import { cn } from '@/lib/utils/cn'
 import { useOnboarding, ONBOARDING_STEP_COUNT } from '@/hooks/useOnboarding'
+import { FocusStep } from './FocusStep'
 import { ProfileStep } from './ProfileStep'
 import { GoalStep } from './GoalStep'
 import { CalorieTargetStep } from './CalorieTargetStep'
 import { WelcomeStep } from './WelcomeStep'
-import type { UserProfileInput, ActivityLevel, UserGoal, BiologicalSex, UnitPreference } from '@/types/user'
-
-// ── Step metadata ──────────────────────────────────────────────────────────
+import type {
+  ActivityLevel,
+  BiologicalSex,
+  OnboardingFocus,
+  UnitPreference,
+  UserGoal,
+  UserProfileInput,
+} from '@/types/user'
 
 const STEP_META = [
-  { heading: 'Tell us about you',            subheading: 'Used only to estimate your calorie needs.' },
-  { heading: 'Activity & goal',               subheading: 'Be honest — there are no wrong answers.' },
-  { heading: 'Your calorie estimate',         subheading: 'You can adjust this any time in Settings.' },
+  {
+    heading: 'What brings you here?',
+    subheading: 'Pick the reason that feels closest. Calmorie will keep the rest simple.',
+  },
+  {
+    heading: 'A few basics',
+    subheading: 'Used only to estimate your calorie needs. Your data stays on this device.',
+  },
+  {
+    heading: 'Activity & goal',
+    subheading: 'Choose your normal week, not your perfect week.',
+  },
+  {
+    heading: 'Your first day is ready',
+    subheading: 'Here is your starting estimate and the first easy action to take.',
+  },
 ] as const
-
-// ── Slide variants (directional) ───────────────────────────────────────────
 
 const stepVariants = {
   enter: (dir: number) => ({
@@ -69,12 +56,7 @@ const stepVariants = {
   }),
 }
 
-// ── Swipe threshold ────────────────────────────────────────────────────────
-// Higher than LessonSwiper (60 vs 40px) to reduce accidental swipes
-// on steps with text input interaction.
 const SWIPE_THRESHOLD = 60
-
-// ── Component ──────────────────────────────────────────────────────────────
 
 interface OnboardingFlowProps {
   onComplete: () => void
@@ -90,14 +72,10 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     onSubmit,
   } = useOnboarding()
 
-  const [direction,    setDirection]    = useState(1)
-  const [showWelcome,  setShowWelcome]  = useState(true)
-
-  // ── Swipe detection refs ────────────────────────────────────────────────
+  const [direction, setDirection] = useState(1)
+  const [showWelcome, setShowWelcome] = useState(true)
   const swipeStartX = useRef<number | null>(null)
   const swipeStartY = useRef<number | null>(null)
-
-  // ── Navigation helpers ──────────────────────────────────────────────────
 
   function handleNext(data: Partial<UserProfileInput>) {
     setDirection(1)
@@ -114,20 +92,13 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     if (success) onComplete()
   }
 
-  function handleEnterForm() {
-    setDirection(1)
-    setShowWelcome(false)
-  }
-
-  // ── Swipe handlers ─────────────────────────────────────────────────────
-
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+  const handleTouchStart = useCallback((e: TouchEvent) => {
     swipeStartX.current = e.touches[0].clientX
     swipeStartY.current = e.touches[0].clientY
   }, [])
 
   const handleTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
+    (e: TouchEvent) => {
       if (swipeStartX.current === null || swipeStartY.current === null) return
 
       const dx = e.changedTouches[0].clientX - swipeStartX.current
@@ -136,11 +107,9 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       swipeStartX.current = null
       swipeStartY.current = null
 
-      // Vertical-dominant = scroll intent, not a swipe
       if (Math.abs(dy) > Math.abs(dx)) return
 
       if (dx > SWIPE_THRESHOLD) {
-        // Swipe right = go back
         if (step === 0) {
           setDirection(-1)
           setShowWelcome(true)
@@ -152,19 +121,20 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     [step] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
-  // ── Derived ────────────────────────────────────────────────────────────
-  const meta          = STEP_META[step]
+  const meta = STEP_META[step]
   const completeInput = partialInput as UserProfileInput
-
-  // ── Render ────────────────────────────────────────────────────────────
 
   return (
     <AnimatePresence mode="wait">
       {showWelcome ? (
-        /* ── Welcome screen ──────────────────────────────────────── */
-        <WelcomeStep key="welcome" onStart={handleEnterForm} />
+        <WelcomeStep
+          key="welcome"
+          onStart={() => {
+            setDirection(1)
+            setShowWelcome(false)
+          }}
+        />
       ) : (
-        /* ── Form flow ───────────────────────────────────────────── */
         <motion.div
           key="form-flow"
           initial={{ opacity: 0, x: '18%' }}
@@ -178,35 +148,30 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             x: '12%',
             transition: { duration: 0.22, ease: [0.4, 0, 0.2, 1] },
           }}
-          className="flex flex-col min-h-screen-dynamic bg-background"
+          className="flex min-h-screen-dynamic flex-col bg-background"
         >
-          {/* ── Sticky header ──────────────────────────────────────── */}
           <header
             className={cn(
               'sticky top-0 z-10',
               'pt-[env(safe-area-inset-top,0px)]',
-              'bg-background/95 backdrop-blur-ios border-b border-border',
-              'px-5',
+              'border-b border-border bg-background/95 px-5 backdrop-blur-ios',
             )}
           >
-            {/* Brand row */}
-            <div className="h-[var(--top-bar-height)] flex items-center justify-between">
+            <div className="flex h-[var(--top-bar-height)] items-center justify-between">
               <div className="flex items-center gap-2">
                 <AppLogo size={24} className="rounded-md" />
-                <span className="font-display text-[15px] font-semibold text-primary tracking-normal">
+                <span className="font-display text-[15px] font-semibold tracking-tight text-primary">
                   Calmorie
                 </span>
               </div>
 
-              {/* Step counter */}
               <span className="font-body text-xs text-ink-muted" aria-live="polite">
                 Step {step + 1} of {stepCount}
               </span>
             </div>
 
-            {/* Progress dots */}
             <div
-              className="flex gap-1.5 pb-3 justify-center"
+              className="flex justify-center gap-1.5 pb-3"
               role="progressbar"
               aria-valuenow={step + 1}
               aria-valuemin={1}
@@ -216,13 +181,11 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
               {Array.from({ length: ONBOARDING_STEP_COUNT }).map((_, i) => (
                 <motion.div
                   key={i}
-                  className={cn('h-1.5 rounded-full')}
+                  className="h-1.5 rounded-full"
                   animate={{
                     width: i === step ? '24px' : '6px',
                     backgroundColor:
-                      i <= step
-                        ? 'var(--color-primary)'
-                        : 'var(--color-border)',
+                      i <= step ? 'var(--color-primary)' : 'var(--color-border)',
                   }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                   aria-hidden="true"
@@ -231,28 +194,17 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             </div>
           </header>
 
-          {/* ── Scrollable content ─────────────────────────────────── */}
           <div className="flex-1 overflow-y-auto">
             <div className="page-container py-6">
-
-              {/* Step heading (not animated — anchors the screen) */}
               <div className="mb-7 space-y-1.5">
-                <h1 className="font-display text-[1.75rem] font-semibold text-ink tracking-normal text-balance leading-tight">
+                <h1 className="font-display text-[1.75rem] font-semibold leading-tight tracking-tight text-ink text-balance">
                   {meta.heading}
                 </h1>
-                <p className="font-body text-[0.9375rem] text-ink-secondary leading-[1.65]">
+                <p className="font-body text-[0.9375rem] leading-[1.65] text-ink-secondary">
                   {meta.subheading}
                 </p>
               </div>
 
-              {/*
-               * Animated step content
-               *
-               * overflow-x-hidden (not overflow-hidden) clips the horizontal slide
-               * animation without cutting off tall content below (navigation buttons).
-               * touch-action: pan-y allows vertical scroll while enabling horizontal
-               * swipe detection via our touch handlers.
-               */}
               <div
                 className="relative overflow-x-hidden"
                 style={{ touchAction: 'pan-y' }}
@@ -269,32 +221,43 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
                     exit="exit"
                   >
                     {step === 0 && (
-                      <ProfileStep
-                        defaultValues={{
-                          name:           partialInput.name,
-                          age:            partialInput.age,
-                          sex:            partialInput.sex as BiologicalSex | undefined,
-                          heightCm:       partialInput.heightCm,
-                          weightKg:       partialInput.weightKg,
-                          unitPreference: partialInput.unitPreference as UnitPreference | undefined,
+                      <FocusStep
+                        defaultValue={partialInput.onboardingFocus as OnboardingFocus | undefined}
+                        onNext={handleNext}
+                        onBack={() => {
+                          setDirection(-1)
+                          setShowWelcome(true)
                         }}
-                        onNext={(data) => handleNext(data)}
-                        onBack={() => { setDirection(-1); setShowWelcome(true) }}
                       />
                     )}
 
                     {step === 1 && (
-                      <GoalStep
+                      <ProfileStep
                         defaultValues={{
-                          activityLevel: partialInput.activityLevel as ActivityLevel | undefined,
-                          goal:          partialInput.goal as UserGoal | undefined,
+                          name: partialInput.name,
+                          age: partialInput.age,
+                          sex: partialInput.sex as BiologicalSex | undefined,
+                          heightCm: partialInput.heightCm,
+                          weightKg: partialInput.weightKg,
+                          unitPreference: partialInput.unitPreference as UnitPreference | undefined,
                         }}
-                        onNext={(data) => handleNext(data)}
+                        onNext={handleNext}
                         onBack={handleBack}
                       />
                     )}
 
                     {step === 2 && (
+                      <GoalStep
+                        defaultValues={{
+                          activityLevel: partialInput.activityLevel as ActivityLevel | undefined,
+                          goal: partialInput.goal as UserGoal | undefined,
+                        }}
+                        onNext={handleNext}
+                        onBack={handleBack}
+                      />
+                    )}
+
+                    {step === 3 && (
                       <CalorieTargetStep
                         profileInput={completeInput}
                         onSubmit={handleSubmit}
@@ -306,11 +269,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
               </div>
             </div>
 
-            {/* Safe-area bottom spacer */}
-            <div
-              className="h-[env(safe-area-inset-bottom,0px)]"
-              aria-hidden="true"
-            />
+            <div className="h-[env(safe-area-inset-bottom,0px)]" aria-hidden="true" />
           </div>
         </motion.div>
       )}

@@ -28,6 +28,10 @@ import fiberHunger      from './fiber-hunger.json'
 import liquidCalories   from './liquid-calories.json'
 import portionSize      from './portion-size.json'
 import weightFluctuation from './weight-fluctuation.json'
+import hungerCravings   from './hunger-cravings.json'
+import balancedPlate    from './balanced-plate.json'
+import walkingDailyMovement from './walking-daily-movement.json'
+import nutritionLabels  from './nutrition-labels.json'
 
 /**
  * All lessons, in the intended library display order.
@@ -50,6 +54,10 @@ export const LESSONS: Lesson[] = [
   liquidCalories    as Lesson,
   portionSize       as Lesson,
   weightFluctuation as Lesson,
+  hungerCravings    as Lesson,
+  balancedPlate     as Lesson,
+  walkingDailyMovement as Lesson,
+  nutritionLabels   as Lesson,
 ]
 
 /**

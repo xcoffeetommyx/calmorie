@@ -1,0 +1,50 @@
+{
+  "slug": "balanced-plate",
+  "title": "Build a Balanced Plate",
+  "category": "habits",
+  "summary": "A simple plate method for building meals that feel satisfying without needing perfect tracking or complicated rules.",
+  "readTimeMinutes": 4,
+  "steps": [
+    {
+      "heading": "Balance makes meals easier",
+      "body": "A balanced plate is not a strict diet template. It is a visual shortcut that helps you include enough filling foods, enough energy, and enough variety. The point is to make meals easier to build when you are busy, hungry, or tired of doing food math."
+    },
+    {
+      "heading": "Start with produce",
+      "body": "Fruits and vegetables add volume, fiber, water, vitamins, and minerals. They help meals feel bigger without automatically making them calorie-dense. This does not mean every meal has to be a salad. Frozen vegetables, fruit with breakfast, salsa, soup, or a side of carrots all count as practical moves."
+    },
+    {
+      "heading": "Add protein",
+      "body": "Protein supports fullness and helps maintain muscle while your weight changes. It can come from meat, poultry, fish, eggs, yogurt, tofu, beans, lentils, nuts, seeds, or soy foods. Most meals feel more satisfying when protein is not an afterthought."
+    },
+    {
+      "heading": "Choose a carbohydrate that fits",
+      "body": "Carbohydrates are not the enemy. Whole grains, potatoes, rice, oats, fruit, beans, and other carb sources provide energy and can make meals more enjoyable and sustainable. A helpful default is to choose higher-fiber options often, then adjust portions based on hunger, goals, and activity."
+    },
+    {
+      "heading": "Include fats for flavor",
+      "body": "Fats make food taste better and help meals feel complete. Oils, avocado, nuts, seeds, cheese, and dressings can all fit. Because fats are energy-dense, the useful move is not avoidance. It is awareness: add enough for flavor and satisfaction without letting it accidentally become the whole meal."
+    }
+  ],
+  "takeaway": "A balanced plate is a flexible shortcut: include produce, protein, a useful carb, and enough fat for flavor. It helps meals become satisfying without turning every choice into a calculation.",
+  "sources": [
+    {
+      "title": "What is MyPlate?",
+      "organization": "USDA MyPlate",
+      "url": "https://www.myplate.gov/eat-healthy/what-is-myplate?keyword=guidelines+my+plate",
+      "note": "USDA overview of MyPlate as a visual guide for food groups and healthy eating."
+    },
+    {
+      "title": "Eat Healthy",
+      "organization": "MyHealthfinder / ODPHP",
+      "url": "https://odphp.health.gov/index.php/myhealthfinder/health-conditions/diabetes/eat-healthy",
+      "note": "Consumer guidance on healthy eating patterns and food group variety."
+    },
+    {
+      "title": "Access to Foods That Support Healthy Dietary Patterns",
+      "organization": "Healthy People 2030 / ODPHP",
+      "url": "https://odphp.health.gov/healthypeople/priority-areas/social-determinants-health/literature-summaries/access-foods-support-healthy-dietary-patterns",
+      "note": "Summarizes Dietary Guidelines concepts including nutrient-dense foods and healthy patterns."
+    }
+  ]
+}

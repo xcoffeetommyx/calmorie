@@ -62,7 +62,7 @@ export default function RootPage() {
   // Not onboarded — render flow in place; on complete, enter /dashboard
   if (!isOnboarded) {
     return (
-      <OnboardingFlow onComplete={() => router.replace('/dashboard')} />
+      <OnboardingFlow onComplete={() => router.replace('/checkin?firstRun=1')} />
     )
   }
 

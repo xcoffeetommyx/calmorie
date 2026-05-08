@@ -13,6 +13,12 @@ export type UserGoal = 'maintain' | 'lose_slow' | 'educate'
 
 export type BiologicalSex = 'male' | 'female' | 'other'
 
+export type OnboardingFocus =
+  | 'lose_weight'
+  | 'understand_calories'
+  | 'build_consistency'
+  | 'improve_habits'
+
 // ── Core model ────────────────────────────────────────────────────────────
 
 export interface UserProfile {
@@ -26,6 +32,7 @@ export interface UserProfile {
   goal: UserGoal
   calorieTarget: number       // TDEE adjusted for goal
   tdee: number                // total daily energy expenditure (unadjusted)
+  onboardingFocus?: OnboardingFocus
   onboardingComplete: boolean
   unitPreference?: UnitPreference  // defaults to 'metric' when absent
   createdAt: string           // ISO datetime
@@ -41,6 +48,7 @@ export interface UserProfileInput {
   weightKg: number
   activityLevel: ActivityLevel
   goal: UserGoal
+  onboardingFocus?: OnboardingFocus
   unitPreference?: UnitPreference
 }
 
@@ -75,6 +83,24 @@ export const GOAL_DESCRIPTIONS: Record<UserGoal, string> = {
     'A modest deficit of ~300 kcal/day — sustainable and science-backed.',
   educate:
     'No calorie targets, just learning. You can add tracking later.',
+}
+
+export const ONBOARDING_FOCUS_LABELS: Record<OnboardingFocus, string> = {
+  lose_weight:         'Lose weight gently',
+  understand_calories: 'Understand calories',
+  build_consistency:   'Build consistency',
+  improve_habits:      'Improve daily habits',
+}
+
+export const ONBOARDING_FOCUS_DESCRIPTIONS: Record<OnboardingFocus, string> = {
+  lose_weight:
+    'Use a calm calorie target and small daily habits to make progress without extremes.',
+  understand_calories:
+    'Learn what your body needs and how food choices affect energy, hunger, and progress.',
+  build_consistency:
+    'Create a simple rhythm with logging, check-ins, streaks, and low-pressure wins.',
+  improve_habits:
+    'Notice sleep, stress, meals, and cravings so your routine becomes easier to steer.',
 }
 
 /** kcal/day adjustment applied to TDEE based on goal */

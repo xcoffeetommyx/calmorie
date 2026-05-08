@@ -20,8 +20,9 @@
  */
 
 import { useMemo } from 'react'
+import type { ReactNode } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronLeft, Info } from 'lucide-react'
+import { BookOpen, CheckCircle2, ChevronLeft, Info, PlusCircle } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { scaleSpring, staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { calculateFromProfile, explainCalorieTarget } from '@/lib/engine/tdee'
@@ -122,6 +123,33 @@ export function CalorieTargetStep({
         {explanation}
       </motion.p>
 
+      <motion.div
+        variants={staggerItem}
+        className="bg-surface rounded-xl border border-border shadow-xs overflow-hidden"
+      >
+        <div className="px-4 py-3 border-b border-border">
+          <p className="font-body text-[11px] font-semibold text-ink-muted uppercase tracking-wider">
+            Your first day
+          </p>
+        </div>
+        <FirstDayRow
+          icon={<CheckCircle2 className="w-4 h-4" strokeWidth={2} aria-hidden="true" />}
+          title="Start with a quick check-in"
+          text="Answer a few questions and get today's wellness score and focus."
+          highlight
+        />
+        <FirstDayRow
+          icon={<PlusCircle className="w-4 h-4" strokeWidth={2} aria-hidden="true" />}
+          title="Log food when you are ready"
+          text="Add meals simply. The target is a guide, not a grade."
+        />
+        <FirstDayRow
+          icon={<BookOpen className="w-4 h-4" strokeWidth={2} aria-hidden="true" />}
+          title="Learn one small idea"
+          text="Short lessons help the numbers make more sense."
+        />
+      </motion.div>
+
       {/* ── Honest disclaimer ────────────────────────────────── */}
       <motion.div
         variants={staggerItem}
@@ -174,10 +202,48 @@ export function CalorieTargetStep({
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
           )}
         >
-          {isEducate ? 'Start learning' : 'Start tracking'}
+          Start first check-in
         </button>
       </motion.div>
     </motion.div>
+  )
+}
+
+function FirstDayRow({
+  icon,
+  title,
+  text,
+  highlight = false,
+}: {
+  icon: ReactNode
+  title: string
+  text: string
+  highlight?: boolean
+}) {
+  return (
+    <div
+      className={cn(
+        'flex items-start gap-3 px-4 py-3 border-b border-border last:border-b-0',
+        highlight && 'bg-primary-light',
+      )}
+    >
+      <span
+        className={cn(
+          'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
+          highlight ? 'bg-primary text-ink-on-primary' : 'bg-surface-raised text-ink-muted',
+        )}
+      >
+        {icon}
+      </span>
+      <div>
+        <p className={cn('font-body text-sm font-semibold', highlight ? 'text-primary-text' : 'text-ink')}>
+          {title}
+        </p>
+        <p className={cn('mt-0.5 font-body text-xs leading-relaxed', highlight ? 'text-primary-text/70' : 'text-ink-muted')}>
+          {text}
+        </p>
+      </div>
+    </div>
   )
 }
 

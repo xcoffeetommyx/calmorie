@@ -4,6 +4,7 @@ out/
 
 *.tsbuildinfo
 next-dev.log
+next-dev.err.log
 
 public/sw.js
 public/swe-worker-*.js

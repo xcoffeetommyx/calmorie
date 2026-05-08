@@ -1,0 +1,53 @@
+{
+  "slug": "hunger-cravings",
+  "title": "Hunger vs. Cravings",
+  "category": "stress",
+  "summary": "Learn the difference between body hunger, appetite, and cravings so you can respond with less guilt and more useful choices.",
+  "readTimeMinutes": 4,
+  "steps": [
+    {
+      "heading": "Hunger is a body signal",
+      "body": "Physical hunger is your body asking for energy. It usually builds gradually and can show up as stomach emptiness, lower energy, trouble focusing, or a general openness to many different foods. Hormones and signals from the gut and brain help coordinate this process so you know when to eat and when you have had enough."
+    },
+    {
+      "heading": "Appetite is broader than hunger",
+      "body": "Appetite is the desire to eat, and it is influenced by more than energy need. Smell, taste, memories, stress, sleep, routine, and the food around you can all raise appetite even if your body is not urgently low on fuel. That does not make appetite fake. It just means the signal has more than one source."
+    },
+    {
+      "heading": "Cravings are specific",
+      "body": "A craving usually points toward a particular food or texture: salty chips, chocolate, ice cream, something crunchy, or something sweet. Cravings can be stronger when you are tired, stressed, underfed, or surrounded by highly palatable foods. They often feel urgent because reward pathways in the brain are involved, not because you have failed at willpower."
+    },
+    {
+      "heading": "Check the signal before reacting",
+      "body": "A simple pause helps. Ask: would a balanced meal or snack sound good right now? If yes, you may be physically hungry. If only one specific food sounds good, it may be more of a craving. Either way, the goal is not to judge it. The goal is to pick a response that actually helps."
+    },
+    {
+      "heading": "Useful responses are flexible",
+      "body": "If you are hungry, eat something with enough protein, fiber, or volume to satisfy you. If it is a craving, you can still choose to enjoy the food intentionally, pair it with something more filling, or wait ten minutes and see whether the urge changes. The win is building trust with your signals instead of fighting them."
+    }
+  ],
+  "takeaway": "Hunger is usually a broad body signal; cravings are often more specific and reward-driven. Both are normal. The skill is noticing the signal and choosing a response that leaves you feeling better, not punished.",
+  "sources": [
+    {
+      "title": "Physiology, Obesity Neurohormonal Appetite And Satiety Control",
+      "organization": "NCBI Bookshelf",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK555906/",
+      "year": 2023,
+      "note": "Explains appetite and satiety signaling, including gut-brain hormones."
+    },
+    {
+      "title": "The gut-brain axis in appetite, satiety, food intake, and eating behavior",
+      "organization": "Nutrients / PubMed Central",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11483575/",
+      "year": 2024,
+      "note": "Reviews hunger, satiation, satiety, and non-homeostatic influences on eating."
+    },
+    {
+      "title": "Brain regulation of appetite and satiety",
+      "organization": "Endocrinology and Metabolism Clinics / PubMed Central",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2710609/",
+      "year": 2008,
+      "note": "Describes hunger, cravings, reward, and brain regulation of eating behavior."
+    }
+  ]
+}

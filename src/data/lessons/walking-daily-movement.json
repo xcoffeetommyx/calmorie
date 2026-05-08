@@ -1,0 +1,53 @@
+{
+  "slug": "walking-daily-movement",
+  "title": "Why Walking Counts",
+  "category": "habits",
+  "summary": "Walking and everyday movement can improve health, support weight management, and reduce the pressure to make exercise perfect.",
+  "readTimeMinutes": 3,
+  "steps": [
+    {
+      "heading": "Movement is not all-or-nothing",
+      "body": "Exercise does not have to be intense to matter. Moderate activity, including brisk walking, provides health benefits and can be easier to repeat than a hard workout plan. Consistency usually beats intensity when you are trying to build a habit that survives real life."
+    },
+    {
+      "heading": "Walking helps more than calories",
+      "body": "Walking burns some energy, but that is not the only benefit. Physical activity can improve mood, sleep quality, blood pressure, heart health, blood sugar control, balance, and long-term disease risk. These wins matter even when the scale is slow to move."
+    },
+    {
+      "heading": "Small sessions add up",
+      "body": "A ten-minute walk after a meal, parking farther away, taking stairs, pacing during a call, or doing a short evening loop all contribute to your weekly movement. You do not need a perfect 60-minute block for movement to count."
+    },
+    {
+      "heading": "Walking can support appetite regulation",
+      "body": "Gentle movement can help with stress and routine, which often affects eating patterns. Some people also find that a short walk creates a clean break between a craving and a decision. It is not a punishment for eating. It is a tool for feeling more regulated."
+    },
+    {
+      "heading": "Make the habit frictionless",
+      "body": "The best walking plan is the one you can repeat. Keep shoes visible, pick a familiar route, pair walks with music or a podcast, or attach them to an existing habit like lunch. The goal is to make movement feel available, not dramatic."
+    }
+  ],
+  "takeaway": "Walking counts because repeatable movement counts. It supports health, mood, and weight management without needing to be extreme or perfect.",
+  "sources": [
+    {
+      "title": "Health Benefits of Physical Activity for Adults",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/physical-activity-basics/health-benefits/adults.html",
+      "year": 2026,
+      "note": "CDC summary of immediate and long-term benefits of physical activity."
+    },
+    {
+      "title": "Physical Activity and Your Weight and Health",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/healthy-weight-growth/physical-activity/index.html",
+      "year": 2026,
+      "note": "Explains physical activity recommendations and weight-related benefits."
+    },
+    {
+      "title": "Physical Activity Guidelines for Americans, 2nd edition",
+      "organization": "U.S. Department of Health and Human Services",
+      "url": "https://www.cdc.gov/physical-activity/media/pdfs/Physical_Activity_Guidelines_2nd_edition.pdf",
+      "year": 2018,
+      "note": "Federal guidelines behind adult activity recommendations."
+    }
+  ]
+}

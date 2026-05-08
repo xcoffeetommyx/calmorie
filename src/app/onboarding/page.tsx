@@ -54,7 +54,7 @@ export default function OnboardingPage() {
 
   return (
     <OnboardingFlow
-      onComplete={() => router.push('/dashboard')}
+      onComplete={() => router.push('/checkin?firstRun=1')}
     />
   )
 }

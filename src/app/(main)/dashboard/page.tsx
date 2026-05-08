@@ -124,7 +124,7 @@ export default function DashboardPage() {
   }
 
   if (!isOnboarded) {
-    return <OnboardingFlow onComplete={() => router.replace('/dashboard')} />
+    return <OnboardingFlow onComplete={() => router.replace('/checkin?firstRun=1')} />
   }
 
   return (

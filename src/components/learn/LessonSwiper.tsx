@@ -47,7 +47,7 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, BookMarked, Sparkles } from 'lucide-react'
+import { ChevronLeft, ChevronRight, BookMarked, Sparkles, Star, Trophy } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { LessonProgress } from './LessonProgress'
 import { SourcesDrawer } from './SourcesDrawer'
@@ -82,9 +82,15 @@ const stepVariants = {
 interface LessonSwiperProps {
   lesson: Lesson
   onClose?: () => void
+  completionReward?: CompletionReward | null
 }
 
-export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
+export interface CompletionReward {
+  xp: number
+  newBadges: string[]
+}
+
+export function LessonSwiper({ lesson, onClose, completionReward }: LessonSwiperProps) {
   const resumeStepSelector = useMemo(
     () => selectResumeStep(lesson.slug),
     [lesson.slug]
@@ -232,6 +238,7 @@ export function LessonSwiper({ lesson, onClose }: LessonSwiperProps) {
               key="takeaway"
               direction={direction}
               takeaway={lesson.takeaway}
+              completionReward={completionReward}
               onDone={onClose}
             />
           ) : step ? (
@@ -423,12 +430,16 @@ function StepScreen({
 function TakeawayScreen({
   direction,
   takeaway,
+  completionReward,
   onDone,
 }: {
   direction: number
   takeaway: string
+  completionReward?: CompletionReward | null
   onDone?: () => void
 }) {
+  const hasReward = !!completionReward && completionReward.xp > 0
+
   return (
     <motion.div
       custom={direction}
@@ -475,6 +486,45 @@ function TakeawayScreen({
             Tap &ldquo;Done&rdquo; to return to the lesson library, or view
             the sources to explore the research behind this lesson.
           </p>
+
+          {hasReward && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.12, type: 'spring', stiffness: 320, damping: 24 }}
+              className="rounded-xl border border-amber-200 bg-amber-100 px-4 py-4 text-amber-900"
+              role="status"
+              aria-live="polite"
+            >
+              <div className="flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/65">
+                  <Star className="h-4 w-4" strokeWidth={2.2} aria-hidden="true" />
+                </span>
+                <div>
+                  <p className="font-body text-sm font-semibold">
+                    +{completionReward.xp} XP earned
+                  </p>
+                  <p className="font-body text-xs leading-relaxed opacity-75">
+                    Nice finish. Your Learn progress just leveled up a little.
+                  </p>
+                </div>
+              </div>
+
+              {completionReward.newBadges.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {completionReward.newBadges.map((badge) => (
+                    <span
+                      key={badge}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-white/65 px-3 py-1 font-body text-[11px] font-semibold"
+                    >
+                      <Trophy className="h-3.5 w-3.5" strokeWidth={2.1} aria-hidden="true" />
+                      {badge}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
         </div>
       </div>
     </motion.div>
