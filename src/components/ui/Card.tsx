@@ -68,7 +68,7 @@ const cardVariants = cva(
       interactive: {
         true: [
           'cursor-pointer select-none',
-          'transition-all duration-normal ease-smooth',
+          'transition-[box-shadow,background-color,border-color,transform] duration-normal ease-out',
           'hover:shadow-card-hover hover:-translate-y-px',
           'active:scale-[0.99] active:shadow-card',
         ].join(' '),
@@ -76,10 +76,10 @@ const cardVariants = cva(
       },
     },
     defaultVariants: {
-      radius:      'xl',   // 24px — rounder than the previous 20px default
+      radius:      'lg',
       shadow:      'card',
       padding:     'md',
-      border:      false,
+      border:      true,
       interactive: false,
     },
   }
@@ -122,7 +122,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('mb-3 flex flex-col gap-1', className)}
+    className={cn('mb-4 flex flex-col gap-1', className)}
     {...props}
   />
 ))
@@ -139,7 +139,7 @@ const CardTitle = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      'font-body text-base font-semibold text-ink tracking-tight leading-snug',
+      'font-body text-base font-semibold text-ink tracking-normal leading-snug',
       className
     )}
     {...props}
@@ -158,7 +158,7 @@ const CardDescription = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      'font-body text-sm text-ink-secondary leading-[1.75]',
+      'font-body text-sm text-ink-secondary leading-normal',
       className
     )}
     {...props}

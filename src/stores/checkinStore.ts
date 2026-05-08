@@ -31,12 +31,22 @@ export interface StreakData {
   bestStreak: number
   /** How many of the last 7 days (including today) had a check-in */
   weeklyCount: number
+  /** Seven-day trail ending today, used for streak visualization */
+  weeklyTrail: StreakTrailDay[]
   /** Non-null when the user checks in today at an exact milestone (3/7/14/30/60/100) */
   milestoneReached: number | null
   /** True when the user missed yesterday but their ≥3-day streak is automatically preserved */
   graceActive: boolean
   /** True when the user has an active ≥3-day streak and hasn't burned a grace day today */
   graceAvailable: boolean
+}
+
+export interface StreakTrailDay {
+  date: string
+  label: string
+  checkedIn: boolean
+  isToday: boolean
+  isGraceBridge: boolean
 }
 
 // ── Store shape ────────────────────────────────────────────────────────────
@@ -142,17 +152,18 @@ export function computeStreaks(
   dates: string[],
   graceBridgeDate: string | null = null,
 ): StreakData {
-  if (dates.length === 0) {
-    return {
-      currentStreak: 0, bestStreak: 0, weeklyCount: 0,
-      milestoneReached: null, graceActive: false, graceAvailable: false,
-    }
-  }
-
   const dateSet           = new Set(dates)
   const today             = todayISO()
   const yesterday         = subtractOneDay(today)
   const dayBeforeYesterday = subtractOneDay(yesterday)
+
+  if (dates.length === 0) {
+    return {
+      currentStreak: 0, bestStreak: 0, weeklyCount: 0,
+      weeklyTrail: buildWeeklyTrail(dateSet, today, null),
+      milestoneReached: null, graceActive: false, graceAvailable: false,
+    }
+  }
 
   // ── Grace detection ──────────────────────────────────────────────────────
   // Eligible = missed exactly yesterday AND had a meaningful prior streak (≥3).
@@ -190,6 +201,7 @@ export function computeStreaks(
     const diff = daysBetween(d, today)
     return diff >= 0 && diff < 7
   }).length
+  const weeklyTrail = buildWeeklyTrail(dateSet, today, bridgeToday)
 
   // Milestone: fires only on the day the user actually checks in at that value.
   const milestoneReached =
@@ -197,7 +209,7 @@ export function computeStreaks(
       ? currentStreak
       : null
 
-  return { currentStreak, bestStreak, weeklyCount, milestoneReached, graceActive, graceAvailable }
+  return { currentStreak, bestStreak, weeklyCount, weeklyTrail, milestoneReached, graceActive, graceAvailable }
 }
 
 /** Counts consecutive days ending at (and including) startDate. */
@@ -269,4 +281,32 @@ function daysBetween(dateA: string, dateB: string): number {
   const a = new Date(`${dateA}T00:00:00`).getTime()
   const b = new Date(`${dateB}T00:00:00`).getTime()
   return Math.round((b - a) / 86_400_000)
+}
+
+function addDays(dateISO: string, amount: number): string {
+  const d = new Date(`${dateISO}T00:00:00`)
+  d.setDate(d.getDate() + amount)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
+function buildWeeklyTrail(
+  dateSet: Set<string>,
+  today: string,
+  bridgeDate: string | null,
+): StreakTrailDay[] {
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = addDays(today, index - 6)
+    const checkedIn = dateSet.has(date)
+    const isGraceBridge = bridgeDate === date && !checkedIn
+    return {
+      date,
+      label: new Date(`${date}T00:00:00`).toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 1),
+      checkedIn,
+      isToday: date === today,
+      isGraceBridge,
+    }
+  })
 }

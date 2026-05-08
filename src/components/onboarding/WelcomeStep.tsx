@@ -44,9 +44,9 @@ export function WelcomeStep({ onStart }: WelcomeStepProps) {
           <div
             className={cn(
               'w-[76px] h-[76px]',
-              'rounded-[22px] bg-primary',
+              'rounded-2xl bg-primary',
               'flex items-center justify-center',
-              'shadow-[0_8px_24px_-4px_rgba(0,0,0,0.18)]',
+              'shadow-md',
             )}
           >
             <Leaf className="w-9 h-9 text-white" strokeWidth={2.25} aria-hidden="true" />
@@ -56,7 +56,7 @@ export function WelcomeStep({ onStart }: WelcomeStepProps) {
         {/* App name */}
         <motion.p
           variants={staggerItem}
-          className="font-display text-lg font-semibold text-primary tracking-tight mb-5"
+          className="font-display text-lg font-semibold text-primary tracking-normal mb-5"
         >
           Calmorie
         </motion.p>
@@ -65,7 +65,7 @@ export function WelcomeStep({ onStart }: WelcomeStepProps) {
         <motion.h1
           variants={staggerItem}
           className={cn(
-            'font-display font-semibold text-ink tracking-tight text-center text-balance',
+            'font-display font-semibold text-ink tracking-normal text-center text-balance',
             'text-[2.25rem] leading-[1.15]',
             'max-w-[260px]',
             'mb-4',
@@ -93,11 +93,11 @@ export function WelcomeStep({ onStart }: WelcomeStepProps) {
             type="button"
             onClick={onStart}
             className={cn(
-              'w-full h-14 rounded-full',
+              'w-full h-14 rounded-lg',
               'bg-primary text-ink-on-primary',
               'font-body text-base font-semibold',
               'shadow-md hover:bg-primary-dark active:scale-[0.97]',
-              'transition-all duration-fast ease-smooth',
+              'transition-[background-color,box-shadow,transform] duration-fast ease-out',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
             )}
           >

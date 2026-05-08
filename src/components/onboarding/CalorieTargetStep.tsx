@@ -53,7 +53,7 @@ export function CalorieTargetStep({
       {/* ── Hero result card ─────────────────────────────────── */}
       <motion.div
         variants={staggerItem}
-        className="bg-primary-light border border-primary-mid rounded-2xl px-5 py-7 text-center space-y-3"
+        className="bg-primary-light border border-primary-mid rounded-xl px-5 py-7 text-center space-y-3"
       >
         {isEducate ? (
           <>
@@ -62,7 +62,7 @@ export function CalorieTargetStep({
             </p>
             <motion.p
               variants={scaleSpring}
-              className="font-display text-5xl font-semibold text-primary tracking-tight"
+              className="font-display text-5xl font-semibold text-primary tracking-normal"
               aria-label={`Estimated maintenance: ${result.tdee.toLocaleString()} kilocalories per day`}
             >
               {result.tdee.toLocaleString()}
@@ -78,7 +78,7 @@ export function CalorieTargetStep({
             </p>
             <motion.p
               variants={scaleSpring}
-              className="font-display text-5xl font-semibold text-primary tracking-tight"
+              className="font-display text-5xl font-semibold text-primary tracking-normal"
               aria-label={`Daily calorie target: ${result.calorieTarget.toLocaleString()} kilocalories`}
             >
               {result.calorieTarget.toLocaleString()}
@@ -94,7 +94,7 @@ export function CalorieTargetStep({
       {!isEducate && (
         <motion.div
           variants={staggerItem}
-          className="bg-surface rounded-2xl border border-border/60 shadow-xs divide-y divide-border overflow-hidden"
+          className="bg-surface rounded-xl border border-border shadow-xs divide-y divide-border overflow-hidden"
         >
           <ResultRow label="Maintenance (TDEE)"  value={`${result.tdee.toLocaleString()} kcal`} />
           <ResultRow label="Goal"                value={GOAL_LABELS[profileInput.goal]} />
@@ -151,7 +151,7 @@ export function CalorieTargetStep({
           type="button"
           onClick={onBack}
           className={cn(
-            'flex items-center justify-center w-12 h-12 rounded-full shrink-0',
+            'flex items-center justify-center w-12 h-12 rounded-lg shrink-0',
             'border border-border text-ink-secondary bg-surface',
             'hover:bg-surface-raised hover:text-ink active:scale-[0.97]',
             'transition-all duration-fast ease-smooth',
@@ -166,11 +166,11 @@ export function CalorieTargetStep({
           type="button"
           onClick={onSubmit}
           className={cn(
-            'flex-1 h-12 rounded-full',
+            'flex-1 h-12 rounded-lg',
             'bg-primary text-ink-on-primary',
             'font-body text-sm font-semibold',
             'shadow-sm hover:bg-primary-dark active:scale-[0.97]',
-            'transition-all duration-fast ease-smooth',
+            'transition-[background-color,box-shadow,transform] duration-fast ease-out',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
           )}
         >

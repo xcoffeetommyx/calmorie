@@ -160,6 +160,7 @@ export function markMilestoneSeen(milestone: number): void {
 //   daysBetween(bridgeDate, today) >= 8
 
 const GRACE_BRIDGE_KEY = 'calmorie_grace_bridge_date'
+const STREAK_CELEBRATE_DATE_KEY = 'calmorie_streak_celebrate_date'
 
 /** Returns the missed date currently bridged by grace, or null. SSR-safe. */
 export function getGraceBridgeDate(): string | null {
@@ -194,6 +195,29 @@ export function isGraceAvailable(bridgeDate: string | null, today: string): bool
   const b = new Date(`${today}T00:00:00`).getTime()
   const days = Math.round((b - a) / 86_400_000)
   return days >= 8
+}
+
+/** Queues one dashboard streak celebration for the supplied check-in date. */
+export function queueStreakCelebration(dateISO: string): void {
+  if (typeof window === 'undefined') return
+  try {
+    sessionStorage.setItem(STREAK_CELEBRATE_DATE_KEY, dateISO)
+  } catch {
+    // sessionStorage unavailable - fail silently
+  }
+}
+
+/** Returns true once for the supplied date, then clears the queued celebration. */
+export function consumeStreakCelebration(dateISO: string): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    const queuedDate = sessionStorage.getItem(STREAK_CELEBRATE_DATE_KEY)
+    if (queuedDate !== dateISO) return false
+    sessionStorage.removeItem(STREAK_CELEBRATE_DATE_KEY)
+    return true
+  } catch {
+    return false
+  }
 }
 
 // ── Streak copy ────────────────────────────────────────────────────────────

@@ -17,7 +17,7 @@
  *   8. MealSummaryCard
  */
 
-import { useMemo }          from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter }        from 'next/navigation'
 import { motion }           from 'framer-motion'
 import Link                 from 'next/link'
@@ -26,6 +26,7 @@ import { AppLogo }           from '@/components/layout/AppLogo'
 import { cn }               from '@/lib/utils/cn'
 import { staggerContainer, staggerItem } from '@/lib/animations/variants'
 import { getTimeGreeting, formatDateDisplay, todayISO } from '@/lib/utils/date'
+import { consumeStreakCelebration } from '@/lib/utils/streakUtils'
 
 import { CalorieRing }      from '@/components/dashboard/CalorieRing'
 import { MealSummaryCard }  from '@/components/dashboard/MealSummaryCard'
@@ -86,6 +87,7 @@ export default function DashboardPage() {
   const { topWarning }    = useHabitAlerts()
   const { progressMap }   = useLessons()
   const contextualLesson  = useContextualLesson()
+  const [celebrateStreak, setCelebrateStreak] = useState(false)
 
   // Completed lessons count — memoized, depends on progressMap reference
   const completedLessonsCount = useMemo(
@@ -103,6 +105,14 @@ export default function DashboardPage() {
   const greeting  = getTimeGreeting()
   const dateLabel = formatDateDisplay(todayISO())
   const isReady   = profileHydrated && logHydrated
+
+  useEffect(() => {
+    if (!isReady || !isCheckedIn) {
+      setCelebrateStreak(false)
+      return
+    }
+    setCelebrateStreak(consumeStreakCelebration(todayISO()))
+  }, [isReady, isCheckedIn])
 
   if (!isReady) {
     return (
@@ -147,10 +157,12 @@ export default function DashboardPage() {
               currentStreak={streakData.currentStreak}
               bestStreak={streakData.bestStreak}
               weeklyCount={streakData.weeklyCount}
+              weeklyTrail={streakData.weeklyTrail}
               isCheckedIn={isCheckedIn}
               completedLessonsCount={completedLessonsCount}
               streakMilestone={streakData.milestoneReached}
               graceActive={streakData.graceActive}
+              celebrateToday={celebrateStreak}
             />
           </motion.div>
         )}

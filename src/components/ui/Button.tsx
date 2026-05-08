@@ -32,7 +32,7 @@ const buttonVariants = cva(
     'inline-flex items-center justify-center gap-2',
     'font-body font-semibold',
     // Transitions — use tokens from tailwind.config.ts transitionDuration
-    'transition-all duration-fast ease-smooth',
+    'transition-[background-color,border-color,color,box-shadow,transform] duration-fast ease-out',
     // Focus — accessible ring using border-focus token
     'focus-visible:outline-none',
     'focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
@@ -52,35 +52,35 @@ const buttonVariants = cva(
          * All tokens verified in tailwind.config.ts → colors.primary / colors.ink
          */
         primary:
-          'bg-primary text-ink-on-primary rounded-full shadow-sm hover:bg-primary-dark',
+          'bg-primary text-ink-on-primary rounded-lg shadow-sm hover:bg-primary-dark hover:shadow-md',
 
         /**
          * secondary — light green pill. Supporting actions.
          * Uses: bg-primary-light, text-primary-text, hover:bg-primary-mid
          */
         secondary:
-          'bg-primary-light text-primary-text rounded-full hover:bg-primary-mid',
+          'bg-primary-light text-primary-text rounded-lg hover:bg-primary-mid',
 
         /**
          * ghost — transparent. Icon rows, nav items, low-emphasis.
          * Uses: text-ink-secondary, hover:bg-surface-raised, hover:text-ink
          */
         ghost:
-          'text-ink-secondary rounded-xl hover:bg-surface-raised hover:text-ink',
+          'text-ink-secondary rounded-lg hover:bg-surface-raised hover:text-ink',
 
         /**
          * outline — white surface with border. Secondary with visible boundary.
          * Uses: bg-surface, border-border, text-ink
          */
         outline:
-          'border border-border bg-surface text-ink rounded-full hover:bg-surface-raised',
+          'border border-border bg-surface text-ink rounded-lg hover:bg-surface-raised hover:border-border-strong',
 
         /**
          * destructive — red. Delete / remove actions only.
          * Uses: bg-error, text-white (literal — error text on red is always white)
          */
         destructive:
-          'bg-error text-white rounded-full hover:opacity-90',
+          'bg-error text-white rounded-lg hover:opacity-90',
 
         /**
          * link — inline text link style. No background.
@@ -95,8 +95,8 @@ const buttonVariants = cva(
         md:       'h-10 px-4 text-sm',
         lg:       'h-12 px-5 text-sm',
         xl:       'h-14 px-7 text-base',
-        icon:     'h-10 w-10 rounded-full p-0',
-        'icon-sm':'h-8  w-8  rounded-full p-0',
+        icon:     'h-10 w-10 rounded-lg p-0',
+        'icon-sm':'h-8  w-8  rounded-md p-0',
       },
     },
     defaultVariants: {

@@ -38,12 +38,12 @@
 
   h1, h2, h3 {
     font-family: var(--font-display);
-    letter-spacing: -0.025em;
+    letter-spacing: 0;
   }
 
   h4, h5, h6 {
     font-family: var(--font-body);
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
   }
 
   :focus-visible {
@@ -131,8 +131,8 @@
     scroll-behavior: auto !important;
   }
 
-  /* Keep loading skeletons breathing, just slower */
-  .animate-pulse-soft {
+  .animate-pulse-soft,
+  .animate-shimmer {
     animation-duration: 4s !important;
     animation-iteration-count: infinite !important;
   }
@@ -161,10 +161,11 @@
     background: linear-gradient(
       90deg,
       var(--color-surface-raised) 25%,
-      var(--color-border) 50%,
+      var(--color-surface-subtle) 50%,
       var(--color-surface-raised) 75%
     );
     background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
   }
 
   .scroll-strip {
@@ -189,6 +190,7 @@
 
   .card-base {
     background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
   }

@@ -79,7 +79,7 @@ export function GoalStep({ defaultValues, onNext, onBack }: GoalStepProps) {
     >
       {/* ── Card: Activity level ───────────────────────────────── */}
       <motion.div variants={staggerItem}>
-        <div className={cn('bg-surface rounded-2xl border border-border/60 px-4 py-4 shadow-xs')}>
+        <div className={cn('bg-surface rounded-xl border border-border px-4 py-4 shadow-xs')}>
           <p className="font-body text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">
             Daily activity
           </p>
@@ -114,7 +114,7 @@ export function GoalStep({ defaultValues, onNext, onBack }: GoalStepProps) {
 
       {/* ── Card: Goal ────────────────────────────────────────── */}
       <motion.div variants={staggerItem}>
-        <div className={cn('bg-surface rounded-2xl border border-border/60 px-4 py-4 shadow-xs')}>
+        <div className={cn('bg-surface rounded-xl border border-border px-4 py-4 shadow-xs')}>
           <p className="font-body text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">
             Your goal
           </p>
@@ -150,7 +150,7 @@ export function GoalStep({ defaultValues, onNext, onBack }: GoalStepProps) {
           type="button"
           onClick={onBack}
           className={cn(
-            'flex items-center justify-center w-12 h-12 rounded-full shrink-0',
+            'flex items-center justify-center w-12 h-12 rounded-lg shrink-0',
             'border border-border text-ink-secondary bg-surface',
             'hover:bg-surface-raised hover:text-ink active:scale-[0.97]',
             'transition-all duration-fast ease-smooth',
@@ -164,11 +164,11 @@ export function GoalStep({ defaultValues, onNext, onBack }: GoalStepProps) {
         <button
           type="submit"
           className={cn(
-            'flex-1 h-12 rounded-full',
+            'flex-1 h-12 rounded-lg',
             'bg-primary text-ink-on-primary',
             'font-body text-sm font-semibold',
             'shadow-sm hover:bg-primary-dark active:scale-[0.97]',
-            'transition-all duration-fast ease-smooth',
+            'transition-[background-color,box-shadow,transform] duration-fast ease-out',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
           )}
         >

@@ -203,7 +203,7 @@ export default function SettingsPage() {
             {/* Donate button */}
             <div className="px-4 py-4">
               <a
-                href="https://www.paypal.com/donate/?hosted_button_id=5M7R79QNBEJE2"
+                href="https://ko-fi.com/xcoffeetommyx"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
@@ -216,7 +216,7 @@ export default function SettingsPage() {
                   'transition-all duration-fast ease-smooth',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
                 )}
-                aria-label="Support Calmorie via PayPal (opens in new tab)"
+                aria-label="Support Calmorie on Ko-fi (opens in new tab)"
               >
                 <Heart size={15} strokeWidth={2} aria-hidden="true" />
                 Support Calmorie

@@ -98,15 +98,19 @@ const config: Config = {
 
       // ── Motion ─────────────────────────────────────────────
       transitionTimingFunction: {
+        out: 'cubic-bezier(0, 0, 0.2, 1)',
+        standard: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        snap: 'cubic-bezier(0.19, 1, 0.22, 1)',
         smooth: 'cubic-bezier(0.22, 1, 0.36, 1)',
         snappy: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
         gentle: 'cubic-bezier(0.4, 0, 0.2, 1)',
       },
       transitionDuration: {
-        fast: '150ms',
-        normal: '300ms',
-        slow: '500ms',
-        slower: '700ms',
+        fast: '120ms',
+        normal: '220ms',
+        slow: '280ms',
+        slower: '300ms',
       },
 
       // ── Layout ─────────────────────────────────────────────
@@ -133,7 +137,7 @@ const config: Config = {
         'slide-up': 'slideUp 500ms cubic-bezier(0.22, 1, 0.36, 1) both',
         'slide-down': 'slideDown 300ms cubic-bezier(0.22, 1, 0.36, 1) both',
         'scale-in': 'scaleIn 300ms cubic-bezier(0.22, 1, 0.36, 1) both',
-        'shimmer': 'shimmer 1.6s linear infinite',
+        'shimmer': 'shimmer 1.6s ease-in-out infinite',
         'pulse-soft': 'pulseSoft 2.5s ease-in-out infinite',
         'spin-slow': 'spin 1.5s linear infinite',
       },

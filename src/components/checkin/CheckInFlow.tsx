@@ -202,6 +202,7 @@ export function CheckInFlow({ onComplete }: CheckInFlowProps) {
             key="result"
             record={result}
             onDone={onComplete}
+            celebrateOnDone
           />
         ) : null}
       </AnimatePresence>

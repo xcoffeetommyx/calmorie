@@ -193,7 +193,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             <div className="h-[var(--top-bar-height)] flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <AppLogo size={24} className="rounded-md" />
-                <span className="font-display text-[15px] font-semibold text-primary tracking-tight">
+                <span className="font-display text-[15px] font-semibold text-primary tracking-normal">
                   Calmorie
                 </span>
               </div>
@@ -237,7 +237,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
               {/* Step heading (not animated — anchors the screen) */}
               <div className="mb-7 space-y-1.5">
-                <h1 className="font-display text-[1.75rem] font-semibold text-ink tracking-tight text-balance leading-tight">
+                <h1 className="font-display text-[1.75rem] font-semibold text-ink tracking-normal text-balance leading-tight">
                   {meta.heading}
                 </h1>
                 <p className="font-body text-[0.9375rem] text-ink-secondary leading-[1.65]">

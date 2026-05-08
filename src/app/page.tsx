@@ -33,7 +33,7 @@ function LoadingScreen() {
     <div className="min-h-screen-dynamic bg-background flex items-center justify-center">
       <div className="flex items-center gap-2 animate-pulse-soft">
         <AppLogo size={28} className="rounded-lg" />
-        <span className="font-display text-lg font-semibold text-primary tracking-tight">
+        <span className="font-display text-lg font-semibold text-primary tracking-normal">
           Calmorie
         </span>
       </div>

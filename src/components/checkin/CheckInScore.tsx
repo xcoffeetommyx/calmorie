@@ -29,7 +29,7 @@ import { scoreToTier } from '@/lib/utils/format'
 import { calculateScore, getScoreDescription, getLessonSlugForFactor } from '@/lib/engine/scoreEngine'
 import { getLessonBySlug } from '@/lib/content/lessons'
 import { useStreakData } from '@/hooks/useStreakData'
-import { getFlameState, FLAME_CONFIGS, getNextMilestone, MILESTONE_MESSAGES, type StreakMilestone } from '@/lib/utils/streakUtils'
+import { getFlameState, FLAME_CONFIGS, getNextMilestone, MILESTONE_MESSAGES, queueStreakCelebration, type StreakMilestone } from '@/lib/utils/streakUtils'
 import { HabitWarning } from './HabitWarning'
 import type { CheckInRecordFull } from '@/stores/checkinStore'
 
@@ -47,9 +47,10 @@ const TIER_STYLES = {
 interface CheckInScoreProps {
   record: CheckInRecordFull
   onDone?: () => void
+  celebrateOnDone?: boolean
 }
 
-export function CheckInScore({ record, onDone }: CheckInScoreProps) {
+export function CheckInScore({ record, onDone, celebrateOnDone = false }: CheckInScoreProps) {
   const { label, tier } = scoreToTier(record.score)
   const styles          = TIER_STYLES[tier]
   const description     = getScoreDescription(record.score)
@@ -68,6 +69,13 @@ export function CheckInScore({ record, onDone }: CheckInScoreProps) {
   const { weakestFactor } = calculateScore(record.answers)
   const lessonSlug        = getLessonSlugForFactor(weakestFactor)
   const recommendedLesson = lessonSlug ? getLessonBySlug(lessonSlug) : null
+
+  function handleDone() {
+    if (celebrateOnDone) {
+      queueStreakCelebration(record.date)
+    }
+    onDone?.()
+  }
 
   return (
     <motion.div
@@ -253,7 +261,7 @@ export function CheckInScore({ record, onDone }: CheckInScoreProps) {
       <motion.div variants={staggerItem}>
         <Link
           href="/dashboard"
-          onClick={onDone}
+          onClick={handleDone}
           className={cn(
             'flex items-center justify-center w-full h-12 rounded-full',
             'bg-primary text-ink-on-primary',

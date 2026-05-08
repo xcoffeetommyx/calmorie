@@ -162,7 +162,7 @@ export function SideNav({ className }: { className?: string }) {
       {/* ── Footer: support link + version ───────────────────────── */}
       <div className="shrink-0 border-t border-border px-3 py-3 space-y-0.5">
         <a
-          href="https://www.paypal.com/donate/?hosted_button_id=5M7R79QNBEJE2"
+          href="https://ko-fi.com/xcoffeetommyx"
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
@@ -173,7 +173,7 @@ export function SideNav({ className }: { className?: string }) {
             'transition-all duration-fast ease-smooth',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
           )}
-          aria-label="Support Calmorie via PayPal (opens in new tab)"
+          aria-label="Support Calmorie on Ko-fi (opens in new tab)"
         >
           <Heart
             aria-hidden="true"
