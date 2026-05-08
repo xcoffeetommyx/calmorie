@@ -5,7 +5,7 @@
  *
  * Design intent:
  *   The score represents how consistently supportive yesterday's habits and
- *   today's starting state are — not a moral judgement. A low score is a
+ *   today's starting state are - not a moral judgement. A low score is a
  *   neutral data point, not a verdict. Tip language reflects this.
  *
  * Scoring model:
@@ -23,7 +23,7 @@
  *   ─────────────────────  ──────
  *   Total possible            100   exact (no buffer needed)
  *
- * All functions are pure — no side effects, no global state.
+ * All functions are pure - no side effects, no global state.
  */
 
 import type { CheckInAnswers } from '@/types/checkin'
@@ -36,7 +36,7 @@ export interface ScoreResult {
   score: number
   /** Personalised plain-language tip based on the weakest area */
   tip: string
-  /** The factor that lost the most points — used to direct the tip and lesson CTA */
+  /** The factor that lost the most points - used to direct the tip and lesson CTA */
   weakestFactor: string
 }
 
@@ -112,7 +112,7 @@ function getScoreBreakdown(a: CheckInAnswers): ScoreBreakdown {
  */
 const TIP_MAP: Record<string, string> = {
   sleep:
-    'Sleep is one of the most impactful things for appetite and energy the next day. Even a small improvement — like going to bed 30 minutes earlier — can make a noticeable difference.',
+    'Sleep is one of the most impactful things for appetite and energy the next day. Even a small improvement - like going to bed 30 minutes earlier - can make a noticeable difference.',
   meals:
     'Eating 2–4 balanced meals spread across the day tends to support steadier energy and appetite. If time is tight, even a small snack counts.',
   stress:
@@ -137,7 +137,7 @@ const DEFAULT_TIP =
 export function getScoreDescription(score: number): string {
   if (score >= 80) return 'Yesterday\'s habits were well-balanced. That\'s worth acknowledging.'
   if (score >= 60) return 'A solid day overall. There are always small things to build on.'
-  if (score >= 40) return 'A mixed day — that\'s normal. One thing to focus on today can make a difference.'
+  if (score >= 40) return 'A mixed day - that\'s normal. One thing to focus on today can make a difference.'
   return 'A tough day. Tracking it honestly is itself a useful step forward.'
 }
 

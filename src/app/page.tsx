@@ -1,14 +1,14 @@
 'use client'
 
 /**
- * Root route — /
+ * Root route - /
  *
  * Gates initial app entry based on hydration and onboarding state.
  *
  * States:
- *   hydrating   — IndexedDB not yet loaded: show branded loading screen
- *   onboarding  — profile incomplete: render OnboardingFlow in place
- *   ready       — onboarded: redirect to /dashboard via router.replace()
+ *   hydrating   - IndexedDB not yet loaded: show branded loading screen
+ *   onboarding  - profile incomplete: render OnboardingFlow in place
+ *   ready       - onboarded: redirect to /dashboard via router.replace()
  *
  * Why router.replace() instead of rendering <Dashboard /> directly:
  *   Rendering the dashboard page component from this route bypasses the
@@ -54,19 +54,19 @@ export default function RootPage() {
     }
   }, [isHydrated, isOnboarded, router])
 
-  // Hydrating — keep screen blank-free with branded loading state
+  // Hydrating - keep screen blank-free with branded loading state
   if (!isHydrated) {
     return <LoadingScreen />
   }
 
-  // Not onboarded — render flow in place; on complete, enter /dashboard
+  // Not onboarded - render flow in place; on complete, enter /dashboard
   if (!isOnboarded) {
     return (
       <OnboardingFlow onComplete={() => router.replace('/checkin?firstRun=1')} />
     )
   }
 
-  // Onboarded — redirect is in-flight (useEffect above), show loading
+  // Onboarded - redirect is in-flight (useEffect above), show loading
   // screen for the one render before navigation completes.
   return <LoadingScreen />
 }

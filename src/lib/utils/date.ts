@@ -3,14 +3,14 @@
  *
  * All functions operate on ISO date strings ('YYYY-MM-DD') or
  * ISO datetime strings. No external date library is required.
- * Dates are treated as local calendar dates — not UTC — to avoid
+ * Dates are treated as local calendar dates - not UTC - to avoid
  * the midnight UTC vs local timezone confusion in nutrition apps.
  */
 
 /**
  * Returns today's date as 'YYYY-MM-DD' in local time.
  *
- * Uses local time deliberately — a user logging at 11 PM should
+ * Uses local time deliberately - a user logging at 11 PM should
  * have that entry belong to today, not yesterday (UTC).
  */
 export function todayISO(): string {
@@ -139,7 +139,7 @@ export function generateId(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     return crypto.randomUUID()
   }
-  // Fallback — not cryptographically secure but fine for local IDs
+  // Fallback - not cryptographically secure but fine for local IDs
   return 'xxxx-xxxx-xxxx'.replace(/x/g, () =>
     Math.floor(Math.random() * 16).toString(16)
   )

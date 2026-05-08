@@ -7,7 +7,7 @@ import { slideUp, staggerContainer, staggerItem } from '@/lib/animations/variant
 /**
  * 404 Not Found
  *
- * Matches the app's visual style — warm background, display font headings,
+ * Matches the app's visual style - warm background, display font headings,
  * gentle entrance animation.
  * Must be a Client Component because it uses Framer Motion.
  */

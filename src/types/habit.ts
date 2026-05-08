@@ -10,14 +10,14 @@ export type HabitSeverity = 'info' | 'gentle' | 'moderate'
  * A static rule definition (lives in data/habitRules.ts).
  *
  * The `trigger` function is evaluated against the user's check-in answers.
- * Rules are pure — they have no side effects and receive no global state.
+ * Rules are pure - they have no side effects and receive no global state.
  */
 export interface HabitRule {
   id: string
   trigger: (answers: CheckInAnswers) => boolean
   severity: HabitSeverity
   title: string
-  message: string             // Plain language — never judgemental
+  message: string             // Plain language - never judgemental
   actionSuggestion: string    // Concrete, gentle next step
   relatedLessonSlug?: string  // Links to a lesson in data/lessons/
 }
@@ -41,7 +41,7 @@ export interface HabitWarning {
 
 /**
  * Semantic description of each severity level.
- * Does NOT contain Tailwind class names — those live in the
+ * Does NOT contain Tailwind class names - those live in the
  * HabitWarning component where they can reference verified tokens.
  *
  * Components use this to derive accessible labels and aria descriptions.
@@ -60,7 +60,7 @@ export const HABIT_SEVERITY_DESCRIPTIONS: Record<HabitSeverity, string> = {
   info:
     'A general tip to help you build awareness.',
   gentle:
-    'A small habit to be mindful of — no action needed right now.',
+    'A small habit to be mindful of - no action needed right now.',
   moderate:
     'A pattern that may be worth adjusting over time.',
 }

@@ -6,10 +6,10 @@
  * A lightweight bottom sheet form for adding a single food entry.
  *
  * Fields:
- *   meal     — pill selector (controlled via RHF Controller)
- *   name     — text input (required, max 80 chars)
- *   calories — numeric text input (required, 1–9999)
- *   notes    — text input (optional)
+ *   meal     - pill selector (controlled via RHF Controller)
+ *   name     - text input (required, max 80 chars)
+ *   calories - numeric text input (required, 1–9999)
+ *   notes    - text input (optional)
  *
  * Pre-fill support:
  *   initialMeal / initialName / initialCalories come from the caller.
@@ -189,7 +189,7 @@ export function FoodEntryForm({
               className="px-5 py-4 space-y-4"
               noValidate
             >
-              {/* Meal selector — Controller pattern avoids label-click-to-submit bug */}
+              {/* Meal selector - Controller pattern avoids label-click-to-submit bug */}
               <div className="space-y-1.5">
                 <p className="font-body text-sm font-medium text-ink">
                   Meal

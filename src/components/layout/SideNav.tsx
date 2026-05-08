@@ -4,7 +4,7 @@
  * SideNav
  *
  * Fixed left-rail navigation for desktop/tablet (lg+ breakpoints).
- * Hidden on mobile — BottomNav renders instead.
+ * Hidden on mobile - BottomNav renders instead.
  *
  * Structure:
  *   ┌─────────────┐
@@ -130,7 +130,7 @@ export function SideNav({ className }: { className?: string }) {
                   : 'text-ink-secondary hover:bg-surface-raised hover:text-ink',
               )}
             >
-              {/* Active accent bar — slides between items with layoutId */}
+              {/* Active accent bar - slides between items with layoutId */}
               {isActive && (
                 <motion.span
                   layoutId="sidenav-accent"

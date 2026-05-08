@@ -61,7 +61,7 @@ const cardVariants = cva(
         false: '',
       },
       /**
-       * interactive — applies hover lift and press scale.
+       * interactive - applies hover lift and press scale.
        * Only use when the entire card is clickable (e.g. LessonCard).
        * Do NOT use if the card contains multiple separate interactive elements.
        */
@@ -113,7 +113,7 @@ Card.displayName = 'Card'
 // ── Sub-components ────────────────────────────────────────────────────────
 
 /**
- * CardHeader — top section for title + description.
+ * CardHeader - top section for title + description.
  * Provides consistent bottom margin before card body content.
  */
 const CardHeader = React.forwardRef<
@@ -129,7 +129,7 @@ const CardHeader = React.forwardRef<
 CardHeader.displayName = 'CardHeader'
 
 /**
- * CardTitle — primary label inside a CardHeader.
+ * CardTitle - primary label inside a CardHeader.
  * Uses font-body (Plus Jakarta Sans) for UI headings, not the display serif.
  */
 const CardTitle = React.forwardRef<
@@ -148,7 +148,7 @@ const CardTitle = React.forwardRef<
 CardTitle.displayName = 'CardTitle'
 
 /**
- * CardDescription — supporting text inside a CardHeader.
+ * CardDescription - supporting text inside a CardHeader.
  * Always secondary colour and smaller than CardTitle.
  */
 const CardDescription = React.forwardRef<
@@ -167,7 +167,7 @@ const CardDescription = React.forwardRef<
 CardDescription.displayName = 'CardDescription'
 
 /**
- * CardContent — main body area. No extra margin; callers add spacing as needed.
+ * CardContent - main body area. No extra margin; callers add spacing as needed.
  */
 const CardContent = React.forwardRef<
   HTMLDivElement,
@@ -178,7 +178,7 @@ const CardContent = React.forwardRef<
 CardContent.displayName = 'CardContent'
 
 /**
- * CardFooter — bottom row for actions or supplementary info.
+ * CardFooter - bottom row for actions or supplementary info.
  * Flex row with standard gap; add `justify-end` for right-aligned actions.
  */
 const CardFooter = React.forwardRef<

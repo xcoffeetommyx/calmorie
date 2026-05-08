@@ -33,7 +33,7 @@ function saveToStorage(items: QuickItem[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
   } catch {
-    // Quota exceeded or private browsing — silently ignore
+    // Quota exceeded or private browsing - silently ignore
   }
 }
 

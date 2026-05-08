@@ -44,7 +44,7 @@ export function CalorieTargetBar({ totalCalories, calorieTarget, className }: Ca
         </div>
       </div>
 
-      {/* Progress bar — h-3 for better visual weight */}
+      {/* Progress bar - h-3 for better visual weight */}
       <div
         className="h-3 bg-border rounded-full overflow-hidden"
         role="progressbar"

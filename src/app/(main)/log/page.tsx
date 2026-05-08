@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Log page — /log
+ * Log page - /log
  *
  * Two-speed food logging:
  *   instant chips  → log immediately, no form, ✓ feedback for 1.5 s
@@ -62,7 +62,7 @@ export default function LogPage() {
   // Persisted recents from localStorage
   const { recentItems, addRecentItem } = useRecentQuickItems()
 
-  // Raw entries — stable selector, no new allocation per render
+  // Raw entries - stable selector, no new allocation per render
   const allEntries = useLogStore(selectEntries)
 
   // Fallback: build QuickItems from allEntries when localStorage recents are empty

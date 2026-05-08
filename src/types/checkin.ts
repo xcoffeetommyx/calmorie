@@ -30,7 +30,7 @@ export interface CheckInAnswers {
 
 /** Persisted record after a Morning Check-In is completed and scored */
 export interface CheckInRecord {
-  id: string                   // 'YYYY-MM-DD' — enforces one per day
+  id: string                   // 'YYYY-MM-DD' - enforces one per day
   date: string
   answers: CheckInAnswers
   score: number                // 0–100

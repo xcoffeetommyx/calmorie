@@ -10,11 +10,11 @@
  *   – Provides `goNext`, `goBack`, `canGoBack` navigation helpers
  *
  * Step order (matches OnboardingFlow.tsx component order):
- *   0 — ProfileStep  (name, age, sex, height, weight)
- *   1 — GoalStep     (activityLevel, goal)
- *   2 — CalorieTargetStep (read-only result, confirm)
+ *   0 - ProfileStep  (name, age, sex, height, weight)
+ *   1 - GoalStep     (activityLevel, goal)
+ *   2 - CalorieTargetStep (read-only result, confirm)
  *
- * The hook does NOT own navigation (router.push) — the page component
+ * The hook does NOT own navigation (router.push) - the page component
  * calls router.push('/dashboard') after onSubmit resolves.
  */
 

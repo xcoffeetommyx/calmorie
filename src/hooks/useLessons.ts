@@ -6,7 +6,7 @@
  * All derived arrays and objects are wrapped in useMemo so their
  * references are stable between renders when progressMap hasn't changed.
  * Previously these were computed inline (no memo), producing new
- * allocations on every render — causing unnecessary child re-renders
+ * allocations on every render - causing unnecessary child re-renders
  * and potential render cascades.
  */
 
@@ -30,14 +30,14 @@ export function useLessons(): UseLessonsReturn {
   const progressMap = useLessonStore((s) => s.progressMap)
   const isHydrated  = useLessonStore((s) => s.isHydrated)
 
-  // Memoized — only recomputes when progressMap reference changes
+  // Memoized - only recomputes when progressMap reference changes
   // (i.e. when a lesson is started, progressed, or completed)
   const lessons = useMemo(
     () => getAllLessonsWithProgress(progressMap),
     [progressMap]
   )
 
-  // Memoized — stable object reference between renders
+  // Memoized - stable object reference between renders
   const lessonOfTheDay = useMemo(() => {
     const raw = getLessonOfTheDay(progressMap)
     return {

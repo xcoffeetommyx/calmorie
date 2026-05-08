@@ -8,7 +8,7 @@
  *
  * This is different from HabitAlertBanner (dashboard):
  *   – Not dismissible (it's part of the check-in result, not an ongoing alert)
- *   – Slightly more compact — designed to stack with others
+ *   – Slightly more compact - designed to stack with others
  *   – Shows both message and actionSuggestion
  *
  * Severity → visual mapping is defined here (co-located with the JSX),
@@ -16,9 +16,9 @@
  * tailwind.config.ts.
  *
  * Tokens used:
- *   bg-primary-light, border-primary-mid, text-primary-text   — gentle/info
- *   bg-warning-bg, border (amber-200), text-amber-800         — moderate
- *   text-primary                                               — lesson link
+ *   bg-primary-light, border-primary-mid, text-primary-text   - gentle/info
+ *   bg-warning-bg, border (amber-200), text-amber-800         - moderate
+ *   text-primary                                               - lesson link
  */
 
 import Link from 'next/link'

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils/cn'
 import '@/styles/globals.css'
 
 /* ── Fonts ──────────────────────────────────────────────────────────────────
- * next/font self-hosts these at build time — fully offline-capable.
+ * next/font self-hosts these at build time - fully offline-capable.
  */
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -37,7 +37,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 const BASE = '/calmorie'
 
 /* ── Metadata ───────────────────────────────────────────────────────────── */
-// manifest and icons are intentionally omitted here — they are handled
+// manifest and icons are intentionally omitted here - they are handled
 // via explicit <link> tags in RootLayout's <head> below.
 export const metadata: Metadata = {
   title: {
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'Calmorie',
-    title: 'Calmorie — Calm Calorie Awareness',
+    title: 'Calmorie - Calm Calorie Awareness',
     description:
       'Science-backed calorie awareness and healthy habit coaching. Free for everyone.',
   },
@@ -99,7 +99,7 @@ export default function RootLayout({
     >
       <head>
         {/*
-          Manifest — explicit path required for static export + basePath.
+          Manifest - explicit path required for static export + basePath.
           The Next.js metadata API does not prepend basePath to manifest/icon
           URLs in output: 'export' mode, causing 404s on GitHub Pages.
           Using a raw <link> tag with the correct /calmorie/ prefix fixes this.

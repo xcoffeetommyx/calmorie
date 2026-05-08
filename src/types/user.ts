@@ -39,7 +39,7 @@ export interface UserProfile {
   updatedAt: string           // ISO datetime
 }
 
-/** Input shape collected during onboarding — no computed fields */
+/** Input shape collected during onboarding - no computed fields */
 export interface UserProfileInput {
   name?: string
   age: number
@@ -80,7 +80,7 @@ export const GOAL_DESCRIPTIONS: Record<UserGoal, string> = {
   maintain:
     'We\'ll calculate your maintenance calories and help you stay balanced.',
   lose_slow:
-    'A modest deficit of ~300 kcal/day — sustainable and science-backed.',
+    'A modest deficit of ~300 kcal/day - sustainable and science-backed.',
   educate:
     'No calorie targets, just learning. You can add tracking later.',
 }

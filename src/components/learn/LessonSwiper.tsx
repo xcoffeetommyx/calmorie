@@ -10,7 +10,7 @@
  *   with useMemo prevents Zustand's useSyncExternalStore from seeing spurious
  *   snapshot changes that could desync currentScreen and isTakeaway.
  *
- * Swipe navigation — v4 fix (touch events replace pointer events):
+ * Swipe navigation - v4 fix (touch events replace pointer events):
  *
  *   Root cause of previous failure:
  *     touch-action is evaluated at the hit-tested element, not at ancestors.
@@ -29,7 +29,7 @@
  *   touch-action:pan-y on the outer container is kept as a supplementary hint
  *   to prevent full-page rubber-band during a clear horizontal swipe.
  *
- * Nav bar height — v4 fix:
+ * Nav bar height - v4 fix:
  *   LessonReader now sets swiper height = 100dvh - topBar - bottomNav, so the
  *   swiper bottom aligns exactly with the BottomNav top (no overlap).
  *   The old pb-[calc(0.75rem+var(--bottom-nav-height))] = 76px bottom padding
@@ -144,7 +144,7 @@ export function LessonSwiper({ lesson, onClose, completionReward }: LessonSwiper
   // Uses onTouchStart / onTouchEnd instead of pointer events.
   //
   // WHY: Android Chrome fires pointercancel (not pointerup) when it claims a
-  // touch for scroll — even with touch-action:pan-y on an ancestor. This is
+  // touch for scroll - even with touch-action:pan-y on an ancestor. This is
   // because touch-action is evaluated at the hit-tested element (the inner
   // overflow-y-auto StepScreen div), not at an ancestor. The inner element
   // defaults to touch-action:auto, so Chrome claims the touch for scroll and
@@ -214,7 +214,7 @@ export function LessonSwiper({ lesson, onClose, completionReward }: LessonSwiper
         </button>
       </div>
 
-      {/* ── Step content — swipe-enabled ─────────────────────────────────────
+      {/* ── Step content - swipe-enabled ─────────────────────────────────────
         *
         * overflow-hidden clips the horizontal slide animation.
         * No px-4 here: absolute inset-0 children fill from the border edge of
@@ -256,7 +256,7 @@ export function LessonSwiper({ lesson, onClose, completionReward }: LessonSwiper
 
       {/* ── Navigation buttons ───────────────────────────────────────────────
         *
-        * Normal py-3 — no BottomNav compensation needed. LessonReader sets the
+        * Normal py-3 - no BottomNav compensation needed. LessonReader sets the
         * swiper height to end exactly at the BottomNav top, so these buttons
         * sit flush above it with standard 12px padding on each side.
         ───────────────────────────────────────────────────────────────────── */}
@@ -344,7 +344,7 @@ export function LessonSwiper({ lesson, onClose, completionReward }: LessonSwiper
  *
  * Horizontal padding (px-4) is on the inner wrapper div, not the outer
  * overflow-hidden container, because absolute inset-0 fills from the border
- * edge of the containing block — padding on the outer container is a no-op.
+ * edge of the containing block - padding on the outer container is a no-op.
  *
  * shadow-card is not used: box-shadows are clipped by any ancestor with
  * overflow:hidden. The swipe container must have overflow:hidden to clip the

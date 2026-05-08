@@ -27,7 +27,7 @@ import { cn } from '@/lib/utils/cn'
 // ── Lesson milestone thresholds ────────────────────────────────────────────
 // Only non-null when completedLessonsCount is EXACTLY at one of these values.
 // This gives a brief "achievement unlocked" moment that disappears once you
-// move past it — consistent with how StreakData.milestoneReached works.
+// move past it - consistent with how StreakData.milestoneReached works.
 const LESSON_MILESTONE_VALUES = [1, 5, 10] as const
 
 // ── Props ──────────────────────────────────────────────────────────────────
@@ -45,11 +45,11 @@ interface WinsRecapCardProps {
 // ── Milestone copy ─────────────────────────────────────────────────────────
 
 const MILESTONE_COPY: Record<string, string> = {
-  '3':        '3-day streak — a habit is starting to form.',
+  '3':        '3-day streak - a habit is starting to form.',
   '7':        'A full week of check-ins. Consistency adds up.',
   '14':       'Two weeks straight. You\'re building something real.',
   '30':       'Thirty days. That\'s genuine commitment.',
-  'lesson-1': 'First lesson done — great start.',
+  'lesson-1': 'First lesson done - great start.',
   'lesson-5': 'Five lessons read. You\'re growing.',
   'lesson-10':'Ten lessons. That\'s real dedication.',
 }
@@ -64,7 +64,7 @@ export function WinsRecapCard({
   streakMilestone,
   className,
 }: WinsRecapCardProps) {
-  // Build chips — only include ones with something to show
+  // Build chips - only include ones with something to show
   const chips: Array<{
     key:   string
     icon:  React.ReactNode
@@ -108,7 +108,7 @@ export function WinsRecapCard({
     })
   }
 
-  // Nothing to show yet — don't render for brand-new users
+  // Nothing to show yet - don't render for brand-new users
   if (chips.length === 0) return null
 
   // Determine if a milestone banner should show
@@ -124,7 +124,7 @@ export function WinsRecapCard({
 
   return (
     <div className={cn('space-y-2', className)}>
-      {/* Milestone banner — only at exact thresholds */}
+      {/* Milestone banner - only at exact thresholds */}
       {milestoneKey && MILESTONE_COPY[milestoneKey] && (
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}

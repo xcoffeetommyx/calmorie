@@ -25,7 +25,7 @@ export interface UseHabitAlertsReturn {
   isCheckedIn: boolean
 }
 
-// Stable empty array — reused when there are no warnings.
+// Stable empty array - reused when there are no warnings.
 // Avoids creating a new [] on every render when no check-in exists.
 const EMPTY_WARNINGS: HabitWarning[] = []
 

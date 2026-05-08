@@ -19,7 +19,7 @@ interface AppProvidersProps {
 }
 
 /**
- * AppProviders — single composition root for all React context providers.
+ * AppProviders - single composition root for all React context providers.
  *
  * On client mount:
  *   1. Wraps the app in Framer Motion's MotionConfig with reducedMotion="user"
@@ -47,7 +47,7 @@ export function AppProviders({ children }: AppProvidersProps) {
       useUserStore.getState().hydrate(profile)
       useLogStore.getState().hydrate(entries)
       // CheckInRow (from DB) and CheckInRecordFull (store) are structurally
-      // identical — both extend CheckInRecord with habitWarnings: HabitWarning[]
+      // identical - both extend CheckInRecord with habitWarnings: HabitWarning[]
       useCheckinStore.getState().hydrate(checkins)
       useLessonStore.getState().hydrate(lessonProgress)
     }

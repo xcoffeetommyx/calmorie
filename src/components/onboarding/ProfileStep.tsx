@@ -7,8 +7,8 @@
  * Collects: name (optional), age, biological sex, height, weight.
  *
  * Unit toggle:
- *   metric   — height in cm, weight in kg
- *   imperial — height in ft + in, weight in lb
+ *   metric   - height in cm, weight in kg
+ *   imperial - height in ft + in, weight in lb
  *
  * Conversion happens before calling onNext so the parent always receives
  * canonical metric values (heightCm, weightKg).
@@ -223,7 +223,7 @@ export function ProfileStep({ defaultValues, onNext, onBack }: ProfileStepProps)
           <div className="space-y-1.5">
             <FieldLabel>Biological sex</FieldLabel>
             <p className="font-body text-xs text-ink-muted -mt-0.5">
-              Used only for the calorie estimate formula — not stored or shared.
+              Used only for the calorie estimate formula - not stored or shared.
             </p>
             <div className="grid grid-cols-3 gap-2 mt-1">
               {SEX_OPTIONS.map(({ value, label }) => (

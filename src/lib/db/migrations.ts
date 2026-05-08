@@ -4,7 +4,7 @@
  * Database version upgrades and data migration utilities.
  *
  * Version history:
- *   v1 — Initial schema: userProfile, foodEntries, checkIns, lessonProgress
+ *   v1 - Initial schema: userProfile, foodEntries, checkIns, lessonProgress
  *
  * When to bump the version:
  *   – Adding a new table
@@ -17,7 +17,7 @@
  *   reads legacy localStorage keys, writes the data to IndexedDB, and marks
  *   the migration done so it never runs again.
  *
- *   This is safe to call on every app boot — the MIGRATION_DONE_KEY guard
+ *   This is safe to call on every app boot - the MIGRATION_DONE_KEY guard
  *   short-circuits immediately if migration has already happened.
  */
 
@@ -47,15 +47,15 @@ export function registerVersions(db: Dexie): void {
  * One-time migration of data from the old localStorage-based Zustand persist
  * stores into IndexedDB.
  *
- * Safe to call on every boot — exits immediately if already done.
+ * Safe to call on every boot - exits immediately if already done.
  * Should be called after `db.open()` succeeds.
  *
- * @param db — the open Dexie instance
+ * @param db - the open Dexie instance
  */
 export async function migrateFromLocalStorage(db: Dexie): Promise<void> {
   if (typeof window === 'undefined') return
 
-  // Already migrated — skip
+  // Already migrated - skip
   if (localStorage.getItem(MIGRATION_DONE_KEY) === 'true') return
 
   // Check whether IndexedDB already has data (e.g. returning user who opened
@@ -79,7 +79,7 @@ export async function migrateFromLocalStorage(db: Dexie): Promise<void> {
           await db.table('userProfile').put(profile)
         }
       } catch {
-        // Corrupt localStorage data — skip silently
+        // Corrupt localStorage data - skip silently
       }
     }
 
@@ -93,7 +93,7 @@ export async function migrateFromLocalStorage(db: Dexie): Promise<void> {
           await db.table('foodEntries').bulkPut(entries)
         }
       } catch {
-        // Corrupt data — skip silently
+        // Corrupt data - skip silently
       }
     }
 
@@ -110,7 +110,7 @@ export async function migrateFromLocalStorage(db: Dexie): Promise<void> {
           }
         }
       } catch {
-        // Corrupt data — skip silently
+        // Corrupt data - skip silently
       }
     }
   }

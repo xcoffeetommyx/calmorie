@@ -31,7 +31,7 @@ export const DAILY_TIPS: DailyTip[] = [
   {
     id: 'tip-02',
     category: 'nutrition',
-    text: 'Adding protein to breakfast — eggs, yoghurt, or legumes — tends to reduce mid-morning hunger and keep energy levels more stable until lunch.',
+    text: 'Adding protein to breakfast - eggs, yoghurt, or legumes - tends to reduce mid-morning hunger and keep energy levels more stable until lunch.',
   },
   {
     id: 'tip-03',
@@ -66,7 +66,7 @@ export const DAILY_TIPS: DailyTip[] = [
   {
     id: 'tip-09',
     category: 'digestion',
-    text: 'Chewing slowly and thoroughly is one of the least-appreciated things you can do for digestion — and it gives satiety signals more time to register.',
+    text: 'Chewing slowly and thoroughly is one of the least-appreciated things you can do for digestion - and it gives satiety signals more time to register.',
   },
   {
     id: 'tip-10',
@@ -86,7 +86,7 @@ export const DAILY_TIPS: DailyTip[] = [
   {
     id: 'tip-13',
     category: 'movement',
-    text: 'Non-exercise activity — standing, taking stairs, walking during calls — often accounts for more daily calorie burn than scheduled exercise sessions.',
+    text: 'Non-exercise activity - standing, taking stairs, walking during calls - often accounts for more daily calorie burn than scheduled exercise sessions.',
   },
   {
     id: 'tip-14',
@@ -96,12 +96,12 @@ export const DAILY_TIPS: DailyTip[] = [
   {
     id: 'tip-15',
     category: 'mindset',
-    text: 'Progress is non-linear. A day of eating more than planned or skipping a routine doesn\'t undo previous progress — it\'s just one day.',
+    text: 'Progress is non-linear. A day of eating more than planned or skipping a routine doesn\'t undo previous progress - it\'s just one day.',
   },
   {
     id: 'tip-16',
     category: 'nutrition',
-    text: 'Starting meals with vegetables before carbs tends to reduce total calorie intake and blunt blood sugar spikes — without any counting required.',
+    text: 'Starting meals with vegetables before carbs tends to reduce total calorie intake and blunt blood sugar spikes - without any counting required.',
   },
   {
     id: 'tip-17',

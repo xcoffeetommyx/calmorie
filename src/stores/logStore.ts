@@ -8,7 +8,7 @@
  * SELECTOR SAFETY NOTE:
  * selectTodayEntries and selectRecentFoodNames previously returned newly
  * allocated arrays on every call. Zustand re-renders the subscribing
- * component whenever the selector return value changes — and since array
+ * component whenever the selector return value changes - and since array
  * equality in JS is by reference, a new [] !== [] on every render.
  * This caused an infinite render loop (React production error #185).
  *
@@ -102,5 +102,5 @@ export const selectLogHydrated = (state: LogState): boolean => state.isHydrated
 
 // NOTE: selectTodayEntries and selectRecentFoodNames have been REMOVED.
 // They returned a new array instance on every call, which Zustand treats
-// as "state changed" and triggers a re-render — causing an infinite loop.
+// as "state changed" and triggers a re-render - causing an infinite loop.
 // Derived values are now computed with useMemo in useTodayLog().

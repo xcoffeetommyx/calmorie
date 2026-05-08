@@ -1,6 +1,6 @@
 /**
  * Number and unit formatting utilities for Calmorie.
- * All functions are pure — no side effects, no external dependencies.
+ * All functions are pure - no side effects, no external dependencies.
  */
 
 // ── Calorie formatting ─────────────────────────────────────────────────────
@@ -28,7 +28,7 @@ export function formatCalories(
 
   if (opts?.compact && rounded >= 1000) {
     const k = rounded / 1000
-    // Avoid ".0" suffix — "1k" not "1.0k", "1.5k" not "1.50k"
+    // Avoid ".0" suffix - "1k" not "1.0k", "1.5k" not "1.50k"
     const kFormatted = Number.isInteger(k) ? `${k}k` : `${parseFloat(k.toFixed(1))}k`
     return `${kFormatted}${suffix}`
   }
@@ -130,7 +130,7 @@ export function lerp(a: number, b: number, t: number): number {
 
 /**
  * Tier key returned by scoreToTier.
- * UI components map these to colours/icons themselves — keeping
+ * UI components map these to colours/icons themselves - keeping
  * style decisions out of the utility layer.
  */
 export type ScoreTier = 'great' | 'good' | 'average' | 'poor'

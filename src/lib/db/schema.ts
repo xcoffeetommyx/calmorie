@@ -8,13 +8,13 @@
  *   2. The Dexie index strings for each table
  *
  * Keep types in sync with the domain types in src/types/*.
- * Dexie stores rows as plain JSON objects — no class instances.
+ * Dexie stores rows as plain JSON objects - no class instances.
  *
  * Tables:
- *   userProfile    — single row (id: 'local-user'), the user's profile and TDEE
- *   foodEntries    — one row per logged food item, indexed by date and meal
- *   checkIns       — one row per completed daily check-in, keyed by date
- *   lessonProgress — one row per lesson, keyed by slug
+ *   userProfile    - single row (id: 'local-user'), the user's profile and TDEE
+ *   foodEntries    - one row per logged food item, indexed by date and meal
+ *   checkIns       - one row per completed daily check-in, keyed by date
+ *   lessonProgress - one row per lesson, keyed by slug
  *
  * Index string format: 'primaryKey, index1, index2'
  * Compound indexes: '[field1+field2]'
@@ -41,7 +41,7 @@ export interface CheckInRow extends Omit<CheckInRecord, 'habitWarningIds'> {
 
 export type { UserProfile  as UserProfileRow }
 export type { FoodEntry    as FoodEntryRow   }
-// CheckInRow is defined directly above — no re-export needed
+// CheckInRow is defined directly above - no re-export needed
 export type { LessonProgress as LessonProgressRow }
 
 // ── Dexie index strings ────────────────────────────────────────────────────
@@ -55,25 +55,25 @@ export type { LessonProgress as LessonProgressRow }
  */
 export const TABLE_SCHEMAS = {
   /**
-   * userProfile — single-row table.
+   * userProfile - single-row table.
    * id is always 'local-user'. The table holds exactly one record.
    */
   userProfile:    'id',
 
   /**
-   * foodEntries — indexed by date (for "get today's entries" queries)
+   * foodEntries - indexed by date (for "get today's entries" queries)
    * and by [date+meal] for grouped meal lookups.
    */
   foodEntries:    'id, date, [date+meal], loggedAt',
 
   /**
-   * checkIns — keyed by date string ('YYYY-MM-DD').
+   * checkIns - keyed by date string ('YYYY-MM-DD').
    * One record per calendar day.
    */
   checkIns:       'id, date',
 
   /**
-   * lessonProgress — keyed by lesson slug.
+   * lessonProgress - keyed by lesson slug.
    * Indexed by completed for "get all completed" queries.
    */
   lessonProgress: 'slug, completed',
@@ -82,7 +82,7 @@ export const TABLE_SCHEMAS = {
 /** Current database version. Increment this when changing TABLE_SCHEMAS. */
 export const DB_VERSION = 1
 
-/** The localStorage keys used by the old persist middleware — used for migration. */
+/** The localStorage keys used by the old persist middleware - used for migration. */
 export const LEGACY_STORAGE_KEYS = {
   userProfile: 'calmorie-user-profile',
   foodEntries: 'calmorie-food-log',

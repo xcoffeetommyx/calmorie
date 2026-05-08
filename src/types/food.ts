@@ -32,14 +32,14 @@ export interface CommonFood {
   /** Preferred meal slot for this food. Used as the default when logging. */
   defaultMeal?: MealType
   /**
-   * 'instant' — one tap logs immediately (predictable calorie count).
-   * 'prefill' — opens form with values pre-filled so user can adjust.
+   * 'instant' - one tap logs immediately (predictable calorie count).
+   * 'prefill' - opens form with values pre-filled so user can adjust.
    */
   mode?: 'instant' | 'prefill'
 }
 
 /**
- * Unified quick-add item — represents either a common food or a logged recent.
+ * Unified quick-add item - represents either a common food or a logged recent.
  * Drives both chip display and tap behaviour in the quick-add strip.
  */
 export interface QuickItem {

@@ -38,7 +38,7 @@ import nutritionLabels  from './nutrition-labels.json'
  * The lesson-of-the-day logic in lib/content/lessons.ts uses this order
  * as the rotation basis.
  *
- * Cast to `Lesson[]` — TypeScript will validate the JSON structure against
+ * Cast to `Lesson[]` - TypeScript will validate the JSON structure against
  * the Lesson interface at compile time via `resolveJsonModule: true`.
  */
 export const LESSONS: Lesson[] = [

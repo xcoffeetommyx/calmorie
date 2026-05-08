@@ -49,7 +49,7 @@ export interface FlameConfig {
 /**
  * Visual config per flame state.
  * Breathing only plays when `isCheckedIn && !prefersReducedMotion`.
- * Scales and glow are intentionally restrained — subtle motion reads as alive,
+ * Scales and glow are intentionally restrained - subtle motion reads as alive,
  * large motion reads as gamey.
  */
 export const FLAME_CONFIGS: Record<FlameState, FlameConfig> = {
@@ -145,7 +145,7 @@ export function markMilestoneSeen(milestone: number): void {
     seen.add(milestone)
     localStorage.setItem(SEEN_MILESTONES_KEY, JSON.stringify([...seen]))
   } catch {
-    // localStorage unavailable — fail silently
+    // localStorage unavailable - fail silently
   }
 }
 
@@ -236,7 +236,7 @@ const ACTIVE_SUBTEXT = [
  */
 export function getStreakHeadline(streak: number, checkedIn: boolean, graceActive: boolean): string {
   if (graceActive || streak > 1)  return `${streak} day streak`
-  if (streak === 1 && checkedIn)  return 'Day 1 — good start.'
+  if (streak === 1 && checkedIn)  return 'Day 1 - good start.'
   if (streak === 1)               return '1 day streak'
   return 'Start fresh today'
 }
@@ -246,7 +246,7 @@ export function getStreakHeadline(streak: number, checkedIn: boolean, graceActiv
  * Designed to be forward-looking and never shaming.
  */
 export function getStreakSubtext(streak: number, checkedIn: boolean, graceActive: boolean): string {
-  if (graceActive)               return 'Streak protected — check in today to keep it going.'
+  if (graceActive)               return 'Streak protected - check in today to keep it going.'
   if (streak === 0)              return 'A small step today restarts the habit.'
   if (streak === 1 && checkedIn) return 'Check in tomorrow to build your streak.'
   if (!checkedIn)                return 'Check in to keep it going.'

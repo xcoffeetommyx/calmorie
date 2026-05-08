@@ -42,9 +42,9 @@ export function LessonCard({ lesson, progress, className }: LessonCardProps) {
         )}
         aria-label={
           isCompleted
-            ? `${lesson.title} — completed`
+            ? `${lesson.title} - completed`
             : isInProgress
-              ? `${lesson.title} — continue reading`
+              ? `${lesson.title} - continue reading`
               : `Read lesson: ${lesson.title}`
         }
       >

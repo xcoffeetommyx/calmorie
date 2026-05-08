@@ -7,7 +7,7 @@
  *   1. If the user has checked in today, derive the weakest scoring factor
  *      from their answers and return the lesson mapped to that factor.
  *   2. Otherwise (no check-in, or no lesson found for the factor),
- *      fall back to getLessonOfTheDay() — which prioritises incomplete lessons.
+ *      fall back to getLessonOfTheDay() - which prioritises incomplete lessons.
  *
  * This is a pure computation wrapped in useMemo. Both inputs (todayRecord
  * and progressMap) are stable store references that only change when

@@ -24,7 +24,7 @@
      1. RAW PALETTE
   ══════════════════════════════════════════════════════════ */
 
-  /* Brand — Warm Sage Green */
+  /* Brand - Warm Sage Green */
   --brand-50:  #f0f6f2;
   --brand-100: #d6eadb;
   --brand-200: #aed4b9;
@@ -36,7 +36,7 @@
   --brand-800: #163021;
   --brand-900: #0d1e14;
 
-  /* Accent — Warm Terracotta */
+  /* Accent - Warm Terracotta */
   --accent-50:  #fdf3ee;
   --accent-100: #f9dece;
   --accent-200: #f1b99a;
@@ -139,8 +139,8 @@
      4. SPACING & LAYOUT
   ══════════════════════════════════════════════════════════ */
 
-  --page-padding:         1rem;       /* 16px — mobile gutter */
-  --page-padding-lg:      1.5rem;     /* 24px — desktop gutter */
+  --page-padding:         1rem;       /* 16px - mobile gutter */
+  --page-padding-lg:      1.5rem;     /* 24px - desktop gutter */
   --content-max-width:    640px;      /* single-column content cap */
   --desktop-sidebar-width: 256px;     /* left nav on desktop */
   --bottom-nav-height:    64px;       /* mobile tab bar */
@@ -235,7 +235,7 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   10. DARK MODE  (future-ready — tokens only)
+   10. DARK MODE  (future-ready - tokens only)
 ═══════════════════════════════════════════════════════════ */
 @media (prefers-color-scheme: dark) {
   :root {

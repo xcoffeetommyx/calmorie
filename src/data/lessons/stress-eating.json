@@ -7,30 +7,30 @@
   "steps": [
     {
       "heading": "Why stress makes us reach for food",
-      "body": "Stress eating is not a lack of willpower — it has a physiological basis. When you experience stress, your body releases hormones including adrenaline and cortisol. These hormones evolved to help you deal with immediate physical threats. In modern life, they are frequently triggered by psychological stressors — work pressure, financial worries, difficult relationships — and food becomes one of the most accessible ways the brain tries to restore a sense of calm."
+      "body": "Stress eating is not a lack of willpower - it has a physiological basis. When you experience stress, your body releases hormones including adrenaline and cortisol. These hormones evolved to help you deal with immediate physical threats. In modern life, they are frequently triggered by psychological stressors - work pressure, financial worries, difficult relationships - and food becomes one of the most accessible ways the brain tries to restore a sense of calm."
     },
     {
       "heading": "Cortisol and appetite",
-      "body": "Cortisol is the main long-term stress hormone. In acute stress, cortisol can temporarily suppress appetite. But in chronic stress — when cortisol levels stay elevated for days or weeks — it tends to increase appetite, particularly for foods high in fat and sugar. These foods trigger the brain's reward system and temporarily reduce cortisol signalling, which is part of why they feel comforting in the moment."
+      "body": "Cortisol is the main long-term stress hormone. In acute stress, cortisol can temporarily suppress appetite. But in chronic stress - when cortisol levels stay elevated for days or weeks - it tends to increase appetite, particularly for foods high in fat and sugar. These foods trigger the brain's reward system and temporarily reduce cortisol signalling, which is part of why they feel comforting in the moment."
     },
     {
       "heading": "Where stress fat tends to accumulate",
-      "body": "Research has found associations between chronically elevated cortisol and greater fat accumulation in the abdominal area. Visceral fat — the fat stored around the internal organs — is associated in population studies with higher risk of cardiovascular disease and metabolic problems. The relationship is not fully understood, but it is one reason that chronic stress is considered a risk factor for metabolic health beyond its direct effect on eating behaviour."
+      "body": "Research has found associations between chronically elevated cortisol and greater fat accumulation in the abdominal area. Visceral fat - the fat stored around the internal organs - is associated in population studies with higher risk of cardiovascular disease and metabolic problems. The relationship is not fully understood, but it is one reason that chronic stress is considered a risk factor for metabolic health beyond its direct effect on eating behaviour."
     },
     {
       "heading": "Emotional eating versus physical hunger",
-      "body": "Physical hunger builds gradually and is satisfied by eating. Emotional eating tends to come on suddenly, is often tied to a specific craving (usually something sweet, salty, or fatty), and does not go away when you are physically full. Noticing the difference between the two is not always easy — especially when you are stressed — but paying attention to context (what happened before the craving) is often more useful than trying to suppress the urge through willpower alone."
+      "body": "Physical hunger builds gradually and is satisfied by eating. Emotional eating tends to come on suddenly, is often tied to a specific craving (usually something sweet, salty, or fatty), and does not go away when you are physically full. Noticing the difference between the two is not always easy - especially when you are stressed - but paying attention to context (what happened before the craving) is often more useful than trying to suppress the urge through willpower alone."
     },
     {
       "heading": "The cortisol and sleep connection",
-      "body": "Stress and sleep deprivation feed each other. Chronic stress raises cortisol at night, which interferes with sleep quality. Poor sleep, in turn, raises cortisol levels the following day. This creates a reinforcing loop where stress and tiredness compound each other's effect on appetite and food choices. Addressing one often helps the other — which is why sleep is treated as a genuine stress-management tool by health researchers."
+      "body": "Stress and sleep deprivation feed each other. Chronic stress raises cortisol at night, which interferes with sleep quality. Poor sleep, in turn, raises cortisol levels the following day. This creates a reinforcing loop where stress and tiredness compound each other's effect on appetite and food choices. Addressing one often helps the other - which is why sleep is treated as a genuine stress-management tool by health researchers."
     },
     {
       "heading": "Practical ways to break the pattern",
-      "body": "The most evidence-supported strategies for reducing stress eating involve addressing the stress itself rather than just restricting food. Regular physical activity reliably reduces cortisol over time. Brief mindfulness practices — even a few minutes of focused breathing — can interrupt the stress response. Identifying your personal stress triggers and having a plan for them (a walk, a phone call, a non-food reward) makes the pattern easier to interrupt before food becomes the default."
+      "body": "The most evidence-supported strategies for reducing stress eating involve addressing the stress itself rather than just restricting food. Regular physical activity reliably reduces cortisol over time. Brief mindfulness practices - even a few minutes of focused breathing - can interrupt the stress response. Identifying your personal stress triggers and having a plan for them (a walk, a phone call, a non-food reward) makes the pattern easier to interrupt before food becomes the default."
     }
   ],
-  "takeaway": "Stress eating is driven by real hormonal changes, not weakness. Cortisol increases appetite for calorie-dense food, promotes fat storage, and disrupts sleep — all of which compound over time. Managing stress at the source is more effective than trying to white-knuckle food choices.",
+  "takeaway": "Stress eating is driven by real hormonal changes, not weakness. Cortisol increases appetite for calorie-dense food, promotes fat storage, and disrupts sleep - all of which compound over time. Managing stress at the source is more effective than trying to white-knuckle food choices.",
   "sources": [
     {
       "title": "Stress and eating behaviours",
@@ -41,7 +41,7 @@
     },
     {
       "title": "Stress-related eating",
-      "organization": "Appetite — Greeno & Wing",
+      "organization": "Appetite - Greeno & Wing",
       "url": "https://www.sciencedirect.com/science/article/pii/S0195666394800103",
       "year": 1994,
       "note": "Foundational review examining the relationship between psychological stress and increased food intake, particularly calorie-dense foods."

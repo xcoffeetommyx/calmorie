@@ -4,7 +4,7 @@
  * Zustand store for lesson reading progress.
  *
  * Persistence: IndexedDB via db.lessonProgress (Dexie).
- * Hydration is explicit — AppProviders calls hydrate() after openDB()
+ * Hydration is explicit - AppProviders calls hydrate() after openDB()
  * loads data from IndexedDB. There is no Zustand persist middleware here.
  *
  * "Started" semantics:
@@ -17,16 +17,16 @@
  *   completed   = progressMap[slug]?.completed === true
  *
  * State:
- *   progressMap   — Record<slug, LessonProgress>: one entry per started lesson
- *   isHydrated    — true once AppProviders has loaded data from IndexedDB
+ *   progressMap   - Record<slug, LessonProgress>: one entry per started lesson
+ *   isHydrated    - true once AppProviders has loaded data from IndexedDB
  *
  * Actions:
- *   hydrate(records)       — bulk load from DB on app boot
- *   markStarted(slug)      — creates the progress record on first open
- *   markProgress(slug, i)  — advances lastStepIndex when user moves forward
- *   markComplete(slug)     — sets completed: true when takeaway is reached
- *   clearAll()             — resets all progress (dev / testing use)
- *   setHydrated()          — marks store as ready (used on error fallback)
+ *   hydrate(records)       - bulk load from DB on app boot
+ *   markStarted(slug)      - creates the progress record on first open
+ *   markProgress(slug, i)  - advances lastStepIndex when user moves forward
+ *   markComplete(slug)     - sets completed: true when takeaway is reached
+ *   clearAll()             - resets all progress (dev / testing use)
+ *   setHydrated()          - marks store as ready (used on error fallback)
  *
  * Write strategy:
  *   All mutating actions update Zustand state synchronously for instant

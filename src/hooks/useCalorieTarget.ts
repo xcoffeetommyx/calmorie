@@ -4,11 +4,11 @@
  * Hook for reading the user's daily calorie target and related values.
  *
  * Returns:
- *   calorieTarget   — the goal-adjusted daily kcal target
+ *   calorieTarget   - the goal-adjusted daily kcal target
  *                     (null if onboarding not complete)
- *   tdee            — maintenance calories before goal adjustment
- *   isOnboarded     — whether a profile exists and is complete
- *   isHydrated      — whether the persisted state has loaded from localStorage
+ *   tdee            - maintenance calories before goal adjustment
+ *   isOnboarded     - whether a profile exists and is complete
+ *   isHydrated      - whether the persisted state has loaded from localStorage
  *
  * Usage:
  *   const { calorieTarget, isOnboarded, isHydrated } = useCalorieTarget()

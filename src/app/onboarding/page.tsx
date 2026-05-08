@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Onboarding page — /onboarding
+ * Onboarding page - /onboarding
  *
  * Entry point for first-run profile setup.
  *

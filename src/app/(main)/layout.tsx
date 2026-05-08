@@ -11,7 +11,7 @@
  * Onboarding gate (Phase 2):
  *   When userStore is implemented, add a client-side check here:
  *   if (!profile?.onboardingComplete) redirect('/onboarding')
- *   This must be done in a client component child — Server Components
+ *   This must be done in a client component child - Server Components
  *   cannot read from IndexedDB/Zustand stores.
  *
  * This file itself is a Server Component (no 'use client').

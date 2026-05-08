@@ -116,7 +116,7 @@ export const selectTopWarning = (
 }
 
 /**
- * Stable selector — returns the records map reference directly.
+ * Stable selector - returns the records map reference directly.
  * The reference only changes when a record is added or the store is cleared,
  * not on every render. Use this with useMemo in hooks for derived values.
  *
@@ -193,7 +193,7 @@ export function computeStreaks(
     dateSet.has(yesterday) ? countConsecutiveBack(dateSet, yesterday) : 0,
   )
 
-  // Best streak: scan all sorted dates (no grace bridging — reflects real history)
+  // Best streak: scan all sorted dates (no grace bridging - reflects real history)
   const bestStreak = computeBestStreak(dates)
 
   // Weekly count: how many of the last 7 days (today inclusive)

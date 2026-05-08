@@ -5,19 +5,19 @@
  *
  * The primary interactive control for Calmorie. All variants are
  * derived from semantic design tokens defined in tailwind.config.ts
- * and tokens.css — no hardcoded colour values.
+ * and tokens.css - no hardcoded colour values.
  *
  * Variants:
- *   primary      — bg-primary (sage green)  — main CTAs
- *   secondary    — bg-primary-light         — lower-emphasis actions
- *   ghost        — transparent              — icon rows, nav items
- *   outline      — border-border            — secondary with border
- *   destructive  — bg-error                 — delete / remove
- *   link         — text-primary, underline  — inline text links
+ *   primary      - bg-primary (sage green)  - main CTAs
+ *   secondary    - bg-primary-light         - lower-emphasis actions
+ *   ghost        - transparent              - icon rows, nav items
+ *   outline      - border-border            - secondary with border
+ *   destructive  - bg-error                 - delete / remove
+ *   link         - text-primary, underline  - inline text links
  *
  * Sizes:
- *   sm / md / lg / xl  — rectangular, radius-full pill shapes
- *   icon / icon-sm     — square, radius-full circle shapes
+ *   sm / md / lg / xl  - rectangular, radius-full pill shapes
+ *   icon / icon-sm     - square, radius-full circle shapes
  */
 
 import * as React from 'react'
@@ -31,23 +31,23 @@ const buttonVariants = cva(
   [
     'inline-flex items-center justify-center gap-2',
     'font-body font-semibold',
-    // Transitions — use tokens from tailwind.config.ts transitionDuration
+    // Transitions - use tokens from tailwind.config.ts transitionDuration
     'transition-[background-color,border-color,color,box-shadow,transform] duration-fast ease-out',
-    // Focus — accessible ring using border-focus token
+    // Focus - accessible ring using border-focus token
     'focus-visible:outline-none',
     'focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2',
     // Disabled
     'disabled:pointer-events-none disabled:opacity-40',
     // Touch
     'select-none',
-    // Press scale — all buttons respond slightly to touch
+    // Press scale - all buttons respond slightly to touch
     'active:scale-[0.97]',
   ].join(' '),
   {
     variants: {
       variant: {
         /**
-         * primary — sage green pill. Main page CTAs.
+         * primary - sage green pill. Main page CTAs.
          * Uses: bg-primary, text-ink-on-primary, hover:bg-primary-dark
          * All tokens verified in tailwind.config.ts → colors.primary / colors.ink
          */
@@ -55,35 +55,35 @@ const buttonVariants = cva(
           'bg-primary text-ink-on-primary rounded-lg shadow-sm hover:bg-primary-dark hover:shadow-md',
 
         /**
-         * secondary — light green pill. Supporting actions.
+         * secondary - light green pill. Supporting actions.
          * Uses: bg-primary-light, text-primary-text, hover:bg-primary-mid
          */
         secondary:
           'bg-primary-light text-primary-text rounded-lg hover:bg-primary-mid',
 
         /**
-         * ghost — transparent. Icon rows, nav items, low-emphasis.
+         * ghost - transparent. Icon rows, nav items, low-emphasis.
          * Uses: text-ink-secondary, hover:bg-surface-raised, hover:text-ink
          */
         ghost:
           'text-ink-secondary rounded-lg hover:bg-surface-raised hover:text-ink',
 
         /**
-         * outline — white surface with border. Secondary with visible boundary.
+         * outline - white surface with border. Secondary with visible boundary.
          * Uses: bg-surface, border-border, text-ink
          */
         outline:
           'border border-border bg-surface text-ink rounded-lg hover:bg-surface-raised hover:border-border-strong',
 
         /**
-         * destructive — red. Delete / remove actions only.
-         * Uses: bg-error, text-white (literal — error text on red is always white)
+         * destructive - red. Delete / remove actions only.
+         * Uses: bg-error, text-white (literal - error text on red is always white)
          */
         destructive:
           'bg-error text-white rounded-lg hover:opacity-90',
 
         /**
-         * link — inline text link style. No background.
+         * link - inline text link style. No background.
          * Uses: text-primary
          */
         link:
@@ -113,7 +113,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   /**
    * Shows a spinner and disables the button.
-   * The spinner uses `animate-spin-slow` — defined in tailwind.config.ts keyframes.
+   * The spinner uses `animate-spin-slow` - defined in tailwind.config.ts keyframes.
    */
   isLoading?: boolean
   /** Icon placed before the label */
@@ -147,7 +147,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={isLoading || undefined}
         {...props}
       >
-        {/* Loading spinner — replaces leftIcon when loading */}
+        {/* Loading spinner - replaces leftIcon when loading */}
         {isLoading ? (
           <span
             className={cn(
@@ -163,14 +163,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           </span>
         ) : null}
 
-        {/* Label — hidden visually when loading (spinner provides feedback) */}
+        {/* Label - hidden visually when loading (spinner provides feedback) */}
         {children != null && (
           <span className={isLoading ? 'opacity-0 pointer-events-none' : undefined}>
             {children}
           </span>
         )}
 
-        {/* Right icon — never shown while loading */}
+        {/* Right icon - never shown while loading */}
         {!isLoading && rightIcon != null ? (
           <span className="shrink-0" aria-hidden="true">
             {rightIcon}

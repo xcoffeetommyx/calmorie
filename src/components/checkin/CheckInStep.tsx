@@ -7,26 +7,26 @@
  *
  * Supports four answer layouts via the `type` prop:
  *
- *   number_select  — numeric choices (e.g. meals eaten: 1 2 3 4 5)
- *   rating         — 1–5 scale with emoji anchors (sleep, stress)
- *   yes_no         — binary yes / no pill buttons
- *   option_select  — labelled multi-option grid (steps range)
+ *   number_select  - numeric choices (e.g. meals eaten: 1 2 3 4 5)
+ *   rating         - 1–5 scale with emoji anchors (sleep, stress)
+ *   yes_no         - binary yes / no pill buttons
+ *   option_select  - labelled multi-option grid (steps range)
  *
  * Each layout calls `onAnswer(value)` when the user makes a selection.
- * The step auto-advances on selection — no separate "Next" button needed
+ * The step auto-advances on selection - no separate "Next" button needed
  * for most steps.
  *
  * Props:
- *   stepIndex     — 0-based, used for animation direction via Framer Motion
- *   totalSteps    — for progress display
- *   question      — main question text
- *   helperText    — optional secondary explanation
- *   type          — which answer layout to render
- *   options       — for option_select type
- *   ratingAnchors — for rating type (low label, high label)
- *   onAnswer      — called with the selected value
- *   onBack        — called when back button is pressed (optional)
- *   direction     — slide direction: 1 = forward, -1 = backward
+ *   stepIndex     - 0-based, used for animation direction via Framer Motion
+ *   totalSteps    - for progress display
+ *   question      - main question text
+ *   helperText    - optional secondary explanation
+ *   type          - which answer layout to render
+ *   options       - for option_select type
+ *   ratingAnchors - for rating type (low label, high label)
+ *   onAnswer      - called with the selected value
+ *   onBack        - called when back button is pressed (optional)
+ *   direction     - slide direction: 1 = forward, -1 = backward
  */
 
 import { motion } from 'framer-motion'

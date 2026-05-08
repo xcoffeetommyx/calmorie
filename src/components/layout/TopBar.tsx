@@ -48,7 +48,7 @@ export function TopBar({
       className={cn(
         // Positioning
         'sticky top-0 z-[200]',
-        // Dimensions — matches --top-bar-height token
+        // Dimensions - matches --top-bar-height token
         'h-[var(--top-bar-height)]',
         // Safe area: notch / Dynamic Island
         'pt-[env(safe-area-inset-top,0px)]',

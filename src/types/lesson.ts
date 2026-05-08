@@ -43,7 +43,7 @@ export interface Lesson {
  * "Started" semantics:
  *   A lesson is considered started when a LessonProgress record exists
  *   for its slug (i.e. progressMap[slug] !== undefined).
- *   There is no separate `started: boolean` field — the presence of the
+ *   There is no separate `started: boolean` field - the presence of the
  *   record is the canonical signal. This keeps the type simple and the
  *   lessonStore logic straightforward.
  *
@@ -52,7 +52,7 @@ export interface Lesson {
  *   completed   = completed === true
  */
 export interface LessonProgress {
-  /** Matches Lesson.slug — primary key in IndexedDB lessonProgress table */
+  /** Matches Lesson.slug - primary key in IndexedDB lessonProgress table */
   slug: string
   /**
    * True when the user has reached the takeaway screen.

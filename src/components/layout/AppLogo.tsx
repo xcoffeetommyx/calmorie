@@ -10,8 +10,8 @@
  *   – Settings About section
  *
  * Props:
- *   size      — width & height in px (default 24)
- *   className — additional Tailwind classes, typically a rounded-* utility
+ *   size      - width & height in px (default 24)
+ *   className - additional Tailwind classes, typically a rounded-* utility
  *               to match the surrounding context
  */
 

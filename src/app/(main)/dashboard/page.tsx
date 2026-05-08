@@ -1,19 +1,19 @@
 'use client'
 
 /**
- * Dashboard page — first impression of the app.
+ * Dashboard page - first impression of the app.
  *
  * Onboarding gate: if profile is not set up, renders OnboardingFlow directly.
  * Loading state: shows a skeleton until both stores have hydrated.
  *
  * Card order:
  *   1. Greeting
- *   2. CalorieRing — hero
- *   3. FlameStreakCard — streak hero + secondary chips (hidden for brand-new users)
- *   4. HabitAlertBanner — conditional, from latest check-in
- *   5. CheckInCTA — pending or completed state
- *   6. DailyFocusCard — shown when checked in today
- *   7. LessonOfTheDay + QuickTipCard — two-column grid
+ *   2. CalorieRing - hero
+ *   3. FlameStreakCard - streak hero + secondary chips (hidden for brand-new users)
+ *   4. HabitAlertBanner - conditional, from latest check-in
+ *   5. CheckInCTA - pending or completed state
+ *   6. DailyFocusCard - shown when checked in today
+ *   7. LessonOfTheDay + QuickTipCard - two-column grid
  *   8. MealSummaryCard
  */
 
@@ -89,7 +89,7 @@ export default function DashboardPage() {
   const contextualLesson  = useContextualLesson()
   const [celebrateStreak, setCelebrateStreak] = useState(false)
 
-  // Completed lessons count — memoized, depends on progressMap reference
+  // Completed lessons count - memoized, depends on progressMap reference
   const completedLessonsCount = useMemo(
     () => Object.values(progressMap).filter((p) => p.completed).length,
     [progressMap]
@@ -99,7 +99,7 @@ export default function DashboardPage() {
   // or has checked in today. Brand-new users see null inside the component.
   const hasStreakHistory = streakData.bestStreak > 0 || isCheckedIn
 
-  // Daily tip — pure lookup, stable reference from static array
+  // Daily tip - pure lookup, stable reference from static array
   const tipOfDay = getTipOfTheDay(todayISO())
 
   const greeting  = getTimeGreeting()
@@ -145,7 +145,7 @@ export default function DashboardPage() {
           </h1>
         </motion.div>
 
-        {/* ── Calorie ring — hero ───────────────────────────── */}
+        {/* ── Calorie ring - hero ───────────────────────────── */}
         <motion.div variants={staggerItem}>
           <CalorieRing caloriesEaten={caloriesEaten} calorieTarget={calorieTarget} />
         </motion.div>
@@ -167,7 +167,7 @@ export default function DashboardPage() {
           </motion.div>
         )}
 
-        {/* ── Habit alert — only when present ──────────────── */}
+        {/* ── Habit alert - only when present ──────────────── */}
         {topWarning && (
           <motion.div variants={staggerItem}>
             <HabitAlertBanner alert={topWarning} />
@@ -183,7 +183,7 @@ export default function DashboardPage() {
           />
         </motion.div>
 
-        {/* ── Daily focus — only when checked in ───────────── */}
+        {/* ── Daily focus - only when checked in ───────────── */}
         {isCheckedIn && todayRecord && (
           <motion.div variants={staggerItem}>
             <DailyFocusCard focus={todayRecord.answers.dailyFocus} />
@@ -226,7 +226,7 @@ function DashboardHeader() {
           'focus-visible:outline-none focus-visible:ring-2',
           'focus-visible:ring-border-focus rounded-lg p-0.5',
         )}
-        aria-label="Calmorie — go to dashboard"
+        aria-label="Calmorie - go to dashboard"
       >
         <AppLogo size={24} className="rounded-md" />
         <span className="font-display text-[15px] font-semibold text-primary tracking-tight">

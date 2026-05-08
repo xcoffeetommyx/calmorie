@@ -9,17 +9,17 @@
  *   – On submit: runs scoreEngine + habitEngine, writes to checkinStore
  *   – Returns the completed result (score, tip, warnings) after submission
  *
- * The hook is intentionally unaware of navigation — the page component
+ * The hook is intentionally unaware of navigation - the page component
  * handles any routing after the wizard completes.
  *
  * Step order (7 questions, one per step):
- *   0 — sleepQuality
- *   1 — lateNightEating
- *   2 — mealsEaten
- *   3 — skippedMeals
- *   4 — sugaryDrinks
- *   5 — stressLevel
- *   6 — dailyFocus
+ *   0 - sleepQuality
+ *   1 - lateNightEating
+ *   2 - mealsEaten
+ *   3 - skippedMeals
+ *   4 - sugaryDrinks
+ *   5 - stressLevel
+ *   6 - dailyFocus
  */
 
 import { useState, useCallback } from 'react'

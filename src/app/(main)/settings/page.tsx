@@ -97,7 +97,7 @@ export default function SettingsPage() {
               }
               hint={
                 isOnboarded
-                  ? `Maintenance: ${profile?.tdee ? formatCalories(profile.tdee) : '—'}`
+                  ? `Maintenance: ${profile?.tdee ? formatCalories(profile.tdee) : '-'}`
                   : 'Set up your profile to calculate'
               }
               disabled
@@ -168,13 +168,13 @@ export default function SettingsPage() {
 
             <p className="font-body text-sm text-ink-secondary leading-relaxed">
               Calmorie is a free educational app that helps you understand how calories,
-              metabolism, sleep, and daily habits connect to your weight — using
+              metabolism, sleep, and daily habits connect to your weight - using
               science-backed explanations rather than rules or restriction.
             </p>
 
             <div className="flex flex-col gap-2 pt-0.5 border-t border-border">
               <InfoRow icon={<Info size={14} />}   label="No ads, no subscriptions, no data selling" />
-              <InfoRow icon={<Shield size={14} />} label="Everything you log stays on this device — nothing is sent to a server" />
+              <InfoRow icon={<Shield size={14} />} label="Everything you log stays on this device - nothing is sent to a server" />
             </div>
           </div>
         </motion.div>
@@ -244,7 +244,7 @@ export default function SettingsPage() {
             <p className="font-body text-sm text-ink-secondary leading-relaxed">
               Calmorie provides general information for educational purposes. It is not
               medical advice, and nothing here should replace a conversation with your
-              doctor or a registered dietitian — especially if you have a health condition
+              doctor or a registered dietitian - especially if you have a health condition
               that affects your nutrition or weight.
             </p>
             <p className="font-body text-xs text-ink-muted leading-relaxed border-t border-border pt-2">

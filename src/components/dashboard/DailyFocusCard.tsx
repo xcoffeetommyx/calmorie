@@ -29,7 +29,7 @@ const FOCUS_EMOJI: Record<DailyFocus, string> = {
 const FOCUS_HINT: Record<DailyFocus, string> = {
   regular_meals:        'Aim for balanced, timed meals today.',
   drink_more_water:     'Try to reach 6–8 glasses throughout the day.',
-  walk_more:            'Even short walks add up — take the stairs.',
+  walk_more:            'Even short walks add up - take the stairs.',
   sleep_earlier:        'Try to wind down 30 minutes earlier tonight.',
   reduce_sugary_drinks: 'Swap one sugary drink for water today.',
   none:                 'Taking today as it comes.',

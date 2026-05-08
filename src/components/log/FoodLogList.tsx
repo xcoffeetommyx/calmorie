@@ -6,13 +6,13 @@
  * Renders all four MealSection components in canonical order
  * (breakfast → lunch → dinner → snack).
  *
- * This component is purely compositional — it holds no state of its own.
+ * This component is purely compositional - it holds no state of its own.
  * All data flows in from useTodayLog() via the log page.
  *
  * Props:
- *   byMeal        — entries grouped by MealType
- *   onAddEntry    — opens FoodEntryForm for a given meal type
- *   onRemoveEntry — removes an entry by id
+ *   byMeal        - entries grouped by MealType
+ *   onAddEntry    - opens FoodEntryForm for a given meal type
+ *   onRemoveEntry - removes an entry by id
  */
 
 import { motion } from 'framer-motion'

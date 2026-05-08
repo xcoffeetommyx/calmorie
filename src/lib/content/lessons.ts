@@ -4,14 +4,14 @@
  * Content loader and helper utilities for lesson data.
  *
  * This is the single public API for reading lesson content in components,
- * hooks, and pages. Components should never import lesson JSON directly —
+ * hooks, and pages. Components should never import lesson JSON directly -
  * they should use these functions instead.
  *
  * Design constraints:
  *   – Framework-agnostic: no React, no Next.js, no browser APIs
  *   – No IndexedDB or stores: these functions are pure data access
  *   – Lesson progress (completed, lastStepIndex) is managed separately
- *     by lessonStore + Dexie — not here
+ *     by lessonStore + Dexie - not here
  *   – All functions are synchronous (data is static JSON bundled at build)
  */
 
@@ -118,7 +118,7 @@ export function getIncompleteLessons(
  *   2. If all lessons are complete, fall back to day-based rotation using
  *      the ISO date string as a seed so the same lesson shows all day
  *
- * This function is pure — it produces the same result for the same inputs
+ * This function is pure - it produces the same result for the same inputs
  * and the same date. It does not require a store or hook.
  *
  * @param progressMap - current lesson progress from lessonStore (can be {})
@@ -138,7 +138,7 @@ export function getLessonOfTheDay(
   )
   if (firstIncomplete) return firstIncomplete
 
-  // Step 2: all complete — rotate by day
+  // Step 2: all complete - rotate by day
   const date = dateISO ?? getTodayISO()
   const dayIndex = getDayIndex(date)
   return LESSONS[dayIndex % LESSONS.length]
@@ -149,7 +149,7 @@ export function getLessonOfTheDay(
 /**
  * Returns today's date as 'YYYY-MM-DD' in local time.
  * Duplicated here (vs lib/utils/date.ts) to keep this module self-contained
- * and framework-independent — this file may eventually be used outside Next.js.
+ * and framework-independent - this file may eventually be used outside Next.js.
  */
 function getTodayISO(): string {
   const d = new Date()

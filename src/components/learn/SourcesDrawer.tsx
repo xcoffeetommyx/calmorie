@@ -17,9 +17,9 @@
  * backdrop → overlay variants, sheet → bottomSheetVariants.
  *
  * Props:
- *   isOpen   — whether the drawer is visible
- *   sources  — array of LessonSource objects from the lesson
- *   onClose  — called when the backdrop or close button is tapped
+ *   isOpen   - whether the drawer is visible
+ *   sources  - array of LessonSource objects from the lesson
+ *   onClose  - called when the backdrop or close button is tapped
  */
 
 import { motion, AnimatePresence } from 'framer-motion'
@@ -98,7 +98,7 @@ export function SourcesDrawer({ isOpen, sources, onClose }: SourcesDrawerProps) 
               </button>
             </div>
 
-            {/* Source list — scrollable */}
+            {/* Source list - scrollable */}
             <div className="overflow-y-auto overscroll-contain flex-1">
               <ul
                 className="px-5 py-4 space-y-4"
@@ -110,7 +110,7 @@ export function SourcesDrawer({ isOpen, sources, onClose }: SourcesDrawerProps) 
                     key={i}
                     className="flex flex-col gap-1.5"
                   >
-                    {/* Organization — prominent */}
+                    {/* Organization - prominent */}
                     <p className="font-body text-xs font-semibold text-ink-muted uppercase tracking-wider">
                       {source.organization}
                       {source.year && (
@@ -131,7 +131,7 @@ export function SourcesDrawer({ isOpen, sources, onClose }: SourcesDrawerProps) 
                         'hover:text-primary transition-colors duration-fast',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus rounded-sm',
                       )}
-                      aria-label={`${source.title} — opens in new tab`}
+                      aria-label={`${source.title} - opens in new tab`}
                     >
                       <span className="flex-1 min-w-0">{source.title}</span>
                       <ExternalLink

@@ -7,16 +7,16 @@
  * Uses the severity level and tone from the habit rule system.
  *
  * Severity theming (colours verified against tailwind.config.ts):
- *   info     — bg-primary-light / text-primary-text (blue-green, informational)
- *   gentle   — bg-primary-light / text-primary-text (default, most common)
- *   moderate — bg-warning-bg / text-amber-800 (warranted attention)
+ *   info     - bg-primary-light / text-primary-text (blue-green, informational)
+ *   gentle   - bg-primary-light / text-primary-text (default, most common)
+ *   moderate - bg-warning-bg / text-amber-800 (warranted attention)
  *
  * Important tone note: messages are written in the rules layer
  * (data/habitRules.ts). This component never rewrites or adds
- * judgement — it only presents what the rule provides.
+ * judgement - it only presents what the rule provides.
  *
  * Props:
- *   alert — a HabitAlertDisplay object (either a full HabitWarning or
+ *   alert - a HabitAlertDisplay object (either a full HabitWarning or
  *           a shape derived from a HabitRule for static/mock use)
  *
  * Phase 5: replace static mock with live output from habitEngine
@@ -33,7 +33,7 @@ import type { HabitSeverity } from '@/types/habit'
 
 // ── Severity → visual mapping ──────────────────────────────────────────────
 // Defined here (co-located with the rendering component) per the guidance
-// in types/habit.ts — not in the type definitions layer.
+// in types/habit.ts - not in the type definitions layer.
 
 const SEVERITY_STYLES: Record<
   HabitSeverity,

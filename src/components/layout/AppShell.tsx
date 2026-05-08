@@ -46,7 +46,7 @@ export function AppShell({ children, className }: AppShellProps) {
   return (
     <div className={cn('relative min-h-screen-dynamic bg-background', className)}>
 
-      {/* Desktop sidebar — renders itself as fixed; hidden on mobile */}
+      {/* Desktop sidebar - renders itself as fixed; hidden on mobile */}
       <SideNav />
 
       {/* Main content column */}
@@ -64,10 +64,10 @@ export function AppShell({ children, className }: AppShellProps) {
         {children}
       </main>
 
-      {/* Mobile bottom nav — renders itself as fixed; hidden on desktop */}
+      {/* Mobile bottom nav - renders itself as fixed; hidden on desktop */}
       <BottomNav />
 
-      {/* PWA install prompt — non-intrusive, shown once per device */}
+      {/* PWA install prompt - non-intrusive, shown once per device */}
       <InstallPrompt />
     </div>
   )

@@ -5,7 +5,7 @@
  * the set of triggered HabitWarning objects, sorted by severity priority.
  *
  * Design:
- *   – Pure function — no side effects, no global state
+ *   – Pure function - no side effects, no global state
  *   – Rules come from data/habitRules.ts (static, auditable)
  *   – Each triggered rule produces exactly one HabitWarning
  *   – Warnings are sorted: moderate → gentle → info
@@ -13,10 +13,10 @@
  *     the same check-in always produces the same warning IDs (stable
  *     for storage and deduplication)
  *
- * The engine does not write to any store — the caller (useCheckIn hook)
+ * The engine does not write to any store - the caller (useCheckIn hook)
  * is responsible for persisting the results.
  *
- * All functions are pure — no side effects, no global state.
+ * All functions are pure - no side effects, no global state.
  */
 
 import type { CheckInAnswers } from '@/types/checkin'
@@ -32,8 +32,8 @@ import { nowISO } from '@/lib/utils/date'
  * Returns triggered HabitWarning objects sorted by severity (most
  * important first).
  *
- * @param answers  — the completed check-in answers
- * @param date     — 'YYYY-MM-DD' date used for stable ID generation
+ * @param answers  - the completed check-in answers
+ * @param date     - 'YYYY-MM-DD' date used for stable ID generation
  */
 export function evaluateHabits(
   answers: CheckInAnswers,

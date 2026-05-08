@@ -34,7 +34,7 @@ export function CalorieRing({ caloriesEaten, calorieTarget, className }: Calorie
   const stats = [
     { label: 'Eaten',     value: formatCalories(caloriesEaten, { unit: false }), unit: 'kcal' },
     { label: 'Target',    value: formatCalories(calorieTarget, { unit: false }), unit: 'kcal' },
-    { label: 'Remaining', value: isOver ? '—' : formatCalories(remaining, { unit: false }), unit: isOver ? '' : 'kcal' },
+    { label: 'Remaining', value: isOver ? '-' : formatCalories(remaining, { unit: false }), unit: isOver ? '' : 'kcal' },
   ]
 
   return (
@@ -167,7 +167,7 @@ export function CalorieRing({ caloriesEaten, calorieTarget, className }: Calorie
           transition={{ duration: 0.3, delay: 0.4 }}
           role="alert"
         >
-          You&rsquo;ve gone over today — tomorrow is a fresh start.
+          You&rsquo;ve gone over today - tomorrow is a fresh start.
         </motion.p>
       )}
     </div>

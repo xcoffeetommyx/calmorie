@@ -34,7 +34,7 @@ export interface TodayLogResult {
 }
 
 export function useTodayLog(): TodayLogResult {
-  // Read raw stable state — these selectors return primitives or the
+  // Read raw stable state - these selectors return primitives or the
   // direct state reference, never newly-allocated arrays.
   const allEntries  = useLogStore(selectEntries)
   const logHydrated = useLogStore(selectLogHydrated)
@@ -44,7 +44,7 @@ export function useTodayLog(): TodayLogResult {
   const { calorieTarget: profileTarget, isHydrated: profileHydrated } = useCalorieTarget()
   const calorieTarget = profileTarget ?? FALLBACK_TARGET
 
-  // Filter to today — memoized so the result array reference is stable
+  // Filter to today - memoized so the result array reference is stable
   // between renders unless allEntries actually changes.
   const today = todayISO()
   const entries = useMemo(
@@ -52,7 +52,7 @@ export function useTodayLog(): TodayLogResult {
     [allEntries, today]
   )
 
-  // Derived scalar — cheap, no allocation
+  // Derived scalar - cheap, no allocation
   const totalCalories = useMemo(
     () => entries.reduce((sum, e) => sum + e.calories, 0),
     [entries]
@@ -61,7 +61,7 @@ export function useTodayLog(): TodayLogResult {
   const remaining     = calorieTarget - totalCalories
   const progressRatio = clamp(totalCalories / calorieTarget, 0, 1)
 
-  // Group by meal — memoized to avoid new object literal on every render
+  // Group by meal - memoized to avoid new object literal on every render
   const byMeal = useMemo(
     () =>
       MEAL_TYPE_ORDER.reduce<Record<MealType, FoodEntry[]>>(

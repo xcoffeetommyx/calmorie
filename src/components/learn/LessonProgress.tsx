@@ -4,16 +4,16 @@
  * LessonProgress
  *
  * Step progress indicator for the lesson reader.
- * Renders as a row of animated dots/pills — the current step
+ * Renders as a row of animated dots/pills - the current step
  * expands into a wider pill, completed steps show as filled dots,
  * upcoming steps as muted dots.
  *
  * Used inside LessonSwiper to anchor the reading position.
  *
  * Props:
- *   currentStep   — 0-based index of the active step
- *   totalSteps    — total number of steps (not counting takeaway)
- *   showTakeaway  — whether to include a final indicator for the takeaway
+ *   currentStep   - 0-based index of the active step
+ *   totalSteps    - total number of steps (not counting takeaway)
+ *   showTakeaway  - whether to include a final indicator for the takeaway
  *   className
  */
 

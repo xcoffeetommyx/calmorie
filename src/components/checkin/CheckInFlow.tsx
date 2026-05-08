@@ -6,8 +6,8 @@
  * Orchestrates the 7-step Morning Check-In wizard and the result screen.
  *
  * Phases:
- *   1. Questions — 7 steps, one per field in CheckInAnswers
- *   2. Result    — CheckInScore screen shown after submission
+ *   1. Questions - 7 steps, one per field in CheckInAnswers
+ *   2. Result    - CheckInScore screen shown after submission
  *
  * Each question step auto-advances on answer selection. A back button
  * is available from step 1 onward.
@@ -42,7 +42,7 @@ interface StepConfig {
   ratingAnchors?: { low: string; high: string }
 }
 
-// Daily focus options — ordered from most to least actionable.
+// Daily focus options - ordered from most to least actionable.
 // 'none' is placed last so it doesn't anchor the default choice.
 const DAILY_FOCUS_OPTIONS: StepOption[] = (
   [
@@ -97,7 +97,7 @@ const STEPS_CONFIG: StepConfig[] = [
   {
     key:        'dailyFocus',
     question:   "What's your focus for today?",
-    helperText: 'Pick one thing to be intentional about — or skip if nothing stands out.',
+    helperText: 'Pick one thing to be intentional about - or skip if nothing stands out.',
     type:       'option_select',
     options:    DAILY_FOCUS_OPTIONS,
   },

@@ -6,11 +6,11 @@
  * this component (or reference its classes directly) for consistency.
  *
  * Variants map to:
- *   Display: h1, h2, h3 — Fraunces (--font-display), tight tracking
- *   UI text: h4, h5, h6 — Plus Jakarta Sans (--font-body), slightly tight
- *   Body:    body, body-sm — Plus Jakarta Sans, relaxed line height
- *   Labels:  label, label-sm — Plus Jakarta Sans, medium weight
- *   Small:   caption — Plus Jakarta Sans, muted colour
+ *   Display: h1, h2, h3 - Fraunces (--font-display), tight tracking
+ *   UI text: h4, h5, h6 - Plus Jakarta Sans (--font-body), slightly tight
+ *   Body:    body, body-sm - Plus Jakarta Sans, relaxed line height
+ *   Labels:  label, label-sm - Plus Jakarta Sans, medium weight
+ *   Small:   caption - Plus Jakarta Sans, muted colour
  *
  * v2 changes:
  *   - `body` line-height bumped to leading-[1.8] for comfortable
@@ -34,7 +34,7 @@ import { cn } from '@/lib/utils/cn'
 const typographyVariants = cva('', {
   variants: {
     variant: {
-      // ── Display headings — Fraunces serif ────────────────────────────
+      // ── Display headings - Fraunces serif ────────────────────────────
       h1: [
         'font-display',
         'text-4xl font-semibold',
@@ -58,7 +58,7 @@ const typographyVariants = cva('', {
         'text-ink',
       ].join(' '),
 
-      // ── UI headings — Plus Jakarta Sans ──────────────────────────────
+      // ── UI headings - Plus Jakarta Sans ──────────────────────────────
       h4: [
         'font-body',
         'text-xl font-semibold',
@@ -106,7 +106,7 @@ const typographyVariants = cva('', {
       ].join(' '),
 
       /**
-       * label-sm — eyebrow / section header style.
+       * label-sm - eyebrow / section header style.
        * Uppercased and letter-spaced to act as a divider or category label.
        * Use sparingly; too many create visual noise.
        */
@@ -167,7 +167,7 @@ export interface TypographyProps
 }
 
 /**
- * Typography — core text rendering component.
+ * Typography - core text rendering component.
  *
  * @example
  * // Heading rendered as an <h1>
@@ -178,11 +178,11 @@ export interface TypographyProps
  * <Typography variant="body">Your progress today is looking great.</Typography>
  *
  * @example
- * // Section label — rendered as a <span> by default
+ * // Section label - rendered as a <span> by default
  * <Typography variant="label-sm">TODAY'S MEALS</Typography>
  *
  * @example
- * // Semantic override — looks like a body paragraph, renders as a <span>
+ * // Semantic override - looks like a body paragraph, renders as a <span>
  * <Typography variant="body-sm" as="span">Note: estimated calories.</Typography>
  */
 function Typography({

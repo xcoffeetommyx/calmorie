@@ -3,7 +3,7 @@
 /**
  * CalorieTargetStep
  *
- * Onboarding step 3 of 3 — read-only result screen.
+ * Onboarding step 3 of 3 - read-only result screen.
  *
  * Shows:
  *   – Maintenance calories (TDEE)
@@ -166,7 +166,7 @@ export function CalorieTargetStep({
           aria-hidden="true"
         />
         <p className="font-body text-xs text-ink-muted leading-relaxed">
-          This estimate uses the Mifflin-St Jeor formula — a standard
+          This estimate uses the Mifflin-St Jeor formula - a standard
           reference tool, not a clinical measurement. Actual needs vary
           between individuals. Adjust if the target feels too high or low
           after a few weeks.

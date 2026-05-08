@@ -6,7 +6,7 @@
  *
  * Calorie values are per standard serving as described in
  * `servingDescription`. All figures are approximate estimates
- * intended for general awareness — not precise nutritional data.
+ * intended for general awareness - not precise nutritional data.
  * Actual values vary by brand, preparation method, and serving size.
  *
  * This is a starter set only, not a nutrition database.
@@ -17,8 +17,8 @@
  *   snacks, drinks, meals
  *
  * mode:
- *   'instant'  — one-tap log; calories are predictable for this serving.
- *   'prefill'  — opens form pre-filled; user should confirm/adjust amount.
+ *   'instant'  - one-tap log; calories are predictable for this serving.
+ *   'prefill'  - opens form pre-filled; user should confirm/adjust amount.
  */
 
 import type { CommonFood } from '@/types/food'

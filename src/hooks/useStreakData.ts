@@ -9,7 +9,7 @@
  *   Fix: read the raw records map via a stable selector, derive with useMemo.
  *
  * Grace day side-effect:
- *   computeStreaks is pure — it cannot write to localStorage itself.
+ *   computeStreaks is pure - it cannot write to localStorage itself.
  *   When grace first becomes active for a given missed day, this hook writes
  *   the bridge date once via useEffect, then passes it back into computeStreaks
  *   on the next render. The effect is idempotent: subsequent renders with the

@@ -9,7 +9,7 @@ import { scaleSpring } from '@/lib/animations/variants'
 interface CheckInCTAProps {
   isCompleted: boolean
   score?: number
-  /** Current check-in streak — shown in completed state when > 0 */
+  /** Current check-in streak - shown in completed state when > 0 */
   streak?: number
   className?: string
 }
@@ -114,7 +114,7 @@ function CompletedState({
       </div>
 
       <div className="flex items-center gap-2 shrink-0">
-        {/* Streak flame — only when streak ≥ 3 */}
+        {/* Streak flame - only when streak ≥ 3 */}
         {streak && streak >= 3 && (
           <motion.div
             variants={scaleSpring}

@@ -1,5 +1,5 @@
 /**
- * Lesson detail page — /learn/[slug]
+ * Lesson detail page - /learn/[slug]
  *
  * This is a Server Component. It has no 'use client' directive, which is
  * required because Next.js does not allow generateStaticParams() in a
@@ -34,7 +34,7 @@ interface LessonPageProps {
 export default function LessonPage({ params }: LessonPageProps) {
   const lesson = getLessonBySlug(params.slug)
 
-  // Unknown slug — renders the app's not-found.tsx (404) page
+  // Unknown slug - renders the app's not-found.tsx (404) page
   if (!lesson) {
     notFound()
   }

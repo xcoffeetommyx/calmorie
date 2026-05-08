@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 /* ══════════════════════════════════════════════════════════
-   BASE LAYER — resets and global element defaults
+   BASE LAYER - resets and global element defaults
 ═══════════════════════════════════════════════════════════ */
 @layer base {
   *,

@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
 /**
- * cn — class name utility
+ * cn - class name utility
  *
  * Combines clsx (conditional class logic) with tailwind-merge
  * (intelligent Tailwind class deduplication). This is the single

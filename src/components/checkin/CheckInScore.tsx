@@ -57,7 +57,7 @@ export function CheckInScore({ record, onDone, celebrateOnDone = false }: CheckI
   const circumference   = 2 * Math.PI * 42  // r=42
   const dashOffset      = circumference * (1 - record.score / 100)
 
-  // Streak data — memoized derivation via stable records reference
+  // Streak data - memoized derivation via stable records reference
   const streakData          = useStreakData()
   const prefersReducedMotion = useReducedMotion()
   const flameState          = getFlameState(streakData.currentStreak)
@@ -65,7 +65,7 @@ export function CheckInScore({ record, onDone, celebrateOnDone = false }: CheckI
   const breathe             = flameCfg.breathingEnabled && !prefersReducedMotion
   const nextMilestone       = getNextMilestone(streakData.currentStreak)
 
-  // Lesson recommendation — re-derive weakest factor from the stored answers
+  // Lesson recommendation - re-derive weakest factor from the stored answers
   const { weakestFactor } = calculateScore(record.answers)
   const lessonSlug        = getLessonSlugForFactor(weakestFactor)
   const recommendedLesson = lessonSlug ? getLessonBySlug(lessonSlug) : null
@@ -148,7 +148,7 @@ export function CheckInScore({ record, onDone, celebrateOnDone = false }: CheckI
             </div>
           )}
 
-          {/* Compact streak row — reward moment, not a duplicate card */}
+          {/* Compact streak row - reward moment, not a duplicate card */}
           <div className="bg-surface rounded-xl border border-border shadow-xs px-4 py-3 flex items-center gap-2.5">
             <motion.div
               variants={scaleSpring}
@@ -181,7 +181,7 @@ export function CheckInScore({ record, onDone, celebrateOnDone = false }: CheckI
               <p className="font-body text-sm font-semibold text-ink leading-none">
                 {streakData.currentStreak > 0
                   ? `${streakData.currentStreak} day streak`
-                  : 'Day one — great start.'}
+                  : 'Day one - great start.'}
               </p>
               {nextMilestone && streakData.currentStreak > 0 && (
                 <p className="font-body text-[11px] text-ink-muted mt-0.5">

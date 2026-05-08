@@ -5,18 +5,18 @@
  *
  * Non-intrusive PWA install prompt. Two surfaces:
  *
- * 1. Android / Chrome / Edge — listens for `beforeinstallprompt`.
+ * 1. Android / Chrome / Edge - listens for `beforeinstallprompt`.
  *    Shows a small bottom banner after a 4-second delay.
  *    Tapping "Install" calls prompt() for the native install dialog.
  *
- * 2. iOS Safari — `beforeinstallprompt` never fires on iOS.
+ * 2. iOS Safari - `beforeinstallprompt` never fires on iOS.
  *    Shows a one-time hint card explaining Share > Add to Home Screen.
  *    Only shown on iOS Safari in non-standalone mode.
  *
  * Both prompts:
  *   – Are shown only once (dismissed state persisted in localStorage)
  *   – Appear after SHOW_DELAY_MS so they don't interrupt first load
- *   – Are fully dismissible via the × button
+ *   – Are fully dismissible via the �- button
  *   – Render nothing if the app is already installed (standalone mode)
  */
 

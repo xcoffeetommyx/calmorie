@@ -9,7 +9,7 @@
  *   await db.userProfile.get('local-user')
  *
  * The `db` export is a module singleton. Dexie handles connection pooling
- * and deduplication internally — importing from multiple files is safe.
+ * and deduplication internally - importing from multiple files is safe.
  *
  * Initialisation:
  *   `openDB()` must be called once on app boot (in AppProviders) before
@@ -19,7 +19,7 @@
  * SSR guard:
  *   IndexedDB is a browser-only API. All db operations are guarded by
  *   `isDBOpen()` checks. The `db` object can be imported in server
- *   components — operations simply won't execute on the server.
+ *   components - operations simply won't execute on the server.
  *
  * Hydration flow:
  *   AppProviders calls openDB() → then the four load*() helpers in parallel
@@ -35,7 +35,7 @@ import type { UserProfileRow, FoodEntryRow, CheckInRow, LessonProgressRow } from
 // ── Database class ─────────────────────────────────────────────────────────
 
 class CalmorieDB extends Dexie {
-  // Typed table accessors — TypeScript knows the row shape for each table
+  // Typed table accessors - TypeScript knows the row shape for each table
   userProfile!:    Table<UserProfileRow,    string>
   foodEntries!:    Table<FoodEntryRow,      string>
   checkIns!:       Table<CheckInRow,        string>
@@ -60,7 +60,7 @@ let _opened = false
  * Opens the database connection and runs the localStorage migration.
  * Call once in AppProviders on client mount.
  *
- * Safe to call multiple times — subsequent calls are no-ops.
+ * Safe to call multiple times - subsequent calls are no-ops.
  * Returns a promise that resolves when the db is ready and migration is done.
  */
 export async function openDB(): Promise<void> {
