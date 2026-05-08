@@ -162,7 +162,7 @@ export default function SettingsPage() {
               <AppLogo size={40} className="rounded-xl shrink-0" />
               <div>
                 <p className="font-display text-base font-semibold text-ink tracking-tight">Calmorie</p>
-                <p className="font-body text-xs text-ink-muted">v1.0 · Free, always</p>
+                <p className="font-body text-xs text-ink-muted">Free, always</p>
               </div>
             </div>
 
@@ -260,7 +260,7 @@ export default function SettingsPage() {
           variants={staggerItem}
           className="font-body text-xs text-ink-muted text-center pb-2"
         >
-          Calmorie · Made with care · v1.0
+          Calmorie · Made with care
         </motion.p>
 
       </motion.div>
